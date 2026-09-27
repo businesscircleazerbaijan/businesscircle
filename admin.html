@@ -93,6 +93,72 @@
   .row-actions{display:flex; gap:8px;}
   .empty-state{color:var(--muted); font-size:14px; padding:40px 0; text-align:center;}
   .table-wrap{overflow-x:auto;}
+
+  /* ===== app shell v2: sidebar layout ===== */
+  :root{ --success:#6FA787; --success-dim:#3E5A4C; --warn:var(--gold); }
+  .shell{display:flex; align-items:flex-start;}
+  .sidebar{
+    width:212px; flex:0 0 212px; border-right:1px solid var(--line);
+    position:sticky; top:70px; align-self:flex-start;
+    height:calc(100vh - 70px); overflow-y:auto; padding:22px 0;
+  }
+  .sidebar a{
+    display:flex; align-items:center; gap:10px; padding:12px 26px; font-size:13.5px;
+    color:var(--muted); border-left:2px solid transparent; white-space:nowrap;
+  }
+  .sidebar a .count{
+    margin-left:auto; font-size:11px; color:var(--muted-2); border:1px solid var(--line);
+    padding:1px 7px; border-radius:20px;
+  }
+  .sidebar a.active{color:#fff; border-left-color:var(--gold); background:var(--panel);}
+  .sidebar a.active .count{color:var(--gold); border-color:var(--gold-dim);}
+  .sidebar a:hover{color:#fff;}
+  .content{flex:1; min-width:0; padding:36px 32px 100px;}
+  @media(max-width:900px){
+    .shell{flex-direction:column;}
+    .sidebar{
+      position:static; width:100%; height:auto; display:flex; overflow-x:auto;
+      border-right:none; border-bottom:1px solid var(--line); padding:10px 14px;
+    }
+    .sidebar a{padding:9px 14px; border-left:none; border-bottom:2px solid transparent;}
+    .sidebar a.active{border-bottom-color:var(--gold); background:transparent;}
+    .content{padding:26px 18px 80px;}
+  }
+  .view{display:none;}
+  .view.show{display:block;}
+
+  .stat-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:8px;}
+  @media(max-width:760px){.stat-grid{grid-template-columns:repeat(2,1fr);}}
+  .stat-card{border:1px solid var(--line); background:var(--panel); padding:20px;}
+  .stat-card .num{font-family:'Fraunces',serif; font-size:30px; color:#fff;}
+  .stat-card .lbl{font-size:12.5px; color:var(--muted); margin-top:4px;}
+
+  .tabs{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:18px;}
+  .tab-btn{
+    padding:8px 15px; font-size:12.5px; border:1px solid var(--line); color:var(--muted);
+    background:transparent; cursor:pointer; border-radius:20px; font-family:'Inter',sans-serif;
+  }
+  .tab-btn.active{border-color:var(--gold); color:var(--gold);}
+  .search-input{
+    background:var(--panel-2); border:1px solid var(--line); color:var(--text);
+    padding:10px 13px; font-size:13.5px; border-radius:2px; font-family:'Inter',sans-serif; width:100%; max-width:280px;
+  }
+  .badge{font-size:11px; padding:3px 9px; display:inline-block; border-radius:20px; border:1px solid var(--line); white-space:nowrap;}
+  .badge-pending{color:var(--gold); border-color:var(--gold-dim);}
+  .badge-approved{color:var(--success); border-color:var(--success-dim);}
+  .badge-rejected{color:var(--danger); border-color:var(--danger);}
+  .badge-waitlisted, .badge-suspended{color:var(--muted); border-color:var(--line);}
+  .detail-row td{background:var(--panel-2); font-size:13px; color:var(--muted);}
+  .detail-grid{display:grid; grid-template-columns:1fr 1fr; gap:6px 24px; padding:16px 4px;}
+  @media(max-width:640px){.detail-grid{grid-template-columns:1fr;}}
+  .detail-grid div b{color:var(--text); display:block; font-size:11px; color:var(--muted-2); font-weight:500; letter-spacing:.04em; margin-bottom:2px;}
+  .detail-grid div span{font-size:13.5px; color:var(--text);}
+  .tag-list{display:flex; flex-wrap:wrap; gap:6px;}
+  .tag{font-size:11px; border:1px solid var(--gold-dim); color:var(--gold); padding:3px 9px; border-radius:20px;}
+  .toast-wrap{position:fixed; bottom:22px; right:22px; z-index:50; display:flex; flex-direction:column; gap:8px;}
+  .toast{background:var(--panel); border:1px solid var(--line); border-left:3px solid var(--gold); padding:12px 18px; font-size:13.5px; box-shadow:0 8px 24px rgba(0,0,0,.4); animation:toastIn .2s ease;}
+  .toast.err{border-left-color:var(--danger);}
+  @keyframes toastIn{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
 </style>
 </head>
 <body>
@@ -101,7 +167,7 @@
 <div id="loginScreen">
   <div class="login-box">
     <h1>Admin Panel</h1>
-    <p>Business Circle Azerbaijan — tədbirlərin idarə edilməsi</p>
+    <p>Business Circle Azerbaijan — icmanın idarə edilməsi</p>
     <form id="loginForm">
       <div class="field"><label>Email</label><input type="email" id="loginEmail" required autocomplete="username"></div>
       <div class="field"><label>Şifrə</label><input type="password" id="loginPass" required autocomplete="current-password"></div>
@@ -120,64 +186,176 @@
     </div>
   </header>
 
-  <main>
-    <div class="wrap">
-      <div class="panel-head">
-        <div>
-          <h2>Tədbirlər</h2>
-          <p>Əlavə et, redaktə et, sil. Vaxtı keçmiş tədbirləri bir kliklə təmizlə.</p>
+  <div class="shell">
+    <aside class="sidebar" id="sidebarNav">
+      <a href="#" data-view="dashboard" class="active">Dashboard</a>
+      <a href="#" data-view="applications">Müraciətlər <span class="count" id="navAppCount">0</span></a>
+      <a href="#" data-view="members">Üzvlər <span class="count" id="navMemberCount">0</span></a>
+      <a href="#" data-view="events">Tədbirlər <span class="count" id="navEventCount">0</span></a>
+    </aside>
+
+    <div class="content">
+
+      <!-- ---------- DASHBOARD ---------- -->
+      <div class="view show" id="view-dashboard">
+        <div class="panel-head"><div><h2>Dashboard</h2><p>İcmanın ümumi vəziyyətinə baxış.</p></div></div>
+        <div class="stat-grid">
+          <div class="stat-card"><div class="num" id="statPending">—</div><div class="lbl">Gözləyən müraciət</div></div>
+          <div class="stat-card"><div class="num" id="statMembers">—</div><div class="lbl">Təsdiqlənmiş üzv</div></div>
+          <div class="stat-card"><div class="num" id="statEvents">—</div><div class="lbl">Ümumi tədbir</div></div>
+          <div class="stat-card"><div class="num" id="statUpcoming">—</div><div class="lbl">Yaxın tədbir</div></div>
         </div>
-        <div class="actions-row">
-          <a href="#" id="cleanExpiredBtn" class="btn btn-danger btn-sm">Vaxtı keçmişləri sil</a>
-          <a href="#" id="newEventBtn" class="btn btn-sm">+ Yeni tədbir</a>
+        <div class="card">
+          <h3>Son müraciətlər</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Ad Soyad</th><th>Şirkət</th><th>Tarix</th><th>Status</th></tr></thead>
+              <tbody id="dashRecentApps"></tbody>
+            </table>
+            <div class="empty-state" id="dashEmpty" style="display:none;">Hələ müraciət yoxdur.</div>
+          </div>
         </div>
       </div>
 
-      <div class="card" id="eventFormCard" style="display:none;">
-        <h3 id="formTitle">Yeni tədbir</h3>
-        <form id="eventForm">
-          <input type="hidden" id="ev_id">
-          <div class="form-grid">
-            <div class="field full"><label>Başlıq *</label><input type="text" id="ev_title" required></div>
-            <div class="field">
-              <label>Kateqoriya *</label>
-              <select id="ev_category" required>
-                <option value="sehər">Səhər yeməyi</option>
-                <option value="networking">Networking</option>
-                <option value="investisiya">İnvestisiya</option>
-                <option value="texnologiya">Texnologiya</option>
-                <option value="qapali">Qapalı görüş</option>
-              </select>
+      <!-- ---------- APPLICATIONS ---------- -->
+      <div class="view" id="view-applications">
+        <div class="panel-head">
+          <div><h2>Üzvlük müraciətləri</h2><p>Müraciətlərə bax, təsdiqlə, rədd et. Təsdiqlənən müraciət avtomatik üzv siyahısına əlavə olunur.</p></div>
+        </div>
+        <div class="tabs" id="appTabs">
+          <button class="tab-btn active" data-status="all">Hamısı</button>
+          <button class="tab-btn" data-status="pending">Gözləyir</button>
+          <button class="tab-btn" data-status="approved">Təsdiqlənib</button>
+          <button class="tab-btn" data-status="waitlisted">Gözləmə siyahısı</button>
+          <button class="tab-btn" data-status="rejected">Rədd edilib</button>
+        </div>
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Ad Soyad</th><th>Şirkət / Vəzifə</th><th>Sektor / Şəhər</th><th>Tarix</th><th>Status</th><th></th></tr></thead>
+              <tbody id="appsBody"></tbody>
+            </table>
+            <div class="empty-state" id="appsEmpty" style="display:none;">Bu statusda müraciət yoxdur.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ---------- MEMBERS ---------- -->
+      <div class="view" id="view-members">
+        <div class="panel-head">
+          <div><h2>Üzvlər</h2><p>Bütün üzvləri idarə et: redaktə et, statusunu dəyiş, sil.</p></div>
+          <div class="actions-row"><a href="#" id="newMemberBtn" class="btn btn-sm">+ Yeni üzv</a></div>
+        </div>
+        <div class="tabs" id="memberTabs">
+          <button class="tab-btn active" data-status="all">Hamısı</button>
+          <button class="tab-btn" data-status="approved">Aktiv</button>
+          <button class="tab-btn" data-status="pending">Gözləyir</button>
+          <button class="tab-btn" data-status="suspended">Dayandırılıb</button>
+        </div>
+        <div style="margin-bottom:16px;"><input type="text" class="search-input" id="memberSearch" placeholder="Ad, sektor və ya şəhərə görə axtar..."></div>
+
+        <div class="card" id="memberFormCard" style="display:none;">
+          <h3 id="memberFormTitle">Yeni üzv</h3>
+          <form id="memberForm">
+            <input type="hidden" id="mb_id">
+            <div class="form-grid">
+              <div class="field full"><label>Ad Soyad *</label><input type="text" id="mb_ad_soyad" required></div>
+              <div class="field"><label>Vəzifə</label><input type="text" id="mb_vezife"></div>
+              <div class="field"><label>Sektor</label><input type="text" id="mb_sahe"></div>
+              <div class="field"><label>Şəhər</label><input type="text" id="mb_seher" value="Bakı"></div>
+              <div class="field">
+                <label>Status</label>
+                <select id="mb_status">
+                  <option value="approved">Aktiv (approved)</option>
+                  <option value="pending">Gözləyir (pending)</option>
+                  <option value="suspended">Dayandırılıb (suspended)</option>
+                </select>
+              </div>
+              <div class="field full"><label>Profil linki</label><input type="text" id="mb_profile_url" placeholder="https://..."></div>
+              <div class="field full"><label>Təklif etdiyi (vergüllə ayır)</label><input type="text" id="mb_offering" placeholder="İnvestisiya, Mentorluq"></div>
+              <div class="field full"><label>Axtardığı (vergüllə ayır)</label><input type="text" id="mb_seeking" placeholder="Tərəfdaş, Müştəri"></div>
             </div>
-            <div class="field"><label>Tarix *</label><input type="date" id="ev_date" required></div>
-            <div class="field"><label>Saat</label><input type="text" id="ev_time" placeholder="09:00"></div>
-            <div class="field"><label>Məkan</label><input type="text" id="ev_location" value="Bakı"></div>
-            <div class="field"><label>İştirakçı limiti</label><input type="number" id="ev_capacity" min="0"></div>
-            <div class="field full"><label>Təsvir</label><input type="text" id="ev_description"></div>
-            <div class="field full"><label>Qeydiyyat linki</label><input type="text" id="ev_link" placeholder="https://..."></div>
-          </div>
-          <div style="display:flex; gap:10px; margin-top:22px;">
-            <button type="submit" class="btn btn-sm" style="width:auto;">Yadda saxla</button>
-            <a href="#" id="cancelFormBtn" class="btn btn-outline btn-sm">Ləğv et</a>
-          </div>
-          <div class="msg" id="formMsg"></div>
-        </form>
-      </div>
+            <div style="display:flex; gap:10px; margin-top:22px;">
+              <button type="submit" class="btn btn-sm" style="width:auto;">Yadda saxla</button>
+              <a href="#" id="cancelMemberFormBtn" class="btn btn-outline btn-sm">Ləğv et</a>
+            </div>
+            <div class="msg" id="memberFormMsg"></div>
+          </form>
+        </div>
 
-      <div class="card">
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr><th>Başlıq</th><th>Kateqoriya</th><th>Tarix</th><th>Məkan</th><th>Limit</th><th>Görünür</th><th></th></tr>
-            </thead>
-            <tbody id="eventsBody"></tbody>
-          </table>
-          <div class="empty-state" id="emptyState" style="display:none;">Hələ tədbir yoxdur.</div>
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Ad Soyad</th><th>Vəzifə / Sektor</th><th>Şəhər</th><th>Status</th><th></th></tr></thead>
+              <tbody id="membersBody"></tbody>
+            </table>
+            <div class="empty-state" id="membersEmpty" style="display:none;">Üzv tapılmadı.</div>
+          </div>
         </div>
       </div>
+
+      <!-- ---------- EVENTS ---------- -->
+      <div class="view" id="view-events">
+        <div class="panel-head">
+          <div>
+            <h2>Tədbirlər</h2>
+            <p>Əlavə et, redaktə et, sil. Vaxtı keçmiş tədbirləri bir kliklə təmizlə.</p>
+          </div>
+          <div class="actions-row">
+            <a href="#" id="cleanExpiredBtn" class="btn btn-danger btn-sm">Vaxtı keçmişləri sil</a>
+            <a href="#" id="newEventBtn" class="btn btn-sm">+ Yeni tədbir</a>
+          </div>
+        </div>
+
+        <div class="card" id="eventFormCard" style="display:none;">
+          <h3 id="formTitle">Yeni tədbir</h3>
+          <form id="eventForm">
+            <input type="hidden" id="ev_id">
+            <div class="form-grid">
+              <div class="field full"><label>Başlıq *</label><input type="text" id="ev_title" required></div>
+              <div class="field">
+                <label>Kateqoriya *</label>
+                <select id="ev_category" required>
+                  <option value="sehər">Səhər yeməyi</option>
+                  <option value="networking">Networking</option>
+                  <option value="investisiya">İnvestisiya</option>
+                  <option value="texnologiya">Texnologiya</option>
+                  <option value="qapali">Qapalı görüş</option>
+                </select>
+              </div>
+              <div class="field"><label>Tarix *</label><input type="date" id="ev_date" required></div>
+              <div class="field"><label>Saat</label><input type="text" id="ev_time" placeholder="09:00"></div>
+              <div class="field"><label>Məkan</label><input type="text" id="ev_location" value="Bakı"></div>
+              <div class="field"><label>İştirakçı limiti</label><input type="number" id="ev_capacity" min="0"></div>
+              <div class="field full"><label>Təsvir</label><input type="text" id="ev_description"></div>
+              <div class="field full"><label>Qeydiyyat linki</label><input type="text" id="ev_link" placeholder="https://..."></div>
+            </div>
+            <div style="display:flex; gap:10px; margin-top:22px;">
+              <button type="submit" class="btn btn-sm" style="width:auto;">Yadda saxla</button>
+              <a href="#" id="cancelFormBtn" class="btn btn-outline btn-sm">Ləğv et</a>
+            </div>
+            <div class="msg" id="formMsg"></div>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Başlıq</th><th>Kateqoriya</th><th>Tarix</th><th>Məkan</th><th>Limit</th><th>Görünür</th><th></th></tr>
+              </thead>
+              <tbody id="eventsBody"></tbody>
+            </table>
+            <div class="empty-state" id="emptyState" style="display:none;">Hələ tədbir yoxdur.</div>
+          </div>
+        </div>
+      </div>
+
     </div>
-  </main>
+  </div>
 </div>
+
+<div class="toast-wrap" id="toastWrap"></div>
 
 <script>
 (function(){
@@ -196,7 +374,12 @@
 
   var supa = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
   var CAT_LABEL = {sehər:'Səhər yeməyi', networking:'Networking', investisiya:'İnvestisiya', texnologiya:'Texnologiya', qapali:'Qapalı görüş'};
+  var APP_STATUS_LABEL = {pending:'Gözləyir', approved:'Təsdiqlənib', rejected:'Rədd edilib', waitlisted:'Gözləmə siyahısı'};
+  var MEMBER_STATUS_LABEL = {approved:'Aktiv', pending:'Gözləyir', suspended:'Dayandırılıb'};
 
+  // ============================================================
+  // ORTAQ KÖMƏKÇİLƏR (bütün bölmələr bunlardan istifadə edir)
+  // ============================================================
   function escapeHtml(s){
     return String(s==null?'':s).replace(/[&<>"']/g, function(c){
       return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
@@ -207,6 +390,49 @@
     el.classList.remove('ok','err');
     el.classList.add('show', ok ? 'ok' : 'err');
   }
+  function fmtDate(iso){
+    if(!iso) return '—';
+    try{ return new Date(iso).toLocaleDateString('az-AZ', {year:'numeric', month:'short', day:'numeric'}); }
+    catch(e){ return String(iso).slice(0,10); }
+  }
+  function badge(status, labelMap){
+    var cls = 'badge badge-' + (status || 'pending');
+    return '<span class="'+cls+'">'+escapeHtml((labelMap[status]||status||'—'))+'</span>';
+  }
+  function toast(text, isErr){
+    var wrap = document.getElementById('toastWrap');
+    var el = document.createElement('div');
+    el.className = 'toast' + (isErr ? ' err' : '');
+    el.textContent = text;
+    wrap.appendChild(el);
+    setTimeout(function(){ el.remove(); }, 3800);
+  }
+  function csvToArray(str){
+    return String(str||'').split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+  }
+
+  // ============================================================
+  // NAVİQASİYA — sidebar-dan bölmə keçidi
+  // ============================================================
+  var VIEWS = ['dashboard','applications','members','events'];
+  function switchView(name){
+    VIEWS.forEach(function(v){
+      document.getElementById('view-'+v).classList.toggle('show', v === name);
+    });
+    document.querySelectorAll('#sidebarNav a').forEach(function(a){
+      a.classList.toggle('active', a.getAttribute('data-view') === name);
+    });
+    if(name === 'dashboard') renderDashboard();
+    if(name === 'applications') renderApplications();
+    if(name === 'members') renderMembers();
+    if(name === 'events') renderEventsTable(currentEvents);
+  }
+  document.querySelectorAll('#sidebarNav a').forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      switchView(a.getAttribute('data-view'));
+    });
+  });
 
   // ---------- AUTH ----------
   document.getElementById('loginForm').addEventListener('submit', function(e){
@@ -234,7 +460,7 @@
       document.getElementById('loginScreen').style.display = 'none';
       document.getElementById('app').classList.add('show');
       document.getElementById('whoEmail').textContent = user.email;
-      loadEvents();
+      initApp();
     });
   }
 
@@ -248,13 +474,309 @@
     if(res.data.session){ checkAdminAndEnter(res.data.session.user); }
   });
 
-  // ---------- EVENTS LIST ----------
+  // hər bölmə öz məlumatını yükləyir, sonra dashboard hamısını ümumiləşdirir
+  function initApp(){
+    loadEvents();
+    loadApplications();
+    loadMembers();
+  }
+
+  // ============================================================
+  // DASHBOARD
+  // ============================================================
+  function renderDashboard(){
+    var pending = currentApplications.filter(function(a){ return a.status === 'pending'; }).length;
+    var approvedMembers = currentMembers.filter(function(m){ return m.status === 'approved'; }).length;
+    var today = new Date().toISOString().slice(0,10);
+    var upcoming = currentEvents.filter(function(ev){ return ev.event_date >= today; }).length;
+
+    document.getElementById('statPending').textContent = pending;
+    document.getElementById('statMembers').textContent = approvedMembers;
+    document.getElementById('statEvents').textContent = currentEvents.length;
+    document.getElementById('statUpcoming').textContent = upcoming;
+
+    var recent = currentApplications.slice(0, 6);
+    var body = document.getElementById('dashRecentApps');
+    var empty = document.getElementById('dashEmpty');
+    if(!recent.length){ body.innerHTML = ''; empty.style.display = 'block'; return; }
+    empty.style.display = 'none';
+    body.innerHTML = recent.map(function(a){
+      return '<tr><td><b>'+escapeHtml(a.ad+' '+a.soyad)+'</b></td>'+
+        '<td>'+escapeHtml(a.sirket||'—')+'</td>'+
+        '<td>'+fmtDate(a.created_at)+'</td>'+
+        '<td>'+badge(a.status, APP_STATUS_LABEL)+'</td></tr>';
+    }).join('');
+  }
+  function refreshNavCounts(){
+    document.getElementById('navAppCount').textContent =
+      currentApplications.filter(function(a){ return a.status === 'pending'; }).length;
+    document.getElementById('navMemberCount').textContent = currentMembers.length;
+    document.getElementById('navEventCount').textContent = currentEvents.length;
+  }
+
+  // ============================================================
+  // MÜRACİƏTLƏR (applications)
+  // ============================================================
+  var currentApplications = [];
+  var appFilter = 'all';
+
+  function loadApplications(){
+    supa.from('applications').select('*').order('created_at', {ascending:false}).then(function(res){
+      if(res.error){ toast('Müraciətlər yüklənmədi: ' + res.error.message, true); return; }
+      currentApplications = res.data || [];
+      refreshNavCounts();
+      renderApplications();
+      renderDashboard();
+    });
+  }
+
+  document.querySelectorAll('#appTabs .tab-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('#appTabs .tab-btn').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      appFilter = btn.getAttribute('data-status');
+      renderApplications();
+    });
+  });
+
+  function renderApplications(){
+    var list = appFilter === 'all' ? currentApplications : currentApplications.filter(function(a){ return a.status === appFilter; });
+    var body = document.getElementById('appsBody');
+    var empty = document.getElementById('appsEmpty');
+    if(!list.length){ body.innerHTML = ''; empty.style.display = 'block'; return; }
+    empty.style.display = 'none';
+
+    body.innerHTML = list.map(function(a){
+      return '' +
+      '<tr data-id="'+a.id+'">'+
+        '<td><b>'+escapeHtml(a.ad+' '+a.soyad)+'</b><div style="color:var(--muted); font-size:12px; margin-top:2px;">'+escapeHtml(a.email||'')+'</div></td>'+
+        '<td>'+escapeHtml(a.sirket||'—')+'<div style="color:var(--muted); font-size:12px;">'+escapeHtml(a.vezife||'')+'</div></td>'+
+        '<td>'+escapeHtml(a.sahe||'—')+'<div style="color:var(--muted); font-size:12px;">'+escapeHtml(a.seher||'')+'</div></td>'+
+        '<td>'+fmtDate(a.created_at)+'</td>'+
+        '<td>'+badge(a.status, APP_STATUS_LABEL)+'</td>'+
+        '<td><div class="row-actions">'+
+          '<a href="#" class="btn btn-outline btn-sm app-detail-btn">Ətraflı</a>'+
+        '</div></td>'+
+      '</tr>'+
+      '<tr class="detail-row app-detail" data-detail-for="'+a.id+'" style="display:none;"><td colspan="6">'+
+        '<div class="detail-grid">'+
+          '<div><b>Telefon</b><span>'+escapeHtml(a.telefon||'—')+'</span></div>'+
+          '<div><b>Website</b><span>'+escapeHtml(a.veb||'—')+'</span></div>'+
+          '<div><b>Sosial media</b><span>'+escapeHtml(a.social||'—')+'</span></div>'+
+          '<div><b>Təklif etdiyi</b><span>'+escapeHtml(a.teklif||'—')+'</span></div>'+
+          '<div><b>Axtardığı</b><span>'+escapeHtml(a.axtaris||'—')+'</span></div>'+
+          '<div style="grid-column:1/-1;"><b>Niyə qoşulmaq istəyir</b><span>'+escapeHtml(a.niye||'—')+'</span></div>'+
+        '</div>'+
+        '<div class="row-actions" style="padding:0 4px 6px;">'+
+          '<a href="#" class="btn btn-sm approve-btn" style="width:auto;">Təsdiqlə</a>'+
+          '<a href="#" class="btn btn-outline btn-sm waitlist-btn">Gözləmə siyahısına al</a>'+
+          '<a href="#" class="btn btn-danger btn-sm reject-btn">Rədd et</a>'+
+          '<a href="#" class="btn btn-danger btn-sm del-app-btn">Sil</a>'+
+        '</div>'+
+      '</td></tr>';
+    }).join('');
+
+    body.querySelectorAll('.app-detail-btn').forEach(function(btn){
+      btn.addEventListener('click', function(e){
+        e.preventDefault();
+        var id = btn.closest('tr').getAttribute('data-id');
+        var row = body.querySelector('.app-detail[data-detail-for="'+id+'"]');
+        row.style.display = row.style.display === 'none' ? 'table-row' : 'none';
+      });
+    });
+    body.querySelectorAll('.approve-btn').forEach(function(btn){
+      btn.addEventListener('click', function(e){ e.preventDefault(); setAppStatus(getAppId(btn), 'approved'); });
+    });
+    body.querySelectorAll('.waitlist-btn').forEach(function(btn){
+      btn.addEventListener('click', function(e){ e.preventDefault(); setAppStatus(getAppId(btn), 'waitlisted'); });
+    });
+    body.querySelectorAll('.reject-btn').forEach(function(btn){
+      btn.addEventListener('click', function(e){ e.preventDefault(); setAppStatus(getAppId(btn), 'rejected'); });
+    });
+    body.querySelectorAll('.del-app-btn').forEach(function(btn){
+      btn.addEventListener('click', function(e){
+        e.preventDefault();
+        var id = getAppId(btn);
+        if(!confirm('Bu müraciəti silmək istədiyinə əminsən?')) return;
+        supa.from('applications').delete().eq('id', id).then(function(res){
+          if(res.error){ toast('Silinmədi: ' + res.error.message, true); return; }
+          toast('Müraciət silindi.');
+          loadApplications();
+        });
+      });
+    });
+
+    function getAppId(btn){ return btn.closest('.app-detail').getAttribute('data-detail-for'); }
+  }
+
+  function setAppStatus(id, status){
+    supa.from('applications').update({status:status}).eq('id', id).then(function(res){
+      if(res.error){ toast('Xəta: ' + res.error.message, true); return; }
+      // Təsdiqlənəndə müraciəti avtomatik üzv siyahısına köçür (email ilə dublikat yoxlanılır)
+      if(status === 'approved'){
+        var app = currentApplications.find(function(a){ return a.id === id; });
+        promoteApplicationToMember(app);
+      }
+      toast('Status yeniləndi: ' + (APP_STATUS_LABEL[status]||status));
+      loadApplications();
+    });
+  }
+
+  function promoteApplicationToMember(app){
+    if(!app) return;
+    var alreadyMember = currentMembers.some(function(m){
+      return (m.ad_soyad||'').trim().toLowerCase() === (app.ad+' '+app.soyad).trim().toLowerCase();
+    });
+    if(alreadyMember) return;
+    supa.from('members').insert([{
+      ad_soyad: (app.ad+' '+app.soyad).trim(),
+      vezife: app.vezife || null,
+      sahe: app.sahe || null,
+      seher: app.seher || null,
+      status: 'approved',
+      offering: app.teklif ? csvToArray(app.teklif) : [],
+      seeking: app.axtaris ? csvToArray(app.axtaris) : []
+    }]).then(function(res){
+      if(res.error){ toast('Üzv avtomatik yaradıla bilmədi: ' + res.error.message, true); return; }
+      loadMembers();
+    });
+  }
+
+  // ============================================================
+  // ÜZVLƏR (members)
+  // ============================================================
+  var currentMembers = [];
+  var memberFilter = 'all';
+  var memberSearchTerm = '';
+
+  function loadMembers(){
+    supa.from('members').select('*').order('created_at', {ascending:false}).then(function(res){
+      if(res.error){ toast('Üzvlər yüklənmədi: ' + res.error.message, true); return; }
+      currentMembers = res.data || [];
+      refreshNavCounts();
+      renderMembers();
+      renderDashboard();
+    });
+  }
+
+  document.querySelectorAll('#memberTabs .tab-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('#memberTabs .tab-btn').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      memberFilter = btn.getAttribute('data-status');
+      renderMembers();
+    });
+  });
+  document.getElementById('memberSearch').addEventListener('input', function(e){
+    memberSearchTerm = e.target.value.trim().toLowerCase();
+    renderMembers();
+  });
+
+  function renderMembers(){
+    var list = memberFilter === 'all' ? currentMembers : currentMembers.filter(function(m){ return m.status === memberFilter; });
+    if(memberSearchTerm){
+      list = list.filter(function(m){
+        return [m.ad_soyad, m.sahe, m.seher, m.vezife].join(' ').toLowerCase().indexOf(memberSearchTerm) !== -1;
+      });
+    }
+    var body = document.getElementById('membersBody');
+    var empty = document.getElementById('membersEmpty');
+    if(!list.length){ body.innerHTML = ''; empty.style.display = 'block'; return; }
+    empty.style.display = 'none';
+
+    body.innerHTML = list.map(function(m){
+      return '<tr data-id="'+m.id+'">'+
+        '<td><b>'+escapeHtml(m.ad_soyad)+'</b></td>'+
+        '<td>'+escapeHtml(m.vezife||'—')+'<div style="color:var(--muted); font-size:12px;">'+escapeHtml(m.sahe||'')+'</div></td>'+
+        '<td>'+escapeHtml(m.seher||'—')+'</td>'+
+        '<td>'+badge(m.status, MEMBER_STATUS_LABEL)+'</td>'+
+        '<td><div class="row-actions">'+
+          '<a href="#" class="btn btn-outline btn-sm mb-edit-btn">Redaktə</a>'+
+          '<a href="#" class="btn btn-danger btn-sm mb-del-btn">Sil</a>'+
+        '</div></td></tr>';
+    }).join('');
+
+    body.querySelectorAll('.mb-edit-btn').forEach(function(btn){
+      btn.addEventListener('click', function(e){
+        e.preventDefault();
+        var id = btn.closest('tr').getAttribute('data-id');
+        openMemberForm(currentMembers.find(function(m){ return m.id === id; }));
+      });
+    });
+    body.querySelectorAll('.mb-del-btn').forEach(function(btn){
+      btn.addEventListener('click', function(e){
+        e.preventDefault();
+        var id = btn.closest('tr').getAttribute('data-id');
+        var m = currentMembers.find(function(x){ return x.id === id; });
+        if(!confirm('"'+m.ad_soyad+'" üzvünü silmək istədiyinə əminsən?')) return;
+        supa.from('members').delete().eq('id', id).then(function(res){
+          if(res.error){ toast('Silinmədi: ' + res.error.message, true); return; }
+          toast('Üzv silindi.');
+          loadMembers();
+        });
+      });
+    });
+  }
+
+  var memberFormCard = document.getElementById('memberFormCard');
+  var memberForm = document.getElementById('memberForm');
+
+  document.getElementById('newMemberBtn').addEventListener('click', function(e){
+    e.preventDefault(); openMemberForm(null);
+  });
+  document.getElementById('cancelMemberFormBtn').addEventListener('click', function(e){
+    e.preventDefault(); memberFormCard.style.display = 'none';
+  });
+
+  function openMemberForm(m){
+    document.getElementById('memberFormTitle').textContent = m ? 'Üzvü redaktə et' : 'Yeni üzv';
+    document.getElementById('mb_id').value = m ? m.id : '';
+    document.getElementById('mb_ad_soyad').value = m ? m.ad_soyad : '';
+    document.getElementById('mb_vezife').value = m ? (m.vezife||'') : '';
+    document.getElementById('mb_sahe').value = m ? (m.sahe||'') : '';
+    document.getElementById('mb_seher').value = m ? (m.seher||'Bakı') : 'Bakı';
+    document.getElementById('mb_status').value = m ? (m.status||'approved') : 'approved';
+    document.getElementById('mb_profile_url').value = m ? (m.profile_url||'') : '';
+    document.getElementById('mb_offering').value = m && m.offering ? m.offering.join(', ') : '';
+    document.getElementById('mb_seeking').value = m && m.seeking ? m.seeking.join(', ') : '';
+    document.getElementById('memberFormMsg').classList.remove('show');
+    memberFormCard.style.display = 'block';
+    memberFormCard.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  memberForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    var id = document.getElementById('mb_id').value;
+    var payload = {
+      ad_soyad: document.getElementById('mb_ad_soyad').value.trim(),
+      vezife: document.getElementById('mb_vezife').value.trim() || null,
+      sahe: document.getElementById('mb_sahe').value.trim() || null,
+      seher: document.getElementById('mb_seher').value.trim() || null,
+      status: document.getElementById('mb_status').value,
+      profile_url: document.getElementById('mb_profile_url').value.trim() || null,
+      offering: csvToArray(document.getElementById('mb_offering').value),
+      seeking: csvToArray(document.getElementById('mb_seeking').value)
+    };
+    var req = id ? supa.from('members').update(payload).eq('id', id) : supa.from('members').insert([payload]);
+    req.then(function(res){
+      if(res.error){ showMsg(document.getElementById('memberFormMsg'), 'Xəta: ' + res.error.message, false); return; }
+      memberFormCard.style.display = 'none';
+      toast(id ? 'Üzv yeniləndi.' : 'Üzv əlavə edildi.');
+      loadMembers();
+    });
+  });
+
+  // ============================================================
+  // TƏDBİRLƏR (events) — mövcud funksionallıq qorunub, yalnız görünüş bölməyə köçürülüb
+  // ============================================================
   var currentEvents = [];
   function loadEvents(){
     supa.from('events').select('*').order('event_date', {ascending:true}).then(function(res){
-      if(res.error){ alert('Tədbirlər yüklənmədi: ' + res.error.message); return; }
-      currentEvents = res.data;
+      if(res.error){ toast('Tədbirlər yüklənmədi: ' + res.error.message, true); return; }
+      currentEvents = res.data || [];
+      refreshNavCounts();
       renderEventsTable(currentEvents);
+      renderDashboard();
     });
   }
 
@@ -294,7 +816,8 @@
         var ev = currentEvents.find(function(x){ return x.id === id; });
         if(!confirm('"'+ev.title+'" tədbirini silmək istədiyinə əminsən?')) return;
         supa.from('events').delete().eq('id', id).then(function(res){
-          if(res.error){ alert('Silinmədi: ' + res.error.message); return; }
+          if(res.error){ toast('Silinmədi: ' + res.error.message, true); return; }
+          toast('Tədbir silindi.');
           loadEvents();
         });
       });
@@ -346,6 +869,7 @@
     req.then(function(res){
       if(res.error){ showMsg(document.getElementById('formMsg'), 'Xəta: ' + res.error.message, false); return; }
       formCard.style.display = 'none';
+      toast(id ? 'Tədbir yeniləndi.' : 'Tədbir əlavə edildi.');
       loadEvents();
     });
   });
@@ -355,10 +879,11 @@
     e.preventDefault();
     var today = new Date().toISOString().slice(0,10);
     var expiredCount = currentEvents.filter(function(ev){ return ev.event_date < today; }).length;
-    if(!expiredCount){ alert('Vaxtı keçmiş tədbir yoxdur.'); return; }
+    if(!expiredCount){ toast('Vaxtı keçmiş tədbir yoxdur.'); return; }
     if(!confirm(expiredCount + ' vaxtı keçmiş tədbir silinəcək. Davam edim?')) return;
     supa.from('events').delete().lt('event_date', today).then(function(res){
-      if(res.error){ alert('Silinmədi: ' + res.error.message); return; }
+      if(res.error){ toast('Silinmədi: ' + res.error.message, true); return; }
+      toast('Vaxtı keçmiş tədbirlər silindi.');
       loadEvents();
     });
   });
