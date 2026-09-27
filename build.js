@@ -1,3 +1,8 @@
+// Netlify build zamanı işə düşür.
+// Environment variable-ları (Site settings → Environment variables) oxuyub
+// index.html və admin.html-dəki __SUPABASE_URL__ / __SUPABASE_ANON_KEY__
+// placeholder-lərini əvəz edir, nəticəni dist/ qovluğuna yazır.
+
 const fs = require('fs');
 const path = require('path');
 

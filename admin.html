@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Admin — Business Circle Azerbaijan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,340;9..144,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{
+    --bg:#080B12; --panel:#0E1420; --panel-2:#121A28; --line:#212C40;
+    --text:#EEF0F5; --muted:#8892A6; --muted-2:#5C6478;
+    --gold:#C6A664; --gold-dim:#8B7642; --danger:#C96A5A;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; line-height:1.5;
+    min-height:100vh; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  h1,h2,h3{font-family:'Fraunces',serif; font-weight:500;}
+  a{color:inherit;}
+  .wrap{max-width:980px; margin:0 auto; padding:0 28px;}
+  @media(max-width:640px){.wrap{padding:0 18px;}}
+
+  /* login */
+  #loginScreen{min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px;}
+  .login-box{width:100%; max-width:360px; border:1px solid var(--line); padding:40px 32px; background:var(--panel);}
+  .login-box h1{font-size:22px; color:#fff; margin-bottom:6px;}
+  .login-box p{color:var(--muted); font-size:13.5px; margin-bottom:28px;}
+  .field{display:flex; flex-direction:column; gap:8px; margin-bottom:18px;}
+  .field label{font-size:12.5px; color:var(--muted);}
+  .field input{
+    background:var(--panel-2); border:1px solid var(--line); color:var(--text);
+    padding:11px 13px; font-size:14.5px; border-radius:2px; font-family:'Inter',sans-serif;
+  }
+  .field input:focus{outline:none; border-color:var(--gold);}
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    padding:11px 20px; border-radius:2px; font-size:14px; font-weight:500;
+    cursor:pointer; border:1px solid transparent; transition:all .2s; background:var(--gold); color:#0A0D14; width:100%;
+  }
+  .btn:hover{background:#D8BA80;}
+  .btn:disabled{opacity:.5; cursor:default;}
+  .btn-outline{background:transparent; border-color:var(--line); color:var(--text); width:auto;}
+  .btn-outline:hover{border-color:var(--gold); color:var(--gold);}
+  .btn-danger{background:transparent; border-color:var(--danger); color:var(--danger); width:auto;}
+  .btn-danger:hover{background:var(--danger); color:#fff;}
+  .btn-sm{padding:7px 14px; font-size:12.5px;}
+  .msg{font-size:13px; margin-top:14px; display:none;}
+  .msg.show{display:block;}
+  .msg.err{color:var(--danger);}
+  .msg.ok{color:var(--gold);}
+
+  /* app shell */
+  #app{display:none;}
+  #app.show{display:block;}
+  header{
+    border-bottom:1px solid var(--line); padding:22px 0; display:flex; justify-content:space-between; align-items:center;
+    position:sticky; top:0; background:rgba(8,11,18,0.92); backdrop-filter:blur(10px); z-index:10;
+    padding-top:calc(22px + env(safe-area-inset-top,0px));
+  }
+  header .brand b{font-size:16px;}
+  header .brand span{display:block; font-size:11px; color:var(--gold); letter-spacing:0.14em; margin-top:2px;}
+  header .who{font-size:13px; color:var(--muted); display:flex; align-items:center; gap:16px;}
+
+  main{padding:44px 0 100px;}
+  .panel-head{display:flex; justify-content:space-between; align-items:flex-end; gap:16px; margin-bottom:28px; flex-wrap:wrap;}
+  .panel-head h2{font-size:22px; color:#fff;}
+  .panel-head p{color:var(--muted); font-size:13.5px; margin-top:6px;}
+  .actions-row{display:flex; gap:10px; flex-wrap:wrap;}
+
+  .card{border:1px solid var(--line); background:var(--panel); padding:28px; margin-bottom:20px;}
+  .card h3{font-size:16px; color:#fff; margin-bottom:18px;}
+  .form-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  @media(max-width:640px){.form-grid{grid-template-columns:1fr;}}
+  .form-grid .full{grid-column:1/-1;}
+  select{
+    background:var(--panel-2); border:1px solid var(--line); color:var(--text);
+    padding:11px 13px; font-size:14px; border-radius:2px; font-family:'Inter',sans-serif; width:100%;
+  }
+
+  table{width:100%; border-collapse:collapse; font-size:14px;}
+  th{text-align:left; color:var(--muted-2); font-size:11.5px; letter-spacing:0.05em; padding:10px 12px; border-bottom:1px solid var(--line);}
+  td{padding:14px 12px; border-bottom:1px solid var(--line); vertical-align:top;}
+  tr.expired td{opacity:.45;}
+  .cat-badge{font-size:11px; color:var(--gold); border:1px solid var(--gold-dim); padding:3px 8px; display:inline-block;}
+  .row-actions{display:flex; gap:8px;}
+  .empty-state{color:var(--muted); font-size:14px; padding:40px 0; text-align:center;}
+  .table-wrap{overflow-x:auto;}
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<div id="loginScreen">
+  <div class="login-box">
+    <h1>Admin Panel</h1>
+    <p>Business Circle Azerbaijan — tədbirlərin idarə edilməsi</p>
+    <form id="loginForm">
+      <div class="field"><label>Email</label><input type="email" id="loginEmail" required autocomplete="username"></div>
+      <div class="field"><label>Şifrə</label><input type="password" id="loginPass" required autocomplete="current-password"></div>
+      <button type="submit" class="btn" id="loginBtn">Daxil ol</button>
+      <div class="msg" id="loginMsg"></div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ APP ============ -->
+<div id="app">
+  <header>
+    <div class="wrap" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+      <div class="brand"><b>BUSINESS CIRCLE</b><span>ADMIN</span></div>
+      <div class="who"><span id="whoEmail"></span><a href="#" id="logoutBtn" class="btn btn-outline btn-sm">Çıxış</a></div>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <div class="panel-head">
+        <div>
+          <h2>Tədbirlər</h2>
+          <p>Əlavə et, redaktə et, sil. Vaxtı keçmiş tədbirləri bir kliklə təmizlə.</p>
+        </div>
+        <div class="actions-row">
+          <a href="#" id="cleanExpiredBtn" class="btn btn-danger btn-sm">Vaxtı keçmişləri sil</a>
+          <a href="#" id="newEventBtn" class="btn btn-sm">+ Yeni tədbir</a>
+        </div>
+      </div>
+
+      <div class="card" id="eventFormCard" style="display:none;">
+        <h3 id="formTitle">Yeni tədbir</h3>
+        <form id="eventForm">
+          <input type="hidden" id="ev_id">
+          <div class="form-grid">
+            <div class="field full"><label>Başlıq *</label><input type="text" id="ev_title" required></div>
+            <div class="field">
+              <label>Kateqoriya *</label>
+              <select id="ev_category" required>
+                <option value="sehər">Səhər yeməyi</option>
+                <option value="networking">Networking</option>
+                <option value="investisiya">İnvestisiya</option>
+                <option value="texnologiya">Texnologiya</option>
+                <option value="qapali">Qapalı görüş</option>
+              </select>
+            </div>
+            <div class="field"><label>Tarix *</label><input type="date" id="ev_date" required></div>
+            <div class="field"><label>Saat</label><input type="text" id="ev_time" placeholder="09:00"></div>
+            <div class="field"><label>Məkan</label><input type="text" id="ev_location" value="Bakı"></div>
+            <div class="field"><label>İştirakçı limiti</label><input type="number" id="ev_capacity" min="0"></div>
+            <div class="field full"><label>Təsvir</label><input type="text" id="ev_description"></div>
+            <div class="field full"><label>Qeydiyyat linki</label><input type="text" id="ev_link" placeholder="https://..."></div>
+          </div>
+          <div style="display:flex; gap:10px; margin-top:22px;">
+            <button type="submit" class="btn btn-sm" style="width:auto;">Yadda saxla</button>
+            <a href="#" id="cancelFormBtn" class="btn btn-outline btn-sm">Ləğv et</a>
+          </div>
+          <div class="msg" id="formMsg"></div>
+        </form>
+      </div>
+
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Başlıq</th><th>Kateqoriya</th><th>Tarix</th><th>Məkan</th><th>Limit</th><th>Görünür</th><th></th></tr>
+            </thead>
+            <tbody id="eventsBody"></tbody>
+          </table>
+          <div class="empty-state" id="emptyState" style="display:none;">Hələ tədbir yoxdur.</div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+(function(){
+  // ====== BACKEND CONFIG — index.html ilə EYNİ dəyərləri yaz ======
+  var CONFIG = {
+    SUPABASE_URL: '__SUPABASE_URL__',
+    SUPABASE_ANON_KEY: '__SUPABASE_ANON_KEY__'
+  };
+
+  if(!CONFIG.SUPABASE_URL || !CONFIG.SUPABASE_ANON_KEY){
+    document.getElementById('loginMsg').textContent = 'Backend qoşulmayıb — CONFIG.SUPABASE_URL / SUPABASE_ANON_KEY doldurulmalıdır.';
+    document.getElementById('loginMsg').classList.add('show','err');
+    document.getElementById('loginBtn').disabled = true;
+    return;
+  }
+
+  var supa = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+  var CAT_LABEL = {sehər:'Səhər yeməyi', networking:'Networking', investisiya:'İnvestisiya', texnologiya:'Texnologiya', qapali:'Qapalı görüş'};
+
+  function escapeHtml(s){
+    return String(s==null?'':s).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+  function showMsg(el, text, ok){
+    el.textContent = text;
+    el.classList.remove('ok','err');
+    el.classList.add('show', ok ? 'ok' : 'err');
+  }
+
+  // ---------- AUTH ----------
+  document.getElementById('loginForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var btn = document.getElementById('loginBtn');
+    var msg = document.getElementById('loginMsg');
+    btn.disabled = true; btn.textContent = 'Yoxlanılır...';
+    supa.auth.signInWithPassword({
+      email: document.getElementById('loginEmail').value.trim(),
+      password: document.getElementById('loginPass').value
+    }).then(function(res){
+      btn.disabled = false; btn.textContent = 'Daxil ol';
+      if(res.error){ showMsg(msg, 'Giriş uğursuz: ' + res.error.message, false); return; }
+      checkAdminAndEnter(res.data.user);
+    });
+  });
+
+  function checkAdminAndEnter(user){
+    supa.from('admins').select('id, ad').eq('id', user.id).maybeSingle().then(function(res){
+      if(res.error || !res.data){
+        showMsg(document.getElementById('loginMsg'), 'Bu hesab admin siyahısında deyil. (admins cədvəlinə əlavə et)', false);
+        supa.auth.signOut();
+        return;
+      }
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('app').classList.add('show');
+      document.getElementById('whoEmail').textContent = user.email;
+      loadEvents();
+    });
+  }
+
+  document.getElementById('logoutBtn').addEventListener('click', function(e){
+    e.preventDefault();
+    supa.auth.signOut().then(function(){ location.reload(); });
+  });
+
+  // giriş vəziyyəti səhifə yenilənəndə də qorunsun
+  supa.auth.getSession().then(function(res){
+    if(res.data.session){ checkAdminAndEnter(res.data.session.user); }
+  });
+
+  // ---------- EVENTS LIST ----------
+  var currentEvents = [];
+  function loadEvents(){
+    supa.from('events').select('*').order('event_date', {ascending:true}).then(function(res){
+      if(res.error){ alert('Tədbirlər yüklənmədi: ' + res.error.message); return; }
+      currentEvents = res.data;
+      renderEventsTable(currentEvents);
+    });
+  }
+
+  function renderEventsTable(list){
+    var body = document.getElementById('eventsBody');
+    var empty = document.getElementById('emptyState');
+    if(!list.length){ body.innerHTML = ''; empty.style.display = 'block'; return; }
+    empty.style.display = 'none';
+    var today = new Date().toISOString().slice(0,10);
+    body.innerHTML = list.map(function(ev){
+      var expired = ev.event_date < today;
+      return '<tr class="'+(expired?'expired':'')+'" data-id="'+ev.id+'">'+
+        '<td><b>'+escapeHtml(ev.title)+'</b></td>'+
+        '<td><span class="cat-badge">'+(CAT_LABEL[ev.category]||ev.category)+'</span></td>'+
+        '<td>'+ev.event_date+(ev.event_time?' · '+escapeHtml(ev.event_time):'')+(expired?' <span style="color:var(--danger);">(keçib)</span>':'')+'</td>'+
+        '<td>'+escapeHtml(ev.location||'')+'</td>'+
+        '<td>'+(ev.capacity||'—')+'</td>'+
+        '<td>'+(ev.published ? 'Bəli' : 'Yox')+'</td>'+
+        '<td><div class="row-actions">'+
+          '<a href="#" class="btn btn-outline btn-sm edit-btn">Redaktə</a>'+
+          '<a href="#" class="btn btn-danger btn-sm del-btn">Sil</a>'+
+        '</div></td></tr>';
+    }).join('');
+
+    body.querySelectorAll('.edit-btn').forEach(function(btn){
+      btn.addEventListener('click', function(e){
+        e.preventDefault();
+        var id = btn.closest('tr').getAttribute('data-id');
+        var ev = currentEvents.find(function(x){ return x.id === id; });
+        openForm(ev);
+      });
+    });
+    body.querySelectorAll('.del-btn').forEach(function(btn){
+      btn.addEventListener('click', function(e){
+        e.preventDefault();
+        var id = btn.closest('tr').getAttribute('data-id');
+        var ev = currentEvents.find(function(x){ return x.id === id; });
+        if(!confirm('"'+ev.title+'" tədbirini silmək istədiyinə əminsən?')) return;
+        supa.from('events').delete().eq('id', id).then(function(res){
+          if(res.error){ alert('Silinmədi: ' + res.error.message); return; }
+          loadEvents();
+        });
+      });
+    });
+  }
+
+  // ---------- ADD / EDIT FORM ----------
+  var formCard = document.getElementById('eventFormCard');
+  var eventForm = document.getElementById('eventForm');
+
+  document.getElementById('newEventBtn').addEventListener('click', function(e){
+    e.preventDefault(); openForm(null);
+  });
+  document.getElementById('cancelFormBtn').addEventListener('click', function(e){
+    e.preventDefault(); formCard.style.display = 'none';
+  });
+
+  function openForm(ev){
+    document.getElementById('formTitle').textContent = ev ? 'Tədbiri redaktə et' : 'Yeni tədbir';
+    document.getElementById('ev_id').value = ev ? ev.id : '';
+    document.getElementById('ev_title').value = ev ? ev.title : '';
+    document.getElementById('ev_category').value = ev ? ev.category : 'networking';
+    document.getElementById('ev_date').value = ev ? ev.event_date : '';
+    document.getElementById('ev_time').value = ev ? (ev.event_time||'') : '';
+    document.getElementById('ev_location').value = ev ? (ev.location||'Bakı') : 'Bakı';
+    document.getElementById('ev_capacity').value = ev ? (ev.capacity||'') : '';
+    document.getElementById('ev_description').value = ev ? (ev.description||'') : '';
+    document.getElementById('ev_link').value = ev ? (ev.link||'') : '';
+    document.getElementById('formMsg').classList.remove('show');
+    formCard.style.display = 'block';
+    formCard.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  eventForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    var id = document.getElementById('ev_id').value;
+    var payload = {
+      title: document.getElementById('ev_title').value.trim(),
+      category: document.getElementById('ev_category').value,
+      event_date: document.getElementById('ev_date').value,
+      event_time: document.getElementById('ev_time').value.trim(),
+      location: document.getElementById('ev_location').value.trim(),
+      capacity: document.getElementById('ev_capacity').value ? parseInt(document.getElementById('ev_capacity').value, 10) : null,
+      description: document.getElementById('ev_description').value.trim(),
+      link: document.getElementById('ev_link').value.trim(),
+      published: true
+    };
+    var req = id ? supa.from('events').update(payload).eq('id', id) : supa.from('events').insert([payload]);
+    req.then(function(res){
+      if(res.error){ showMsg(document.getElementById('formMsg'), 'Xəta: ' + res.error.message, false); return; }
+      formCard.style.display = 'none';
+      loadEvents();
+    });
+  });
+
+  // ---------- CLEAN EXPIRED ----------
+  document.getElementById('cleanExpiredBtn').addEventListener('click', function(e){
+    e.preventDefault();
+    var today = new Date().toISOString().slice(0,10);
+    var expiredCount = currentEvents.filter(function(ev){ return ev.event_date < today; }).length;
+    if(!expiredCount){ alert('Vaxtı keçmiş tədbir yoxdur.'); return; }
+    if(!confirm(expiredCount + ' vaxtı keçmiş tədbir silinəcək. Davam edim?')) return;
+    supa.from('events').delete().lt('event_date', today).then(function(res){
+      if(res.error){ alert('Silinmədi: ' + res.error.message); return; }
+      loadEvents();
+    });
+  });
+})();
+</script>
+</body>
+</html>

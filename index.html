@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Business Circle Azerbaijan — Doğru insanlar. Doğru əlaqələr.</title>
+<meta name="description" content="Azərbaycanın sahibkarlarını, rəhbərlərini və investorlarını bir araya gətirən qapalı biznes icması. Səhər yeməkləri, tədbirlər və business matching.">
+<meta property="og:title" content="Business Circle Azerbaijan">
+<meta property="og:description" content="Uğurlu insanların təsadüfi tanışlıqlarını real biznes əlaqələrinə çevirən icma.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,340;9..144,420;9..144,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{
+    --bg:#080B12;
+    --panel:#0E1420;
+    --panel-2:#121A28;
+    --line:#212C40;
+    --text:#EEF0F5;
+    --muted:#8892A6;
+    --muted-2:#5C6478;
+    --gold:#C6A664;
+    --gold-dim:#8B7642;
+    font-size:16px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth; scroll-padding-top:88px;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter', -apple-system, sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  img{max-width:100%; display:block;}
+  a{color:inherit; text-decoration:none;}
+  h1,h2,h3,h4{font-family:'Fraunces', Georgia, serif; font-weight:500; letter-spacing:-0.01em;}
+  .wrap{max-width:1180px; margin:0 auto; padding:0 32px;}
+  @media(max-width:640px){.wrap{padding:0 20px;}}
+
+  /* ---------- Nav ---------- */
+  header{
+    position:sticky; top:0; z-index:100;
+    padding-top:env(safe-area-inset-top,0px);
+    background:rgba(8,11,18,0.72);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    border-bottom:1px solid transparent;
+    transition:border-color .35s ease, background .35s ease;
+  }
+  header.scrolled{border-bottom-color:var(--line); background:rgba(8,11,18,0.92);}
+  nav{display:flex; align-items:center; justify-content:space-between; padding:20px 32px; max-width:1180px; margin:0 auto;}
+  @media(max-width:640px){nav{padding:16px 20px;}}
+  .logo{display:flex; flex-direction:column; line-height:1.05;}
+  .logo b{font-family:'Fraunces',serif; font-size:17px; font-weight:500; letter-spacing:0.04em;}
+  .logo span{font-size:10.5px; color:var(--gold); letter-spacing:0.22em; margin-top:3px;}
+  .navlinks{display:flex; gap:34px; font-size:14.5px; color:var(--muted);}
+  .navlinks a{transition:color .2s;}
+  .navlinks a:hover{color:var(--text);}
+  .nav-cta{display:flex; align-items:center; gap:22px;}
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center;
+    padding:12px 24px; border-radius:2px; font-size:14px; font-weight:500;
+    cursor:pointer; border:1px solid transparent; transition:all .25s ease; white-space:nowrap;
+  }
+  .btn-gold{background:var(--gold); color:#0A0D14;}
+  .btn-gold:hover{background:#D8BA80;}
+  .btn-outline{border-color:var(--line); color:var(--text);}
+  .btn-outline:hover{border-color:var(--gold); color:var(--gold);}
+  .burger{display:none; flex-direction:column; gap:5px; cursor:pointer; padding:8px;}
+  .burger span{width:22px; height:1.5px; background:var(--text); transition:.3s;}
+  @media(max-width:900px){
+    .navlinks{display:none;}
+    .nav-cta .btn-outline{display:none;}
+    .burger{display:flex;}
+  }
+  #mobilemenu{
+    display:none; flex-direction:column; gap:2px; padding:8px 20px 24px;
+    border-bottom:1px solid var(--line); background:var(--bg);
+  }
+  #mobilemenu.open{display:flex;}
+  #mobilemenu a{padding:13px 4px; color:var(--muted); border-bottom:1px solid var(--panel);font-size:15px;}
+  #mobilemenu a:last-of-type{border-bottom:none;}
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative; min-height:92vh; display:flex; align-items:center;
+    padding:140px 0 90px;
+    background:
+      radial-gradient(ellipse 900px 500px at 82% 18%, rgba(198,166,100,0.10), transparent 60%),
+      linear-gradient(180deg, #070A10 0%, #080B12 60%, #080B12 100%);
+    border-bottom:1px solid var(--line);
+    overflow:hidden;
+  }
+  .hero::before{
+    content:""; position:absolute; inset:0;
+    background-image:
+      linear-gradient(rgba(198,166,100,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(198,166,100,0.035) 1px, transparent 1px);
+    background-size:64px 64px;
+    mask-image:radial-gradient(ellipse 70% 60% at 70% 30%, black, transparent);
+    pointer-events:none;
+  }
+  .hero-inner{position:relative; z-index:2; max-width:760px;}
+  .eyebrow{color:var(--gold); font-size:14px; letter-spacing:0.02em; margin-bottom:22px; font-family:'Fraunces',serif; font-style:italic;}
+  .hero h1{
+    font-size:clamp(34px, 5.4vw, 60px); line-height:1.1; margin-bottom:28px; color:#fff;
+  }
+  .hero p.lead{font-size:19px; color:var(--muted); max-width:560px; margin-bottom:40px;}
+  .hero-ctas{display:flex; gap:16px; flex-wrap:wrap; margin-bottom:64px;}
+  .hero-strip{display:flex; gap:44px; flex-wrap:wrap; border-top:1px solid var(--line); padding-top:28px;}
+  .hero-strip div{display:flex; flex-direction:column; gap:4px;}
+  .hero-strip b{font-family:'Fraunces',serif; font-size:26px; color:#fff; font-weight:500;}
+  .hero-strip span{font-size:13px; color:var(--muted-2);}
+
+  /* ---------- generic section ---------- */
+  section{padding:110px 0;}
+  @media(max-width:640px){section{padding:70px 0;}}
+  .section-head{max-width:640px; margin-bottom:56px;}
+  .section-head .kicker{color:var(--gold); font-family:'Fraunces',serif; font-style:italic; font-size:14px; margin-bottom:14px;}
+  .section-head h2{font-size:clamp(26px,3.4vw,38px); color:#fff; line-height:1.2;}
+  .section-head p{color:var(--muted); margin-top:16px; font-size:16.5px; max-width:520px;}
+  .divider{border:none; border-top:1px solid var(--line);}
+
+  .reveal{opacity:0; transform:translateY(22px); transition:opacity .7s ease, transform .7s ease;}
+  .reveal.in{opacity:1; transform:none;}
+
+  /* ---------- Bu nədir ---------- */
+  .split{display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:start;}
+  @media(max-width:860px){.split{grid-template-columns:1fr; gap:36px;}}
+  .split .big-q{font-family:'Fraunces',serif; font-size:clamp(24px,3vw,32px); color:#fff; line-height:1.35;}
+  .split .answer p{color:var(--muted); font-size:16.5px; margin-bottom:16px;}
+
+  /* ---------- pillars ---------- */
+  .pillars{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line);}
+  @media(max-width:860px){.pillars{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:560px){.pillars{grid-template-columns:1fr;}}
+  .pillar{background:var(--panel); padding:36px 30px; transition:background .25s;}
+  .pillar:hover{background:var(--panel-2);}
+  .pillar .num{color:var(--gold-dim); font-family:'Fraunces',serif; font-size:13px; margin-bottom:20px; letter-spacing:0.05em;}
+  .pillar h3{color:#fff; font-size:19px; margin-bottom:10px; font-weight:500;}
+  .pillar p{color:var(--muted); font-size:14.5px;}
+
+  /* ---------- benefits ---------- */
+  .benefit-grid{columns:3 220px; column-gap:28px;}
+  @media(max-width:640px){.benefit-grid{columns:2 160px;}}
+  .benefit-item{break-inside:avoid; padding:14px 0; border-top:1px solid var(--line); font-size:15px; color:var(--muted);}
+  .benefit-item b{color:var(--text); font-weight:500;}
+
+  /* ---------- breakfast card ---------- */
+  .bf-wrap{display:grid; grid-template-columns:1.1fr 1fr; gap:0; border:1px solid var(--line); overflow:hidden;}
+  @media(max-width:860px){.bf-wrap{grid-template-columns:1fr;}}
+  .bf-visual{
+    background:
+      radial-gradient(circle at 30% 30%, rgba(198,166,100,0.18), transparent 55%),
+      linear-gradient(135deg, #141B29, #0B0F17);
+    min-height:320px; display:flex; align-items:end; padding:32px; position:relative;
+  }
+  .bf-visual span{font-family:'Fraunces',serif; font-style:italic; color:var(--gold); font-size:15px;}
+  .bf-info{padding:44px;}
+  @media(max-width:640px){.bf-info{padding:30px 24px;}}
+  .bf-info .tag{display:inline-block; font-size:12px; color:var(--gold); border:1px solid var(--gold-dim); padding:5px 12px; margin-bottom:22px;}
+  .bf-info h3{font-size:24px; color:#fff; margin-bottom:20px;}
+  .bf-meta{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:28px;}
+  .bf-meta div span{display:block; font-size:12px; color:var(--muted-2); margin-bottom:4px;}
+  .bf-meta div b{font-size:15px; font-weight:500;}
+
+  /* ---------- events ---------- */
+  .filter-row{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:40px;}
+  .filter-chip{
+    padding:9px 18px; border:1px solid var(--line); font-size:13.5px; color:var(--muted);
+    cursor:pointer; transition:all .2s; border-radius:2px;
+  }
+  .filter-chip.active, .filter-chip:hover{border-color:var(--gold); color:var(--gold);}
+  .event-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line);}
+  @media(max-width:860px){.event-grid{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:600px){.event-grid{grid-template-columns:1fr;}}
+  .event-card{background:var(--panel); padding:30px; transition:.3s;}
+  .event-card.hide{display:none;}
+  .event-card:hover{background:var(--panel-2);}
+  .event-cat{font-size:11.5px; color:var(--gold); letter-spacing:0.06em; margin-bottom:16px;}
+  .event-card h4{color:#fff; font-size:17.5px; margin-bottom:14px; font-weight:500; line-height:1.3;}
+  .event-card .meta{font-size:13.5px; color:var(--muted); margin-bottom:22px;}
+  .event-card .meta div{margin-bottom:4px;}
+  .event-card a{font-size:13.5px; color:var(--text); border-bottom:1px solid var(--gold-dim); padding-bottom:2px;}
+
+  /* ---------- values ---------- */
+  .values{display:grid; grid-template-columns:repeat(5,1fr); gap:24px;}
+  @media(max-width:900px){.values{grid-template-columns:repeat(2,1fr) ;}}
+  @media(max-width:560px){.values{grid-template-columns:1fr;}}
+  .value h4{color:var(--gold); font-family:'Fraunces',serif; font-size:19px; margin-bottom:10px; font-style:italic;}
+  .value p{color:var(--muted); font-size:14px;}
+
+  /* ---------- numbers ---------- */
+  .numbers{display:grid; grid-template-columns:repeat(4,1fr); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+  @media(max-width:640px){.numbers{grid-template-columns:repeat(2,1fr);}}
+  .number-cell{padding:40px 20px; text-align:center; border-right:1px solid var(--line);}
+  .number-cell:last-child{border-right:none;}
+  .number-cell b{font-family:'Fraunces',serif; font-size:clamp(32px,4vw,44px); color:var(--gold); display:block;}
+  .number-cell span{font-size:13.5px; color:var(--muted); margin-top:6px; display:block;}
+
+  /* ---------- steps ---------- */
+  .steps{display:grid; grid-template-columns:repeat(4,1fr); gap:32px;}
+  @media(max-width:760px){.steps{grid-template-columns:1fr 1fr;}}
+  @media(max-width:480px){.steps{grid-template-columns:1fr;}}
+  .step .n{font-family:'Fraunces',serif; color:var(--gold-dim); font-size:34px; margin-bottom:14px;}
+  .step h4{color:#fff; font-size:16.5px; margin-bottom:8px; font-weight:500;}
+  .step p{color:var(--muted); font-size:14px;}
+
+  /* ---------- members ---------- */
+  .member-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line); border:1px solid var(--line);}
+  @media(max-width:860px){.member-grid{grid-template-columns:repeat(2,1fr);}}
+  .member-card{background:var(--panel); padding:26px; text-align:left;}
+  .avatar{width:46px; height:46px; border-radius:50%; background:linear-gradient(135deg,#2A3550,#171E2C); border:1px solid var(--line); margin-bottom:16px; display:flex; align-items:center; justify-content:center; font-family:'Fraunces',serif; color:var(--gold); font-size:16px;}
+  .member-card h4{color:#fff; font-size:15.5px; margin-bottom:3px; font-weight:500;}
+  .member-card .role{color:var(--gold); font-size:12.5px; margin-bottom:2px;}
+  .member-card .sector{color:var(--muted-2); font-size:12.5px; margin-bottom:16px;}
+  .member-card a{font-size:12.5px; color:var(--muted); border-bottom:1px solid var(--line);}
+
+  /* ---------- matching ---------- */
+  .match-box{border:1px solid var(--line); padding:44px;}
+  @media(max-width:640px){.match-box{padding:26px;}}
+  .match-tabs{display:flex; gap:1px; background:var(--line); border:1px solid var(--line); margin-bottom:28px; width:fit-content;}
+  .match-tab{padding:11px 22px; font-size:14px; background:var(--panel); color:var(--muted); cursor:pointer;}
+  .match-tab.active{background:var(--gold); color:#0A0D14;}
+  .chip-group{display:flex; flex-wrap:wrap; gap:10px; margin-bottom:30px;}
+  .chip{
+    padding:10px 18px; border:1px solid var(--line); font-size:14px; color:var(--muted);
+    cursor:pointer; border-radius:2px; transition:.2s;
+  }
+  .chip.sel{border-color:var(--gold); color:var(--gold); background:rgba(198,166,100,0.08);}
+  #matchResult{display:none; margin-top:8px; padding-top:28px; border-top:1px solid var(--line);}
+  #matchResult.show{display:block;}
+  .match-row{display:flex; justify-content:space-between; align-items:center; padding:18px 0; border-bottom:1px solid var(--line); flex-wrap:wrap; gap:12px;}
+  .match-row .who b{display:block; color:#fff; font-size:15px;}
+  .match-row .who span{color:var(--muted); font-size:13px;}
+  .match-row .btn{padding:9px 16px; font-size:13px;}
+
+  /* ---------- membership tiers ---------- */
+  .tiers{display:grid; grid-template-columns:repeat(3,1fr); gap:24px;}
+  @media(max-width:860px){.tiers{grid-template-columns:1fr;}}
+  .tier{border:1px solid var(--line); padding:38px 32px; display:flex; flex-direction:column;}
+  .tier.mid{border-color:var(--gold-dim); background:linear-gradient(180deg, rgba(198,166,100,0.05), transparent 40%);}
+  .tier .tname{font-family:'Fraunces',serif; font-size:21px; color:#fff; margin-bottom:8px;}
+  .tier .tdesc{color:var(--muted); font-size:14px; margin-bottom:26px; min-height:42px;}
+  .tier ul{list-style:none; margin-bottom:30px; flex:1;}
+  .tier li{font-size:14px; color:var(--muted); padding:9px 0; border-top:1px solid var(--line);}
+  .tier li:first-child{border-top:none;}
+  .tier .price{color:var(--gold); font-size:13.5px; margin-bottom:20px; font-family:'Fraunces',serif; font-style:italic;}
+
+  /* ---------- form ---------- */
+  .form-wrap{border:1px solid var(--line); padding:48px;}
+  @media(max-width:640px){.form-wrap{padding:26px;}}
+  .form-grid{display:grid; grid-template-columns:1fr 1fr; gap:22px;}
+  @media(max-width:640px){.form-grid{grid-template-columns:1fr;}}
+  .field{display:flex; flex-direction:column; gap:8px;}
+  .field.full{grid-column:1/-1;}
+  .field label{font-size:13px; color:var(--muted);}
+  .field input, .field select, .field textarea{
+    background:var(--panel); border:1px solid var(--line); color:var(--text);
+    padding:12px 14px; font-size:14.5px; font-family:'Inter',sans-serif; border-radius:2px;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus{outline:none; border-color:var(--gold);}
+  .field.error input, .field.error textarea{border-color:#C96A5A;}
+  .field .err-msg{font-size:12px; color:#C96A5A; display:none;}
+  .field.error .err-msg{display:block;}
+  .check-row{display:flex; align-items:center; gap:10px; margin:26px 0;}
+  .check-row input{width:16px; height:16px; accent-color:var(--gold);}
+  .check-row label{font-size:13.5px; color:var(--muted);}
+  #formSuccess{display:none; text-align:center; padding:60px 20px;}
+  #formSuccess.show{display:block;}
+  #formSuccess.show + #applyForm{display:none;}
+  #formSuccess h3{color:#fff; font-size:22px; margin-bottom:12px;}
+  #formSuccess p{color:var(--muted);}
+
+  /* ---------- whatsapp ---------- */
+  .wa-band{
+    border:1px solid var(--gold-dim); padding:56px; display:flex; justify-content:space-between; align-items:center; gap:32px; flex-wrap:wrap;
+    background:linear-gradient(120deg, rgba(198,166,100,0.06), transparent 60%);
+  }
+  .wa-band h3{color:#fff; font-size:24px; max-width:440px; margin-bottom:10px;}
+  .wa-band p{color:var(--muted); max-width:420px; font-size:15px;}
+
+  /* ---------- insights ---------- */
+  .insight-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:32px;}
+  @media(max-width:860px){.insight-grid{grid-template-columns:1fr;}}
+  .insight-card .icat{font-size:12px; color:var(--gold); margin-bottom:14px;}
+  .insight-card h4{color:#fff; font-size:18px; margin-bottom:10px; line-height:1.35;}
+  .insight-card p{color:var(--muted); font-size:14px;}
+  .insight-card .iline{border-top:1px solid var(--line); margin-top:22px; padding-top:14px; font-size:12.5px; color:var(--muted-2);}
+
+  /* ---------- faq ---------- */
+  .faq-item{border-top:1px solid var(--line);}
+  .faq-item:last-child{border-bottom:1px solid var(--line);}
+  .faq-q{display:flex; justify-content:space-between; align-items:center; padding:24px 0; cursor:pointer; gap:20px;}
+  .faq-q h4{font-size:16.5px; font-weight:500; color:#fff;}
+  .faq-q .plus{font-family:'Fraunces',serif; font-size:22px; color:var(--gold); transition:transform .25s; flex-shrink:0;}
+  .faq-item.open .plus{transform:rotate(45deg);}
+  .faq-a{max-height:0; overflow:hidden; transition:max-height .3s ease;}
+  .faq-a p{color:var(--muted); font-size:14.5px; padding-bottom:24px; max-width:640px;}
+
+  /* ---------- footer ---------- */
+  footer{border-top:1px solid var(--line); padding:70px 0 40px;}
+  .foot-grid{display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:40px; margin-bottom:56px;}
+  @media(max-width:760px){.foot-grid{grid-template-columns:1fr 1fr; row-gap:36px;}}
+  .foot-brand b{font-family:'Fraunces',serif; font-size:18px; display:block; margin-bottom:8px;}
+  .foot-brand .tag{color:var(--gold); font-style:italic; font-family:'Fraunces',serif; font-size:14px; margin-bottom:18px;}
+  .foot-brand p{color:var(--muted-2); font-size:13.5px; max-width:260px;}
+  .foot-col h5{font-size:12.5px; color:var(--muted-2); letter-spacing:0.06em; margin-bottom:16px;}
+  .foot-col a{display:block; font-size:14px; color:var(--muted); margin-bottom:11px;}
+  .foot-col a:hover{color:var(--gold);}
+  .foot-bottom{display:flex; justify-content:space-between; align-items:center; padding-top:28px; border-top:1px solid var(--line); flex-wrap:wrap; gap:16px;}
+  .foot-bottom span{font-size:13px; color:var(--muted-2);}
+  .social{display:flex; gap:18px;}
+  .social a{font-size:13px; color:var(--muted); }
+  .social a:hover{color:var(--gold);}
+
+  /* wa float */
+  .wa-float{
+    position:fixed; bottom:24px; right:24px; z-index:90;
+    width:52px; height:52px; border-radius:50%; background:var(--gold);
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+    box-shadow:0 8px 24px rgba(0,0,0,0.4);
+    bottom:calc(24px + env(safe-area-inset-bottom,0px));
+  }
+  .wa-float svg{width:24px; height:24px;}
+
+  ::selection{background:var(--gold); color:#0A0D14;}
+</style>
+</head>
+<body>
+
+<header id="siteHeader">
+  <nav>
+    <a href="#home" class="logo">
+      <b>BUSINESS CIRCLE</b>
+      <span>AZERBAIJAN</span>
+    </a>
+    <div class="navlinks">
+      <a href="#home">Ana səhifə</a>
+      <a href="#icma">İcma</a>
+      <a href="#tedbirler">Tədbirlər</a>
+      <a href="#uzvluk">Üzvlük</a>
+      <a href="#networking">Networking</a>
+      <a href="#haqqimizda">Haqqımızda</a>
+      <a href="#elaqe">Əlaqə</a>
+    </div>
+    <div class="nav-cta">
+      <a href="#elaqe" class="btn btn-outline">Üzv ol</a>
+      <div class="burger" id="burgerBtn" aria-label="Menyu">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </nav>
+  <div id="mobilemenu">
+    <a href="#home">Ana səhifə</a>
+    <a href="#icma">İcma</a>
+    <a href="#tedbirler">Tədbirlər</a>
+    <a href="#uzvluk">Üzvlük</a>
+    <a href="#networking">Networking</a>
+    <a href="#haqqimizda">Haqqımızda</a>
+    <a href="#elaqe">Əlaqə</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="home" style="padding-top:140px;">
+  <div class="wrap hero-inner">
+    <div class="eyebrow">Doğru insanlar. Doğru əlaqələr. Yeni imkanlar.</div>
+    <h1>Burada vizit kartları deyil, münasibətlər qurulur.</h1>
+    <p class="lead">Uğurlu insanların təsadüfi tanışlıqlarını real biznes əlaqələrinə çevirən qapalı icma. Bir masa ətrafında tanış olduğunuz insan növbəti tərəfdaşınız, müştəriniz və ya investorunuz ola bilər.</p>
+    <div class="hero-ctas">
+      <a href="#elaqe" class="btn btn-gold">İcmaya qoşul</a>
+      <a href="#tedbirler" class="btn btn-outline">Yaxın tədbirlərə bax</a>
+    </div>
+    <div class="hero-strip">
+      <div><b id="cnt1">0+</b><span>Üzv</span></div>
+      <div><b id="cnt2">0+</b><span>Şirkət</span></div>
+      <div><b id="cnt3">0+</b><span>Tədbir</span></div>
+      <div><b id="cnt4">0+</b><span>Yeni əlaqə</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- BU NƏDİR -->
+<section id="icma">
+  <div class="wrap">
+    <div class="split reveal">
+      <div class="big-q">Sadəcə biznes klubu deyil.</div>
+      <div class="answer">
+        <p>Business Circle müxtəlif sahələrdə fəaliyyət göstərən sahibkarların, biznes rəhbərlərinin, investorların və bacarıqlı peşəkarların bir araya gəldiyi canlı biznes icmasıdır.</p>
+        <p>Burada məqsəd sadəcə əlaqə toplamaq deyil — etibarlı münasibətlər qurmaq, yeni əməkdaşlıqlar yaratmaq, təcrübə paylaşmaq və bir-birimizin inkişafına real töhfə verməkdir.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- 6 İSTİQAMƏT -->
+<section>
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="kicker">Platforma</div>
+      <h2>Altı əsas istiqamət</h2>
+    </div>
+  </div>
+  <div class="wrap" style="padding:0;">
+    <div class="pillars reveal">
+      <div class="pillar"><div class="num">01</div><h3>Networking</h3><p>Doğru insanlarla tanış ol və peşəkar çevrəni genişləndir.</p></div>
+      <div class="pillar"><div class="num">02</div><h3>Business Matching</h3><p>Ehtiyacların və imkanların uyğun olduğu insanları bir araya gətir.</p></div>
+      <div class="pillar"><div class="num">03</div><h3>Səhər yeməkləri</h3><p>Kiçik qruplarda səmimi və məhsuldar səhər görüşləri.</p></div>
+      <div class="pillar"><div class="num">04</div><h3>Tədbirlər</h3><p>Biznes, investisiya, marketinq, satış və texnologiya mövzularında görüşlər.</p></div>
+      <div class="pillar"><div class="num">05</div><h3>Əməkdaşlıq</h3><p>Üzvlər arasında yeni layihələr, tərəfdaşlıqlar və kommersiya imkanları.</p></div>
+      <div class="pillar"><div class="num">06</div><h3>Təcrübə mübadiləsi</h3><p>Fərqli sahələrdən olan insanların bilik və təcrübəsindən faydalan.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- NİYƏ QOŞULMALI -->
+<section style="background:var(--panel); border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="kicker">Səbəb</div>
+      <h2>Bir əlaqə bəzən bir şirkətin istiqamətini dəyişə bilər.</h2>
+    </div>
+    <div class="benefit-grid reveal">
+      <div class="benefit-item"><b>Yeni biznes tərəfdaşları</b></div>
+      <div class="benefit-item"><b>Yeni müştərilər</b></div>
+      <div class="benefit-item"><b>İnvestorlarla əlaqə</b></div>
+      <div class="benefit-item"><b>Təchizatçı və xidmət tərəfdaşları</b></div>
+      <div class="benefit-item"><b>Peşəkar dostluqlar</b></div>
+      <div class="benefit-item"><b>Yeni ideyalar</b></div>
+      <div class="benefit-item"><b>Təcrübə mübadiləsi</b></div>
+      <div class="benefit-item"><b>Birgə layihələr</b></div>
+      <div class="benefit-item"><b>Tövsiyə və referallar</b></div>
+      <div class="benefit-item"><b>Şəxsi və peşəkar inkişaf</b></div>
+    </div>
+  </div>
+</section>
+
+<!-- SƏHƏR YEMƏYİ -->
+<section>
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="kicker">Ənənə</div>
+      <h2>Günə doğru insanlarla başla.</h2>
+      <p>Biznes əlaqələrinin ən maraqlı söhbətləri bəzən rəsmi ofisdə yox, səhər yeməyi masasının ətrafında yaranır.</p>
+    </div>
+    <div class="bf-wrap reveal">
+      <div class="bf-visual"><span>Business Breakfast — aylıq format</span></div>
+      <div class="bf-info">
+        <div class="tag">Business Breakfast #01</div>
+        <h3>Yeni biznes imkanları və əməkdaşlıq</h3>
+        <div class="bf-meta">
+          <div><span>Tarix</span><b>12 Oktyabr</b></div>
+          <div><span>Saat</span><b>09:00</b></div>
+          <div><span>Məkan</span><b>Bakı</b></div>
+          <div><span>İştirakçı</span><b>20 nəfər</b></div>
+        </div>
+        <a href="#elaqe" class="btn btn-gold">Qeydiyyatdan keç</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TƏDBİRLƏR -->
+<section id="tedbirler" style="background:var(--panel); border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="kicker">Təqvim</div>
+      <h2>Yaxın tədbirlər</h2>
+    </div>
+    <div class="filter-row" id="filterRow">
+      <div class="filter-chip active" data-f="all">Hamısı</div>
+      <div class="filter-chip" data-f="sehər">Səhər yeməyi</div>
+      <div class="filter-chip" data-f="networking">Networking</div>
+      <div class="filter-chip" data-f="investisiya">İnvestisiya</div>
+      <div class="filter-chip" data-f="texnologiya">Texnologiya</div>
+      <div class="filter-chip" data-f="qapali">Qapalı görüş</div>
+    </div>
+    <div class="event-grid" id="eventGrid">
+      <div class="event-card" data-cat="sehər"><div class="event-cat">SƏHƏR YEMƏYİ</div><h4>Yeni biznes imkanları və əməkdaşlıq</h4><div class="meta"><div>12 Oktyabr · 09:00</div><div>Bakı · 20 iştirakçı</div></div><a href="#elaqe">Ətraflı bax →</a></div>
+      <div class="event-card" data-cat="networking"><div class="event-cat">NETWORKING</div><h4>Payız Networking Axşamı</h4><div class="meta"><div>18 Oktyabr · 19:00</div><div>Bakı · 60 iştirakçı</div></div><a href="#elaqe">Ətraflı bax →</a></div>
+      <div class="event-card" data-cat="investisiya"><div class="event-cat">İNVESTİSİYA</div><h4>Startap və İnvestor Görüşü</h4><div class="meta"><div>25 Oktyabr · 15:00</div><div>Bakı · 35 iştirakçı</div></div><a href="#elaqe">Ətraflı bax →</a></div>
+      <div class="event-card" data-cat="texnologiya"><div class="event-cat">TEXNOLOGİYA</div><h4>Biznesdə Avtomatlaşdırma Trendləri</h4><div class="meta"><div>2 Noyabr · 10:00</div><div>Bakı · 40 iştirakçı</div></div><a href="#elaqe">Ətraflı bax →</a></div>
+      <div class="event-card" data-cat="sehər"><div class="event-cat">SƏHƏR YEMƏYİ</div><h4>Rəhbərlər üçün Səhər Söhbəti</h4><div class="meta"><div>8 Noyabr · 09:00</div><div>Bakı · 18 iştirakçı</div></div><a href="#elaqe">Ətraflı bax →</a></div>
+      <div class="event-card" data-cat="qapali"><div class="event-cat">QAPALI GÖRÜŞ</div><h4>Private Circle: İldən-ilə İnkişaf</h4><div class="meta"><div>15 Noyabr · 18:30</div><div>Bakı · 15 iştirakçı</div></div><a href="#elaqe">Ətraflı bax →</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- ÜZVLƏR -->
+<section id="haqqimizda">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="kicker">İcma</div>
+      <h2>Üzvlər</h2>
+      <p>Fərqli sektorlardan olan sahibkarlar və rəhbərlər — hər biri öz sahəsində fəaliyyət göstərir, öz təcrübəsini gətirir.</p>
+    </div>
+    <div class="member-grid reveal" id="memberGrid">
+      <div class="member-card"><div class="avatar">R</div><h4>Rəşad M.</h4><div class="role">Founder</div><div class="sector">Texnologiya · Bakı</div><a href="#">Profilə bax →</a></div>
+      <div class="member-card"><div class="avatar">N</div><h4>Nərmin Q.</h4><div class="role">CEO</div><div class="sector">Marketinq · Bakı</div><a href="#">Profilə bax →</a></div>
+      <div class="member-card"><div class="avatar">T</div><h4>Tural S.</h4><div class="role">Investor</div><div class="sector">Maliyyə · Bakı</div><a href="#">Profilə bax →</a></div>
+      <div class="member-card"><div class="avatar">L</div><h4>Leyla H.</h4><div class="role">Director</div><div class="sector">Retail · Bakı</div><a href="#">Profilə bax →</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- BUSINESS MATCHING -->
+<section id="networking" style="background:var(--panel); border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="kicker">Business Matching</div>
+      <h2>Bəlkə axtardığınız insan artıq icmadadır?</h2>
+    </div>
+    <div class="match-box reveal">
+      <div class="match-tabs">
+        <div class="match-tab active" data-tab="axtar">Mən axtarıram</div>
+        <div class="match-tab" data-tab="teklif">Mən təklif edirəm</div>
+      </div>
+      <div class="chip-group" id="axtarChips">
+        <div class="chip" data-tag="terefdash">Tərəfdaş</div><div class="chip" data-tag="investor">İnvestor</div><div class="chip" data-tag="musteri">Müştəri</div>
+        <div class="chip" data-tag="tedarukchu">Təchizatçı</div><div class="chip" data-tag="ishchi">İşçi</div><div class="chip" data-tag="mentor">Mentor</div>
+        <div class="chip" data-tag="hemtesisci">Həmtəsisçi</div><div class="chip" data-tag="xidmet">Xidmət</div><div class="chip" data-tag="ideya">Yeni biznes ideyası</div>
+      </div>
+      <div class="chip-group" id="teklifChips" style="display:none;">
+        <div class="chip" data-tag="investisiya">İnvestisiya</div><div class="chip" data-tag="xidmet">Xidmət</div><div class="chip" data-tag="mehsul">Məhsul</div>
+        <div class="chip" data-tag="ekspertiza">Ekspertiza</div><div class="chip" data-tag="terefdashliq">Tərəfdaşlıq</div><div class="chip" data-tag="marketinq">Marketinq</div>
+        <div class="chip" data-tag="texnologiya">Texnologiya</div><div class="chip" data-tag="konsaltinq">Konsaltinq</div>
+      </div>
+      <a class="btn btn-gold" id="matchBtn">Uyğun əlaqələr tap</a>
+      <div id="matchResult">
+        <p id="matchStatus" style="color:var(--muted); font-size:13.5px; margin-bottom:18px;">Uyğun əlaqələr tapıldı</p>
+        <div id="matchRows"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUES -->
+<section>
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="kicker">Prinsiplər</div>
+      <h2>Bu icmanı fərqli edən nədir?</h2>
+    </div>
+    <div class="values reveal">
+      <div class="value"><h4>Etibar</h4><p>Burada uzunmüddətli münasibətlər qurulur.</p></div>
+      <div class="value"><h4>Keyfiyyət</h4><p>Çox insan yox, doğru insanlar.</p></div>
+      <div class="value"><h4>Qarşılıq</h4><p>Dəyər vermədən dəyər gözləmə.</p></div>
+      <div class="value"><h4>Açıqlıq</h4><p>Fərqli sahələrdən olan insanları bir masa ətrafında birləşdiririk.</p></div>
+      <div class="value"><h4>Əməkdaşlıq</h4><p>Birlikdə daha çox imkan yaradırıq.</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap"><hr class="divider"></div>
+
+<!-- NUMBERS -->
+<section style="padding:0;">
+  <div class="numbers reveal">
+    <div class="number-cell"><b>500+</b><span>Üzv</span></div>
+    <div class="number-cell"><b>100+</b><span>Şirkət</span></div>
+    <div class="number-cell"><b>50+</b><span>Tədbir</span></div>
+    <div class="number-cell"><b>1000+</b><span>Yeni əlaqə</span></div>
+  </div>
+</section>
+
+<!-- STEPS -->
+<section>
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="kicker">Proses</div>
+      <h2>Necə işləyir?</h2>
+    </div>
+    <div class="steps reveal">
+      <div class="step"><div class="n">01</div><h4>Müraciət et</h4><p>Qısa formu doldur, komandamız səninlə əlaqə saxlayacaq.</p></div>
+      <div class="step"><div class="n">02</div><h4>Profilini yarat</h4><p>Fəaliyyət sahəni, təklif etdiyin və axtardığın imkanları qeyd et.</p></div>
+      <div class="step"><div class="n">03</div><h4>Doğru insanlarla tanış ol</h4><p>Tədbirlərdə və business matching vasitəsilə uyğun üzvləri tap.</p></div>
+      <div class="step"><div class="n">04</div><h4>Əməkdaşlığa başla</h4><p>Əlaqəni real layihəyə, tərəfdaşlığa və ya müştəriyə çevir.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ÜZVLÜK -->
+<section id="uzvluk" style="background:var(--panel); border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="kicker">Üzvlük</div>
+      <h2>Öz səviyyəni seç</h2>
+    </div>
+    <div class="tiers reveal">
+      <div class="tier">
+        <div class="tname">Community</div>
+        <div class="tdesc">Networking və açıq tədbirlərə çıxış.</div>
+        <ul><li>Açıq tədbirlərə giriş</li><li>WhatsApp icması</li><li>Üzv profili</li></ul>
+        <div class="price">Müraciət et</div>
+        <a href="#elaqe" class="btn btn-outline">Müraciət et</a>
+      </div>
+      <div class="tier mid">
+        <div class="tname">Business</div>
+        <div class="tdesc">Networking + xüsusi tədbirlər + business matching.</div>
+        <ul><li>Bütün Community imtiyazları</li><li>Xüsusi biznes tədbirləri</li><li>Business matching funksiyası</li><li>Səhər yeməyi dəvətləri</li></ul>
+        <div class="price">Coming Soon</div>
+        <a href="#elaqe" class="btn btn-gold">Müraciət et</a>
+      </div>
+      <div class="tier">
+        <div class="tname">Private Circle</div>
+        <div class="tdesc">Qapalı görüşlər + premium networking + xüsusi imkanlar.</div>
+        <ul><li>Bütün Business imtiyazları</li><li>Qapalı, məhdud iştirakçılı görüşlər</li><li>Fərdi tanışlıq təşkili</li></ul>
+        <div class="price">Coming Soon</div>
+        <a href="#elaqe" class="btn btn-outline">Müraciət et</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- APPLICATION FORM -->
+<section id="elaqe">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="kicker">Üzvlük üçün müraciət</div>
+      <h2>İcmaya qoşulmaq üçün müraciət et</h2>
+      <p>Formu doldur, komandamız 2 iş günü ərzində səninlə əlaqə saxlayacaq.</p>
+    </div>
+    <div class="form-wrap reveal">
+      <div id="formSuccess">
+        <h3>Təşəkkür edirik.</h3>
+        <p>Müraciətiniz qəbul edildi. Komandamız sizinlə əlaqə saxlayacaq.</p>
+      </div>
+      <form id="applyForm" novalidate>
+        <div class="form-grid">
+          <div class="field"><label>Ad *</label><input type="text" name="ad" required><span class="err-msg">Zəhmət olmasa adını daxil et.</span></div>
+          <div class="field"><label>Soyad *</label><input type="text" name="soyad" required><span class="err-msg">Zəhmət olmasa soyadını daxil et.</span></div>
+          <div class="field"><label>Telefon *</label><input type="tel" name="telefon" required><span class="err-msg">Zəhmət olmasa telefon nömrəsini daxil et.</span></div>
+          <div class="field"><label>Email *</label><input type="email" name="email" required><span class="err-msg">Zəhmət olmasa düzgün email daxil et.</span></div>
+          <div class="field"><label>Şirkət</label><input type="text" name="sirket"></div>
+          <div class="field"><label>Vəzifə</label><input type="text" name="vezife"></div>
+          <div class="field"><label>Fəaliyyət sahəsi</label><input type="text" name="sahe"></div>
+          <div class="field"><label>Şəhər</label><input type="text" name="seher" value="Bakı"></div>
+          <div class="field"><label>LinkedIn / Instagram</label><input type="text" name="social"></div>
+          <div class="field"><label>Veb sayt</label><input type="text" name="veb"></div>
+          <div class="field full"><label>Siz nə təklif edirsiniz?</label><textarea name="teklif" rows="2"></textarea></div>
+          <div class="field full"><label>Siz nə axtarırsınız?</label><textarea name="axtaris" rows="2"></textarea></div>
+          <div class="field full"><label>Niyə icmaya qoşulmaq istəyirsiniz?</label><textarea name="niye" rows="3"></textarea></div>
+        </div>
+        <div class="check-row">
+          <input type="checkbox" id="rules" required>
+          <label for="rules">İcma qaydaları ilə razıyam.</label>
+        </div>
+        <button type="submit" class="btn btn-gold">Müraciəti göndər</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- WHATSAPP -->
+<section>
+  <div class="wrap">
+    <div class="wa-band reveal">
+      <div>
+        <h3>Əlaqə tədbirdən sonra da davam edir.</h3>
+        <p>Görüşlərdə tanış olduğunuz insanlarla əlaqəni qoruyun, yeni imkanları paylaşın və icmanın gündəlik həyatının bir hissəsi olun.</p>
+      </div>
+      <a href="#" class="btn btn-gold">WhatsApp icmasına qoşul</a>
+    </div>
+  </div>
+</section>
+
+<!-- INSIGHTS -->
+<section style="background:var(--panel); border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="kicker">Business Insights</div>
+      <h2>Son yazılar</h2>
+    </div>
+    <div class="insight-grid reveal">
+      <div class="insight-card">
+        <div class="icat">NETWORKING</div>
+        <h4>Səhər yeməyi görüşlərindən niyə əməkdaşlıq çıxır?</h4>
+        <p>Qeyri-rəsmi mühitin biznes qərarlarına təsiri.</p>
+        <div class="iline">5 dəq oxuma</div>
+      </div>
+      <div class="insight-card">
+        <div class="icat">SAHİBKARLIQ</div>
+        <h4>Kiçik icmalarda böyük imkanlar necə tapılır?</h4>
+        <p>Keyfiyyətli əlaqə şəbəkəsi qurmağın praktik yolları.</p>
+        <div class="iline">4 dəq oxuma</div>
+      </div>
+      <div class="insight-card">
+        <div class="icat">İNVESTİSİYA</div>
+        <h4>İnvestorla ilk görüşə necə hazırlaşmalı?</h4>
+        <p>Təqdimatdan əvvəl nəzərə alınmalı əsas məqamlar.</p>
+        <div class="iline">6 dəq oxuma</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section>
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="kicker">Suallar</div>
+      <h2>Tez-tez verilən suallar</h2>
+    </div>
+    <div id="faqList" class="reveal">
+      <div class="faq-item">
+        <div class="faq-q"><h4>Kimlər üzv ola bilər?</h4><span class="plus">+</span></div>
+        <div class="faq-a"><p>Sahibkarlar, biznes rəhbərləri, investorlar və peşəkar sahədə fəaliyyət göstərən şəxslər müraciət edə bilər. Hər müraciət komanda tərəfindən nəzərdən keçirilir.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><h4>Üzvlük ödənişlidirmi?</h4><span class="plus">+</span></div>
+        <div class="faq-a"><p>Üzvlük səviyyələri və qiymətləndirmə hazırda müəyyənləşdirilir. Müraciət edən şəxslərə fərdi qaydada məlumat veriləcək.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><h4>Tədbirlər necə keçirilir?</h4><span class="plus">+</span></div>
+        <div class="faq-a"><p>Tədbirlər Bakıda, əvvəlcədən müəyyən edilmiş məkanlarda keçirilir — səhər yeməkləri, networking axşamları və qapalı görüşlər formatında.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><h4>WhatsApp icması necə işləyir?</h4><span class="plus">+</span></div>
+        <div class="faq-a"><p>Üzvlər qəbul olunduqdan sonra icmanın WhatsApp qrupuna dəvət olunur, burada gündəlik əlaqə və məlumat mübadiləsi davam edir.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><h4>Üzvlük üçün seçim prosesi varmı?</h4><span class="plus">+</span></div>
+        <div class="faq-a"><p>Bəli, hər müraciət komanda tərəfindən qiymətləndirilir ki, icmanın keyfiyyəti və etibar mühiti qorunsun.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><h4>Business matching necə işləyir?</h4><span class="plus">+</span></div>
+        <div class="faq-a"><p>Nə axtardığını və nə təklif etdiyini qeyd edirsən, sistem uyğun üzvləri təklif edir və tanışlıq üçün sorğu göndərə bilirsən.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><h4>Şirkətimi icmada tanıda bilərəmmi?</h4><span class="plus">+</span></div>
+        <div class="faq-a"><p>Bəli, üzv profilində şirkətin və fəaliyyət sahən haqqında məlumat yerləşdirə bilərsən.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><h4>Tədbirə qonaq kimi qoşula bilərəmmi?</h4><span class="plus">+</span></div>
+        <div class="faq-a"><p>Bəzi açıq tədbirlərə qonaq statusu ilə qoşulmaq mümkündür, qapalı görüşlər isə yalnız üzvlər üçündür.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <b>BUSINESS CIRCLE AZERBAIJAN</b>
+        <div class="tag">Doğru insanlar. Doğru əlaqələr. Yeni imkanlar.</div>
+        <p>Sahibkarları, rəhbərləri və investorları bir araya gətirən qapalı biznes icması.</p>
+      </div>
+      <div class="foot-col">
+        <h5>NAVİQASİYA</h5>
+        <a href="#home">Ana səhifə</a>
+        <a href="#icma">İcma</a>
+        <a href="#tedbirler">Tədbirlər</a>
+        <a href="#uzvluk">Üzvlük</a>
+      </div>
+      <div class="foot-col">
+        <h5>MƏLUMAT</h5>
+        <a href="#haqqimizda">Haqqımızda</a>
+        <a href="#elaqe">Əlaqə</a>
+        <a href="#">FAQ</a>
+        <a href="#">Privacy Policy</a>
+      </div>
+      <div class="foot-col">
+        <h5>ƏLAQƏ</h5>
+        <a href="#">Instagram</a>
+        <a href="#">LinkedIn</a>
+        <a href="#">WhatsApp</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Business Circle Azerbaijan. Bütün hüquqlar qorunur.</span>
+      <div class="social">
+        <a href="#">IG</a><a href="#">LI</a><a href="#">FB</a><a href="#">TT</a><a href="#">WA</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<a href="#" class="wa-float" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24" fill="#0A0D14"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.36 5.07L2 22l5.06-1.33A9.94 9.94 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm0 18c-1.6 0-3.09-.46-4.35-1.26l-.31-.19-3.06.8.82-2.99-.2-.31A7.93 7.93 0 014 12c0-4.42 3.58-8 8-8s8 3.58 8 8-3.58 8-8 8zm4.38-5.83c-.24-.12-1.42-.7-1.64-.78-.22-.08-.38-.12-.54.12-.16.24-.62.78-.76.94-.14.16-.28.18-.52.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.44-1.34-1.68-.14-.24-.02-.37.1-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.54-1.3-.74-1.78-.2-.47-.4-.4-.54-.41h-.46c-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.7 2.6 4.12 3.64.58.25 1.03.4 1.38.51.58.18 1.11.16 1.53.1.47-.07 1.42-.58 1.62-1.14.2-.56.2-1.04.14-1.14-.06-.1-.22-.16-.46-.28z"/></svg>
+</a>
+
+<script>
+(function(){
+  // ====== BACKEND CONFIG ======
+  // Supabase layihəni yaratdıqdan və /schema.sql-i icra etdikdən sonra
+  // aşağıdakı iki dəyəri doldur. Boş qalarsa, sayt "demo" rejimində işləyir:
+  // formlar və matching UI-da göstərilir, amma heç bir yerə yazılmır.
+  var CONFIG = {
+    SUPABASE_URL: '__SUPABASE_URL__',
+    SUPABASE_ANON_KEY: '__SUPABASE_ANON_KEY__'
+  };
+  var supa = null;
+  var LIVE = false;
+  if(CONFIG.SUPABASE_URL && CONFIG.SUPABASE_ANON_KEY && window.supabase){
+    try{
+      supa = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+      LIVE = true;
+    }catch(err){ console.warn('Supabase init xətası:', err); }
+  }
+
+  // header scroll state
+  var header = document.getElementById('siteHeader');
+  window.addEventListener('scroll', function(){
+    header.classList.toggle('scrolled', window.scrollY > 10);
+  });
+
+  // mobile menu
+  var burger = document.getElementById('burgerBtn');
+  var menu = document.getElementById('mobilemenu');
+  burger.addEventListener('click', function(){ menu.classList.toggle('open'); });
+  menu.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){ menu.classList.remove('open'); });
+  });
+
+  // scroll reveal (single orchestrated pattern, staggered)
+  var revealEls = document.querySelectorAll('.reveal');
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, {threshold:0.12});
+  revealEls.forEach(function(el){ io.observe(el); });
+
+  // animated counters
+  function animateCounter(el, target){
+    var start = 0, dur = 1400, startTime = null;
+    function step(ts){
+      if(!startTime) startTime = ts;
+      var progress = Math.min((ts-startTime)/dur, 1);
+      var val = Math.floor(progress * target);
+      el.textContent = val + '+';
+      if(progress < 1) requestAnimationFrame(step);
+      else el.textContent = target + '+';
+    }
+    requestAnimationFrame(step);
+  }
+  var counters = [
+    {id:'cnt1', val:500}, {id:'cnt2', val:100}, {id:'cnt3', val:50}, {id:'cnt4', val:1000}
+  ];
+  var heroCounted = false;
+  var heroStrip = document.querySelector('.hero-strip');
+  var heroIo = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting && !heroCounted){
+        heroCounted = true;
+        counters.forEach(function(c){ animateCounter(document.getElementById(c.id), c.val); });
+      }
+    });
+  }, {threshold:0.4});
+  if(heroStrip) heroIo.observe(heroStrip);
+
+  // ====== EVENTS: Supabase-dən canlı çək, olmasa statik demo qalır ======
+  var CAT_LABEL = {sehər:'SƏHƏR YEMƏYİ', networking:'NETWORKING', investisiya:'İNVESTİSİYA', texnologiya:'TEXNOLOGİYA', qapali:'QAPALI GÖRÜŞ'};
+  function renderEvents(list){
+    var grid = document.getElementById('eventGrid');
+    if(!list || !list.length) return; // boşdursa mövcud statik nümunələr qalır
+    grid.innerHTML = list.map(function(ev){
+      var cat = ev.category || 'networking';
+      return '<div class="event-card" data-cat="'+cat+'">'+
+        '<div class="event-cat">'+(CAT_LABEL[cat]||cat.toUpperCase())+'</div>'+
+        '<h4>'+escapeHtml(ev.title)+'</h4>'+
+        '<div class="meta"><div>'+escapeHtml(ev.event_date||'')+' · '+escapeHtml(ev.event_time||'')+'</div>'+
+        '<div>'+escapeHtml(ev.location||'Bakı')+' · '+(ev.capacity? ev.capacity+' iştirakçı':'')+'</div></div>'+
+        '<a href="'+(ev.link || '#elaqe')+'">Ətraflı bax →</a></div>';
+    }).join('');
+    bindEventFilter();
+  }
+  function escapeHtml(s){
+    return String(s==null?'':s).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+  function bindEventFilter(){
+    var chips = document.querySelectorAll('.filter-chip');
+    var cards = document.querySelectorAll('.event-card');
+    chips.forEach(function(chip){
+      chip.onclick = function(){
+        chips.forEach(function(c){ c.classList.remove('active'); });
+        chip.classList.add('active');
+        var f = chip.getAttribute('data-f');
+        cards.forEach(function(card){
+          if(f === 'all' || card.getAttribute('data-cat') === f){ card.classList.remove('hide'); }
+          else { card.classList.add('hide'); }
+        });
+      };
+    });
+  }
+  bindEventFilter();
+  if(LIVE){
+    supa.from('events').select('*').eq('published', true).order('event_date', {ascending:true}).limit(12)
+      .then(function(res){
+        if(res.error){ console.warn('events sorğu xətası:', res.error.message); return; }
+        renderEvents(res.data);
+      });
+  }
+
+  // ====== ÜZVLƏR: Supabase-dən canlı çək ======
+  function renderMembers(list){
+    var grid = document.getElementById('memberGrid');
+    if(!list || !list.length) return;
+    grid.innerHTML = list.map(function(m){
+      var letter = (m.ad_soyad||'?').trim().charAt(0).toUpperCase();
+      return '<div class="member-card">'+
+        '<div class="avatar">'+letter+'</div>'+
+        '<h4>'+escapeHtml(m.ad_soyad)+'</h4>'+
+        '<div class="role">'+escapeHtml(m.vezife||'')+'</div>'+
+        '<div class="sector">'+escapeHtml(m.sahe||'')+' · '+escapeHtml(m.seher||'Bakı')+'</div>'+
+        '<a href="'+(m.profile_url || '#')+'">Profilə bax →</a></div>';
+    }).join('');
+  }
+  if(LIVE){
+    supa.from('members').select('*').eq('status','approved').order('created_at',{ascending:false}).limit(8)
+      .then(function(res){
+        if(res.error){ console.warn('members sorğu xətası:', res.error.message); return; }
+        renderMembers(res.data);
+      });
+  }
+
+  // business matching demo
+  var tabs = document.querySelectorAll('.match-tab');
+  var axtarChips = document.getElementById('axtarChips');
+  var teklifChips = document.getElementById('teklifChips');
+  tabs.forEach(function(tab){
+    tab.addEventListener('click', function(){
+      tabs.forEach(function(t){ t.classList.remove('active'); });
+      tab.classList.add('active');
+      if(tab.getAttribute('data-tab') === 'axtar'){
+        axtarChips.style.display = 'flex'; teklifChips.style.display = 'none';
+      } else {
+        axtarChips.style.display = 'none'; teklifChips.style.display = 'flex';
+      }
+    });
+  });
+  document.querySelectorAll('.chip').forEach(function(chip){
+    chip.addEventListener('click', function(){ chip.classList.toggle('sel'); });
+  });
+
+  var DEMO_MATCHES = [
+    {ad_soyad:'Kamran Əliyev', vezife:'Founder', sahe:'İnşaat sektoru', tag:'Tərəfdaşlıq'},
+    {ad_soyad:'Aynur Vəliyeva', vezife:'Investor', sahe:'Maliyyə', tag:'İnvestisiya'},
+    {ad_soyad:'Elvin Hüseynov', vezife:'CEO', sahe:'Texnologiya', tag:'Texnologiya'}
+  ];
+  function renderMatchRows(list){
+    var rows = document.getElementById('matchRows');
+    rows.innerHTML = list.map(function(m){
+      return '<div class="match-row"><div class="who"><b>'+escapeHtml(m.ad_soyad)+'</b>'+
+        '<span>'+escapeHtml(m.vezife||'')+', '+escapeHtml(m.sahe||'')+' — Təklif edir: '+escapeHtml(m.tag||'')+'</span></div>'+
+        '<a class="btn btn-outline" href="#elaqe">Sorğu göndər</a></div>';
+    }).join('');
+  }
+  document.getElementById('matchBtn').addEventListener('click', function(e){
+    e.preventDefault();
+    var activeTab = document.querySelector('.match-tab.active').getAttribute('data-tab');
+    var chipGroup = activeTab === 'axtar' ? axtarChips : teklifChips;
+    var selectedTags = Array.prototype.slice.call(chipGroup.querySelectorAll('.chip.sel')).map(function(c){ return c.getAttribute('data-tag'); });
+    var statusEl = document.getElementById('matchStatus');
+    var resultBox = document.getElementById('matchResult');
+
+    if(!selectedTags.length){
+      statusEl.textContent = 'Nəticə üçün ən azı bir kateqoriya seç.';
+      resultBox.classList.add('show');
+      document.getElementById('matchRows').innerHTML = '';
+      return;
+    }
+
+    if(LIVE){
+      // "axtarıram" seçimi -> üzvlərin "offering" massivində uyğunluq axtarılır (əksinə: "seeking")
+      var col = activeTab === 'axtar' ? 'offering' : 'seeking';
+      statusEl.textContent = 'Axtarılır...';
+      resultBox.classList.add('show');
+      document.getElementById('matchRows').innerHTML = '';
+      supa.from('members').select('*').eq('status','approved').overlaps(col, selectedTags).limit(10)
+        .then(function(res){
+          if(res.error){
+            statusEl.textContent = 'Sorğuda xəta baş verdi.';
+            console.warn('matching xətası:', res.error.message);
+            return;
+          }
+          if(!res.data.length){
+            statusEl.textContent = 'Hazırda uyğun üzv tapılmadı — icma böyüdükcə yenidən yoxla.';
+            return;
+          }
+          statusEl.textContent = res.data.length + ' uyğun əlaqə tapıldı';
+          renderMatchRows(res.data.map(function(m){ return {ad_soyad:m.ad_soyad, vezife:m.vezife, sahe:m.sahe, tag:selectedTags[0]}; }));
+        });
+    } else {
+      statusEl.textContent = 'Uyğun əlaqələr tapıldı — nümunə nəticə (canlı verilənlər üçün backend qoşulmalıdır)';
+      renderMatchRows(DEMO_MATCHES);
+      resultBox.classList.add('show');
+    }
+    resultBox.scrollIntoView({behavior:'smooth', block:'nearest'});
+  });
+
+  // faq accordion
+  document.querySelectorAll('.faq-item').forEach(function(item){
+    var q = item.querySelector('.faq-q');
+    var a = item.querySelector('.faq-a');
+    q.addEventListener('click', function(){
+      var isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(function(i){
+        i.classList.remove('open');
+        i.querySelector('.faq-a').style.maxHeight = null;
+      });
+      if(!isOpen){
+        item.classList.add('open');
+        a.style.maxHeight = a.scrollHeight + 'px';
+      }
+    });
+  });
+
+  // membership form: validation + real Supabase insert (LIVE) or demo fallback
+  var form = document.getElementById('applyForm');
+  var submitBtn = form.querySelector('button[type="submit"]');
+  var submitDefaultText = submitBtn.textContent;
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var valid = true;
+    var required = form.querySelectorAll('input[required]');
+    required.forEach(function(input){
+      var field = input.closest('.field');
+      var ok = input.value.trim().length > 0;
+      if(input.type === 'email' && ok){
+        ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value.trim());
+      }
+      field.classList.toggle('error', !ok);
+      if(!ok) valid = false;
+    });
+    var rules = document.getElementById('rules');
+    if(!rules.checked){ valid = false; rules.parentElement.style.color = '#C96A5A'; }
+    else { rules.parentElement.style.color = ''; }
+    if(!valid) return;
+
+    var payload = {
+      ad: form.ad.value.trim(),
+      soyad: form.soyad.value.trim(),
+      telefon: form.telefon.value.trim(),
+      email: form.email.value.trim(),
+      sirket: form.sirket.value.trim(),
+      vezife: form.vezife.value.trim(),
+      sahe: form.sahe.value.trim(),
+      seher: form.seher.value.trim(),
+      social: form.social.value.trim(),
+      veb: form.veb.value.trim(),
+      teklif: form.teklif.value.trim(),
+      axtaris: form.axtaris.value.trim(),
+      niye: form.niye.value.trim(),
+      status: 'pending'
+    };
+
+    function showSuccess(){
+      document.getElementById('formSuccess').classList.add('show');
+      form.reset();
+      document.getElementById('formSuccess').scrollIntoView({behavior:'smooth', block:'center'});
+    }
+
+    if(LIVE){
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Göndərilir...';
+      supa.from('applications').insert([payload]).then(function(res){
+        submitBtn.disabled = false;
+        submitBtn.textContent = submitDefaultText;
+        if(res.error){
+          alert('Xəta baş verdi, zəhmət olmasa yenidən cəhd et. (' + res.error.message + ')');
+          console.error('application insert xətası:', res.error);
+          return;
+        }
+        showSuccess();
+      });
+    } else {
+      // Backend qoşulmayıb — demo rejim, məlumat heç yerə yazılmır.
+      console.info('DEMO REJİM: backend qoşulmadığı üçün bu məlumat heç yerə göndərilmədi:', payload);
+      showSuccess();
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
