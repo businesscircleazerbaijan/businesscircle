@@ -407,6 +407,17 @@
     background:var(--panel-2); border:1px solid var(--line); color:var(--text);
     padding:11px 13px; font-size:14px; border-radius:2px; font-family:'Inter',sans-serif; width:100%;
   }
+
+  /* ===== böyük profil şəkilləri ===== */
+  .member-card .avatar{width:100%; height:auto; aspect-ratio:1/1; border-radius:6px; font-size:64px; margin-bottom:18px;}
+  .avatar-preview{width:140px; height:140px; border-radius:14px; font-size:44px;}
+  .pm-box{max-width:520px;}
+  .pm-top{text-align:center; margin-bottom:18px;}
+  .pm-avatar{width:200px; height:200px; border-radius:14px; font-size:72px; margin:0 auto 16px;}
+  .pm-sec{padding:16px 0; border-top:1px solid var(--line);}
+  .pm-sec h5{font-family:'Inter',sans-serif; font-size:13px; font-weight:600; color:var(--gold); margin-bottom:10px;}
+  .pm-dl{display:grid; grid-template-columns:96px 1fr; gap:8px 14px; font-size:14px;}
+  .pm-dl dt{color:var(--muted-2);} .pm-dl dd{color:var(--text); word-break:break-word;}
 </style>
 </head>
 <body>
@@ -569,17 +580,7 @@
 <div id="profileModal" class="auth-overlay">
   <div class="auth-box pm-box">
     <a href="#" id="profileModalClose" class="auth-close">✕</a>
-    <div class="pm-header">
-      <div class="avatar pm-avatar" id="pm_avatar"></div>
-      <div>
-        <h3 id="pm_name" style="color:#fff; font-size:19px;"></h3>
-        <div id="pm_role" style="color:var(--gold); font-size:13.5px; margin-top:4px;"></div>
-        <div id="pm_loc" style="color:var(--muted-2); font-size:12.5px; margin-top:2px;"></div>
-      </div>
-    </div>
-    <p id="pm_about" style="color:var(--muted); font-size:14px; margin:20px 0; line-height:1.6;"></p>
-    <div id="pm_tags" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px;"></div>
-    <div id="pm_links" style="display:flex; flex-wrap:wrap; gap:14px; font-size:13px; padding-top:16px; border-top:1px solid var(--line);"></div>
+    <div id="pm_body"></div>
   </div>
 </div>
 
@@ -594,10 +595,10 @@
       <a href="#tedbirler" class="btn btn-outline" id="cms-cta2">Yaxın tədbirlərə bax</a>
     </div>
     <div class="hero-strip">
-      <div><b id="cnt1">0+</b><span>Üzv</span></div>
-      <div><b id="cnt2">0+</b><span>Şirkət</span></div>
-      <div><b id="cnt3">0+</b><span>Tədbir</span></div>
-      <div><b id="cnt4">0+</b><span>Yeni əlaqə</span></div>
+      <div><b id="cnt1">0+</b><span data-cms="t1">Üzv</span></div>
+      <div><b id="cnt2">0+</b><span data-cms="t2">Şirkət</span></div>
+      <div><b id="cnt3">0+</b><span data-cms="t3">Tədbir</span></div>
+      <div><b id="cnt4">0+</b><span data-cms="t4">Yeni əlaqə</span></div>
     </div>
   </div>
 </section>
@@ -606,10 +607,10 @@
 <section id="icma">
   <div class="wrap">
     <div class="split reveal">
-      <div class="big-q">Sadəcə biznes klubu deyil.</div>
+      <div class="big-q" data-cms="t5">Sadəcə biznes klubu deyil.</div>
       <div class="answer">
-        <p>Business Circle müxtəlif sahələrdə fəaliyyət göstərən sahibkarların, biznes rəhbərlərinin, investorların və bacarıqlı peşəkarların bir araya gəldiyi canlı biznes icmasıdır.</p>
-        <p>Burada məqsəd sadəcə əlaqə toplamaq deyil — etibarlı münasibətlər qurmaq, yeni əməkdaşlıqlar yaratmaq, təcrübə paylaşmaq və bir-birimizin inkişafına real töhfə verməkdir.</p>
+        <p data-cms="t6">Business Circle müxtəlif sahələrdə fəaliyyət göstərən sahibkarların, biznes rəhbərlərinin, investorların və bacarıqlı peşəkarların bir araya gəldiyi canlı biznes icmasıdır.</p>
+        <p data-cms="t7">Burada məqsəd sadəcə əlaqə toplamaq deyil — etibarlı münasibətlər qurmaq, yeni əməkdaşlıqlar yaratmaq, təcrübə paylaşmaq və bir-birimizin inkişafına real töhfə verməkdir.</p>
       </div>
     </div>
   </div>
@@ -621,18 +622,18 @@
 <section>
   <div class="wrap">
     <div class="section-head reveal">
-      <div class="kicker">Platforma</div>
-      <h2>Altı əsas istiqamət</h2>
+      <div class="kicker" data-cms="t8">Platforma</div>
+      <h2 data-cms="t9">Altı əsas istiqamət</h2>
     </div>
   </div>
   <div class="wrap" style="padding:0;">
     <div class="pillars reveal">
-      <div class="pillar"><div class="num">01</div><h3>Networking</h3><p>Doğru insanlarla tanış ol və peşəkar çevrəni genişləndir.</p></div>
-      <div class="pillar"><div class="num">02</div><h3>Business Matching</h3><p>Ehtiyacların və imkanların uyğun olduğu insanları bir araya gətir.</p></div>
-      <div class="pillar"><div class="num">03</div><h3>Səhər yeməkləri</h3><p>Kiçik qruplarda səmimi və məhsuldar səhər görüşləri.</p></div>
-      <div class="pillar"><div class="num">04</div><h3>Tədbirlər</h3><p>Biznes, investisiya, marketinq, satış və texnologiya mövzularında görüşlər.</p></div>
-      <div class="pillar"><div class="num">05</div><h3>Əməkdaşlıq</h3><p>Üzvlər arasında yeni layihələr, tərəfdaşlıqlar və kommersiya imkanları.</p></div>
-      <div class="pillar"><div class="num">06</div><h3>Təcrübə mübadiləsi</h3><p>Fərqli sahələrdən olan insanların bilik və təcrübəsindən faydalan.</p></div>
+      <div class="pillar"><div class="num">01</div><h3 data-cms="t10">Networking</h3><p data-cms="t11">Doğru insanlarla tanış ol və peşəkar çevrəni genişləndir.</p></div>
+      <div class="pillar"><div class="num">02</div><h3 data-cms="t12">Business Matching</h3><p data-cms="t13">Ehtiyacların və imkanların uyğun olduğu insanları bir araya gətir.</p></div>
+      <div class="pillar"><div class="num">03</div><h3 data-cms="t14">Səhər yeməkləri</h3><p data-cms="t15">Kiçik qruplarda səmimi və məhsuldar səhər görüşləri.</p></div>
+      <div class="pillar"><div class="num">04</div><h3 data-cms="t16">Tədbirlər</h3><p data-cms="t17">Biznes, investisiya, marketinq, satış və texnologiya mövzularında görüşlər.</p></div>
+      <div class="pillar"><div class="num">05</div><h3 data-cms="t18">Əməkdaşlıq</h3><p data-cms="t19">Üzvlər arasında yeni layihələr, tərəfdaşlıqlar və kommersiya imkanları.</p></div>
+      <div class="pillar"><div class="num">06</div><h3 data-cms="t20">Təcrübə mübadiləsi</h3><p data-cms="t21">Fərqli sahələrdən olan insanların bilik və təcrübəsindən faydalan.</p></div>
     </div>
   </div>
 </section>
@@ -641,20 +642,20 @@
 <section style="background:var(--panel); border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
   <div class="wrap">
     <div class="section-head reveal">
-      <div class="kicker">Səbəb</div>
-      <h2>Bir əlaqə bəzən bir şirkətin istiqamətini dəyişə bilər.</h2>
+      <div class="kicker" data-cms="t22">Səbəb</div>
+      <h2 data-cms="t23">Bir əlaqə bəzən bir şirkətin istiqamətini dəyişə bilər.</h2>
     </div>
     <div class="benefit-grid reveal">
-      <div class="benefit-item"><b>Yeni biznes tərəfdaşları</b></div>
-      <div class="benefit-item"><b>Yeni müştərilər</b></div>
-      <div class="benefit-item"><b>İnvestorlarla əlaqə</b></div>
-      <div class="benefit-item"><b>Təchizatçı və xidmət tərəfdaşları</b></div>
-      <div class="benefit-item"><b>Peşəkar dostluqlar</b></div>
-      <div class="benefit-item"><b>Yeni ideyalar</b></div>
-      <div class="benefit-item"><b>Təcrübə mübadiləsi</b></div>
-      <div class="benefit-item"><b>Birgə layihələr</b></div>
-      <div class="benefit-item"><b>Tövsiyə və referallar</b></div>
-      <div class="benefit-item"><b>Şəxsi və peşəkar inkişaf</b></div>
+      <div class="benefit-item"><b data-cms="t24">Yeni biznes tərəfdaşları</b></div>
+      <div class="benefit-item"><b data-cms="t25">Yeni müştərilər</b></div>
+      <div class="benefit-item"><b data-cms="t26">İnvestorlarla əlaqə</b></div>
+      <div class="benefit-item"><b data-cms="t27">Təchizatçı və xidmət tərəfdaşları</b></div>
+      <div class="benefit-item"><b data-cms="t28">Peşəkar dostluqlar</b></div>
+      <div class="benefit-item"><b data-cms="t29">Yeni ideyalar</b></div>
+      <div class="benefit-item"><b data-cms="t30">Təcrübə mübadiləsi</b></div>
+      <div class="benefit-item"><b data-cms="t31">Birgə layihələr</b></div>
+      <div class="benefit-item"><b data-cms="t32">Tövsiyə və referallar</b></div>
+      <div class="benefit-item"><b data-cms="t33">Şəxsi və peşəkar inkişaf</b></div>
     </div>
   </div>
 </section>
@@ -663,22 +664,22 @@
 <section>
   <div class="wrap">
     <div class="section-head reveal">
-      <div class="kicker">Ənənə</div>
-      <h2>Günə doğru insanlarla başla.</h2>
-      <p>Biznes əlaqələrinin ən maraqlı söhbətləri bəzən rəsmi ofisdə yox, səhər yeməyi masasının ətrafında yaranır.</p>
+      <div class="kicker" data-cms="t34">Ənənə</div>
+      <h2 data-cms="t35">Günə doğru insanlarla başla.</h2>
+      <p data-cms="t36">Biznes əlaqələrinin ən maraqlı söhbətləri bəzən rəsmi ofisdə yox, səhər yeməyi masasının ətrafında yaranır.</p>
     </div>
     <div class="bf-wrap reveal">
-      <div class="bf-visual"><span>Business Breakfast — aylıq format</span></div>
+      <div class="bf-visual"><span data-cms="t37">Business Breakfast — aylıq format</span></div>
       <div class="bf-info">
-        <div class="tag">Business Breakfast #01</div>
-        <h3>Yeni biznes imkanları və əməkdaşlıq</h3>
+        <div class="tag" data-cms="t38">Business Breakfast #01</div>
+        <h3 data-cms="t39">Yeni biznes imkanları və əməkdaşlıq</h3>
         <div class="bf-meta">
-          <div><span>Tarix</span><b>12 Oktyabr</b></div>
-          <div><span>Saat</span><b>09:00</b></div>
-          <div><span>Məkan</span><b>Bakı</b></div>
-          <div><span>İştirakçı</span><b>20 nəfər</b></div>
+          <div><span data-cms="t40">Tarix</span><b data-cms="t41">12 Oktyabr</b></div>
+          <div><span data-cms="t42">Saat</span><b data-cms="t43">09:00</b></div>
+          <div><span data-cms="t44">Məkan</span><b data-cms="t45">Bakı</b></div>
+          <div><span data-cms="t46">İştirakçı</span><b data-cms="t47">20 nəfər</b></div>
         </div>
-        <a href="#elaqe" class="btn btn-gold">Qeydiyyatdan keç</a>
+        <a href="#elaqe" class="btn btn-gold" data-cms="t48">Qeydiyyatdan keç</a>
       </div>
     </div>
   </div>
@@ -688,8 +689,8 @@
 <section id="tedbirler" style="background:var(--panel); border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
   <div class="wrap">
     <div class="section-head reveal">
-      <div class="kicker">Təqvim</div>
-      <h2>Yaxın tədbirlər</h2>
+      <div class="kicker" data-cms="t49">Təqvim</div>
+      <h2 data-cms="t50">Yaxın tədbirlər</h2>
     </div>
     <div class="filter-row" id="filterRow">
       <div class="filter-chip active" data-f="all">Hamısı</div>
@@ -714,9 +715,9 @@
 <section id="haqqimizda">
   <div class="wrap">
     <div class="section-head reveal">
-      <div class="kicker">İcma</div>
-      <h2>Üzvlər</h2>
-      <p>Fərqli sektorlardan olan sahibkarlar və rəhbərlər — hər biri öz sahəsində fəaliyyət göstərir, öz təcrübəsini gətirir.</p>
+      <div class="kicker" data-cms="t81">İcma</div>
+      <h2 data-cms="t82">Üzvlər</h2>
+      <p data-cms="t83">Fərqli sektorlardan olan sahibkarlar və rəhbərlər — hər biri öz sahəsində fəaliyyət göstərir, öz təcrübəsini gətirir.</p>
     </div>
     <div class="member-grid reveal" id="memberGrid">
       <div class="member-card"><div class="avatar">R</div><h4>Rəşad M.</h4><div class="role">Founder</div><div class="sector">Texnologiya · Bakı</div><a href="#">Profilə bax →</a></div>
@@ -731,8 +732,8 @@
 <section id="networking" style="background:var(--panel); border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
   <div class="wrap">
     <div class="section-head reveal">
-      <div class="kicker">Business Matching</div>
-      <h2>Bəlkə axtardığınız insan artıq icmadadır?</h2>
+      <div class="kicker" data-cms="t100">Business Matching</div>
+      <h2 data-cms="t101">Bəlkə axtardığınız insan artıq icmadadır?</h2>
     </div>
     <div class="match-box reveal">
       <div class="match-tabs">
@@ -762,15 +763,15 @@
 <section>
   <div class="wrap">
     <div class="section-head reveal">
-      <div class="kicker">Prinsiplər</div>
-      <h2>Bu icmanı fərqli edən nədir?</h2>
+      <div class="kicker" data-cms="t102">Prinsiplər</div>
+      <h2 data-cms="t103">Bu icmanı fərqli edən nədir?</h2>
     </div>
     <div class="values reveal">
-      <div class="value"><h4>Etibar</h4><p>Burada uzunmüddətli münasibətlər qurulur.</p></div>
-      <div class="value"><h4>Keyfiyyət</h4><p>Çox insan yox, doğru insanlar.</p></div>
-      <div class="value"><h4>Qarşılıq</h4><p>Dəyər vermədən dəyər gözləmə.</p></div>
-      <div class="value"><h4>Açıqlıq</h4><p>Fərqli sahələrdən olan insanları bir masa ətrafında birləşdiririk.</p></div>
-      <div class="value"><h4>Əməkdaşlıq</h4><p>Birlikdə daha çox imkan yaradırıq.</p></div>
+      <div class="value"><h4 data-cms="t104">Etibar</h4><p data-cms="t105">Burada uzunmüddətli münasibətlər qurulur.</p></div>
+      <div class="value"><h4 data-cms="t106">Keyfiyyət</h4><p data-cms="t107">Çox insan yox, doğru insanlar.</p></div>
+      <div class="value"><h4 data-cms="t108">Qarşılıq</h4><p data-cms="t109">Dəyər vermədən dəyər gözləmə.</p></div>
+      <div class="value"><h4 data-cms="t110">Açıqlıq</h4><p data-cms="t111">Fərqli sahələrdən olan insanları bir masa ətrafında birləşdiririk.</p></div>
+      <div class="value"><h4 data-cms="t112">Əməkdaşlıq</h4><p data-cms="t113">Birlikdə daha çox imkan yaradırıq.</p></div>
     </div>
   </div>
 </section>
@@ -780,10 +781,10 @@
 <!-- NUMBERS -->
 <section style="padding:0;">
   <div class="numbers reveal">
-    <div class="number-cell"><b>500+</b><span>Üzv</span></div>
-    <div class="number-cell"><b>100+</b><span>Şirkət</span></div>
-    <div class="number-cell"><b>50+</b><span>Tədbir</span></div>
-    <div class="number-cell"><b>1000+</b><span>Yeni əlaqə</span></div>
+    <div class="number-cell"><b data-cms="t114">500+</b><span data-cms="t115">Üzv</span></div>
+    <div class="number-cell"><b data-cms="t116">100+</b><span data-cms="t117">Şirkət</span></div>
+    <div class="number-cell"><b data-cms="t118">50+</b><span data-cms="t119">Tədbir</span></div>
+    <div class="number-cell"><b data-cms="t120">1000+</b><span data-cms="t121">Yeni əlaqə</span></div>
   </div>
 </section>
 
@@ -791,14 +792,14 @@
 <section>
   <div class="wrap">
     <div class="section-head reveal">
-      <div class="kicker">Proses</div>
-      <h2>Necə işləyir?</h2>
+      <div class="kicker" data-cms="t122">Proses</div>
+      <h2 data-cms="t123">Necə işləyir?</h2>
     </div>
     <div class="steps reveal">
-      <div class="step"><div class="n">01</div><h4>Müraciət et</h4><p>Qısa formu doldur, komandamız səninlə əlaqə saxlayacaq.</p></div>
-      <div class="step"><div class="n">02</div><h4>Profilini yarat</h4><p>Fəaliyyət sahəni, təklif etdiyin və axtardığın imkanları qeyd et.</p></div>
-      <div class="step"><div class="n">03</div><h4>Doğru insanlarla tanış ol</h4><p>Tədbirlərdə və business matching vasitəsilə uyğun üzvləri tap.</p></div>
-      <div class="step"><div class="n">04</div><h4>Əməkdaşlığa başla</h4><p>Əlaqəni real layihəyə, tərəfdaşlığa və ya müştəriyə çevir.</p></div>
+      <div class="step"><div class="n">01</div><h4 data-cms="t124">Müraciət et</h4><p data-cms="t125">Qısa formu doldur, komandamız səninlə əlaqə saxlayacaq.</p></div>
+      <div class="step"><div class="n">02</div><h4 data-cms="t126">Profilini yarat</h4><p data-cms="t127">Fəaliyyət sahəni, təklif etdiyin və axtardığın imkanları qeyd et.</p></div>
+      <div class="step"><div class="n">03</div><h4 data-cms="t128">Doğru insanlarla tanış ol</h4><p data-cms="t129">Tədbirlərdə və business matching vasitəsilə uyğun üzvləri tap.</p></div>
+      <div class="step"><div class="n">04</div><h4 data-cms="t130">Əməkdaşlığa başla</h4><p data-cms="t131">Əlaqəni real layihəyə, tərəfdaşlığa və ya müştəriyə çevir.</p></div>
     </div>
   </div>
 </section>
@@ -807,30 +808,30 @@
 <section id="uzvluk" style="background:var(--panel); border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
   <div class="wrap">
     <div class="section-head reveal">
-      <div class="kicker">Üzvlük</div>
-      <h2>Öz səviyyəni seç</h2>
+      <div class="kicker" data-cms="t132">Üzvlük</div>
+      <h2 data-cms="t133">Öz səviyyəni seç</h2>
     </div>
     <div class="tiers reveal">
       <div class="tier">
-        <div class="tname">Community</div>
-        <div class="tdesc">Networking və açıq tədbirlərə çıxış.</div>
-        <ul><li>Açıq tədbirlərə giriş</li><li>WhatsApp icması</li><li>Üzv profili</li></ul>
-        <div class="price">Müraciət et</div>
-        <a href="#elaqe" class="btn btn-outline">Müraciət et</a>
+        <div class="tname" data-cms="t134">Community</div>
+        <div class="tdesc" data-cms="t135">Networking və açıq tədbirlərə çıxış.</div>
+        <ul><li data-cms="t136">Açıq tədbirlərə giriş</li><li data-cms="t137">WhatsApp icması</li><li data-cms="t138">Üzv profili</li></ul>
+        <div class="price" data-cms="t139">Müraciət et</div>
+        <a href="#elaqe" class="btn btn-outline" data-cms="t140">Müraciət et</a>
       </div>
       <div class="tier mid">
-        <div class="tname">Business</div>
-        <div class="tdesc">Networking + xüsusi tədbirlər + business matching.</div>
-        <ul><li>Bütün Community imtiyazları</li><li>Xüsusi biznes tədbirləri</li><li>Business matching funksiyası</li><li>Səhər yeməyi dəvətləri</li></ul>
-        <div class="price">Coming Soon</div>
-        <a href="#elaqe" class="btn btn-gold">Müraciət et</a>
+        <div class="tname" data-cms="t141">Business</div>
+        <div class="tdesc" data-cms="t142">Networking + xüsusi tədbirlər + business matching.</div>
+        <ul><li data-cms="t143">Bütün Community imtiyazları</li><li data-cms="t144">Xüsusi biznes tədbirləri</li><li data-cms="t145">Business matching funksiyası</li><li data-cms="t146">Səhər yeməyi dəvətləri</li></ul>
+        <div class="price" data-cms="t147">Coming Soon</div>
+        <a href="#elaqe" class="btn btn-gold" data-cms="t148">Müraciət et</a>
       </div>
       <div class="tier">
-        <div class="tname">Private Circle</div>
-        <div class="tdesc">Qapalı görüşlər + premium networking + xüsusi imkanlar.</div>
-        <ul><li>Bütün Business imtiyazları</li><li>Qapalı, məhdud iştirakçılı görüşlər</li><li>Fərdi tanışlıq təşkili</li></ul>
-        <div class="price">Coming Soon</div>
-        <a href="#elaqe" class="btn btn-outline">Müraciət et</a>
+        <div class="tname" data-cms="t149">Private Circle</div>
+        <div class="tdesc" data-cms="t150">Qapalı görüşlər + premium networking + xüsusi imkanlar.</div>
+        <ul><li data-cms="t151">Bütün Business imtiyazları</li><li data-cms="t152">Qapalı, məhdud iştirakçılı görüşlər</li><li data-cms="t153">Fərdi tanışlıq təşkili</li></ul>
+        <div class="price" data-cms="t154">Coming Soon</div>
+        <a href="#elaqe" class="btn btn-outline" data-cms="t155">Müraciət et</a>
       </div>
     </div>
   </div>
@@ -840,14 +841,14 @@
 <section id="elaqe">
   <div class="wrap">
     <div class="section-head reveal">
-      <div class="kicker">Üzvlük üçün müraciət</div>
-      <h2>İcmaya qoşulmaq üçün müraciət et</h2>
-      <p>Formu doldur, komandamız 2 iş günü ərzində səninlə əlaqə saxlayacaq.</p>
+      <div class="kicker" data-cms="t156">Üzvlük üçün müraciət</div>
+      <h2 data-cms="t157">İcmaya qoşulmaq üçün müraciət et</h2>
+      <p data-cms="t158">Formu doldur, komandamız 2 iş günü ərzində səninlə əlaqə saxlayacaq.</p>
     </div>
     <div class="form-wrap reveal">
       <div id="formSuccess">
-        <h3>Təşəkkür edirik.</h3>
-        <p>Müraciətiniz qəbul edildi. Komandamız sizinlə əlaqə saxlayacaq.</p>
+        <h3 data-cms="t159">Təşəkkür edirik.</h3>
+        <p data-cms="t160">Müraciətiniz qəbul edildi. Komandamız sizinlə əlaqə saxlayacaq.</p>
       </div>
       <form id="applyForm" novalidate>
         <div class="form-grid">
@@ -892,27 +893,27 @@
 <section style="background:var(--panel); border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
   <div class="wrap">
     <div class="section-head reveal">
-      <div class="kicker">Business Insights</div>
-      <h2>Son yazılar</h2>
+      <div class="kicker" data-cms="t161">Business Insights</div>
+      <h2 data-cms="t162">Son yazılar</h2>
     </div>
     <div class="insight-grid reveal">
       <div class="insight-card">
-        <div class="icat">NETWORKING</div>
-        <h4>Səhər yeməyi görüşlərindən niyə əməkdaşlıq çıxır?</h4>
-        <p>Qeyri-rəsmi mühitin biznes qərarlarına təsiri.</p>
-        <div class="iline">5 dəq oxuma</div>
+        <div class="icat" data-cms="t163">NETWORKING</div>
+        <h4 data-cms="t164">Səhər yeməyi görüşlərindən niyə əməkdaşlıq çıxır?</h4>
+        <p data-cms="t165">Qeyri-rəsmi mühitin biznes qərarlarına təsiri.</p>
+        <div class="iline" data-cms="t166">5 dəq oxuma</div>
       </div>
       <div class="insight-card">
-        <div class="icat">SAHİBKARLIQ</div>
-        <h4>Kiçik icmalarda böyük imkanlar necə tapılır?</h4>
-        <p>Keyfiyyətli əlaqə şəbəkəsi qurmağın praktik yolları.</p>
-        <div class="iline">4 dəq oxuma</div>
+        <div class="icat" data-cms="t167">SAHİBKARLIQ</div>
+        <h4 data-cms="t168">Kiçik icmalarda böyük imkanlar necə tapılır?</h4>
+        <p data-cms="t169">Keyfiyyətli əlaqə şəbəkəsi qurmağın praktik yolları.</p>
+        <div class="iline" data-cms="t170">4 dəq oxuma</div>
       </div>
       <div class="insight-card">
-        <div class="icat">İNVESTİSİYA</div>
-        <h4>İnvestorla ilk görüşə necə hazırlaşmalı?</h4>
-        <p>Təqdimatdan əvvəl nəzərə alınmalı əsas məqamlar.</p>
-        <div class="iline">6 dəq oxuma</div>
+        <div class="icat" data-cms="t171">İNVESTİSİYA</div>
+        <h4 data-cms="t172">İnvestorla ilk görüşə necə hazırlaşmalı?</h4>
+        <p data-cms="t173">Təqdimatdan əvvəl nəzərə alınmalı əsas məqamlar.</p>
+        <div class="iline" data-cms="t174">6 dəq oxuma</div>
       </div>
     </div>
   </div>
@@ -922,41 +923,41 @@
 <section>
   <div class="wrap">
     <div class="section-head reveal">
-      <div class="kicker">Suallar</div>
-      <h2>Tez-tez verilən suallar</h2>
+      <div class="kicker" data-cms="t175">Suallar</div>
+      <h2 data-cms="t176">Tez-tez verilən suallar</h2>
     </div>
     <div id="faqList" class="reveal">
       <div class="faq-item">
-        <div class="faq-q"><h4>Kimlər üzv ola bilər?</h4><span class="plus">+</span></div>
-        <div class="faq-a"><p>Sahibkarlar, biznes rəhbərləri, investorlar və peşəkar sahədə fəaliyyət göstərən şəxslər müraciət edə bilər. Hər müraciət komanda tərəfindən nəzərdən keçirilir.</p></div>
+        <div class="faq-q"><h4 data-cms="t177">Kimlər üzv ola bilər?</h4><span class="plus">+</span></div>
+        <div class="faq-a"><p data-cms="t178">Sahibkarlar, biznes rəhbərləri, investorlar və peşəkar sahədə fəaliyyət göstərən şəxslər müraciət edə bilər. Hər müraciət komanda tərəfindən nəzərdən keçirilir.</p></div>
       </div>
       <div class="faq-item">
-        <div class="faq-q"><h4>Üzvlük ödənişlidirmi?</h4><span class="plus">+</span></div>
-        <div class="faq-a"><p>Üzvlük səviyyələri və qiymətləndirmə hazırda müəyyənləşdirilir. Müraciət edən şəxslərə fərdi qaydada məlumat veriləcək.</p></div>
+        <div class="faq-q"><h4 data-cms="t179">Üzvlük ödənişlidirmi?</h4><span class="plus">+</span></div>
+        <div class="faq-a"><p data-cms="t180">Üzvlük səviyyələri və qiymətləndirmə hazırda müəyyənləşdirilir. Müraciət edən şəxslərə fərdi qaydada məlumat veriləcək.</p></div>
       </div>
       <div class="faq-item">
-        <div class="faq-q"><h4>Tədbirlər necə keçirilir?</h4><span class="plus">+</span></div>
-        <div class="faq-a"><p>Tədbirlər Bakıda, əvvəlcədən müəyyən edilmiş məkanlarda keçirilir — səhər yeməkləri, networking axşamları və qapalı görüşlər formatında.</p></div>
+        <div class="faq-q"><h4 data-cms="t181">Tədbirlər necə keçirilir?</h4><span class="plus">+</span></div>
+        <div class="faq-a"><p data-cms="t182">Tədbirlər Bakıda, əvvəlcədən müəyyən edilmiş məkanlarda keçirilir — səhər yeməkləri, networking axşamları və qapalı görüşlər formatında.</p></div>
       </div>
       <div class="faq-item">
-        <div class="faq-q"><h4>WhatsApp icması necə işləyir?</h4><span class="plus">+</span></div>
-        <div class="faq-a"><p>Üzvlər qəbul olunduqdan sonra icmanın WhatsApp qrupuna dəvət olunur, burada gündəlik əlaqə və məlumat mübadiləsi davam edir.</p></div>
+        <div class="faq-q"><h4 data-cms="t183">WhatsApp icması necə işləyir?</h4><span class="plus">+</span></div>
+        <div class="faq-a"><p data-cms="t184">Üzvlər qəbul olunduqdan sonra icmanın WhatsApp qrupuna dəvət olunur, burada gündəlik əlaqə və məlumat mübadiləsi davam edir.</p></div>
       </div>
       <div class="faq-item">
-        <div class="faq-q"><h4>Üzvlük üçün seçim prosesi varmı?</h4><span class="plus">+</span></div>
-        <div class="faq-a"><p>Bəli, hər müraciət komanda tərəfindən qiymətləndirilir ki, icmanın keyfiyyəti və etibar mühiti qorunsun.</p></div>
+        <div class="faq-q"><h4 data-cms="t185">Üzvlük üçün seçim prosesi varmı?</h4><span class="plus">+</span></div>
+        <div class="faq-a"><p data-cms="t186">Bəli, hər müraciət komanda tərəfindən qiymətləndirilir ki, icmanın keyfiyyəti və etibar mühiti qorunsun.</p></div>
       </div>
       <div class="faq-item">
-        <div class="faq-q"><h4>Business matching necə işləyir?</h4><span class="plus">+</span></div>
-        <div class="faq-a"><p>Nə axtardığını və nə təklif etdiyini qeyd edirsən, sistem uyğun üzvləri təklif edir və tanışlıq üçün sorğu göndərə bilirsən.</p></div>
+        <div class="faq-q"><h4 data-cms="t187">Business matching necə işləyir?</h4><span class="plus">+</span></div>
+        <div class="faq-a"><p data-cms="t188">Nə axtardığını və nə təklif etdiyini qeyd edirsən, sistem uyğun üzvləri təklif edir və tanışlıq üçün sorğu göndərə bilirsən.</p></div>
       </div>
       <div class="faq-item">
-        <div class="faq-q"><h4>Şirkətimi icmada tanıda bilərəmmi?</h4><span class="plus">+</span></div>
-        <div class="faq-a"><p>Bəli, üzv profilində şirkətin və fəaliyyət sahən haqqında məlumat yerləşdirə bilərsən.</p></div>
+        <div class="faq-q"><h4 data-cms="t189">Şirkətimi icmada tanıda bilərəmmi?</h4><span class="plus">+</span></div>
+        <div class="faq-a"><p data-cms="t190">Bəli, üzv profilində şirkətin və fəaliyyət sahən haqqında məlumat yerləşdirə bilərsən.</p></div>
       </div>
       <div class="faq-item">
-        <div class="faq-q"><h4>Tədbirə qonaq kimi qoşula bilərəmmi?</h4><span class="plus">+</span></div>
-        <div class="faq-a"><p>Bəzi açıq tədbirlərə qonaq statusu ilə qoşulmaq mümkündür, qapalı görüşlər isə yalnız üzvlər üçündür.</p></div>
+        <div class="faq-q"><h4 data-cms="t191">Tədbirə qonaq kimi qoşula bilərəmmi?</h4><span class="plus">+</span></div>
+        <div class="faq-a"><p data-cms="t192">Bəzi açıq tədbirlərə qonaq statusu ilə qoşulmaq mümkündür, qapalı görüşlər isə yalnız üzvlər üçündür.</p></div>
       </div>
     </div>
   </div>
@@ -966,26 +967,26 @@
   <div class="wrap">
     <div class="foot-grid">
       <div class="foot-brand">
-        <b>BUSINESS CIRCLE AZERBAIJAN</b>
-        <div class="tag">Doğru insanlar. Doğru əlaqələr. Yeni imkanlar.</div>
-        <p>Sahibkarları, rəhbərləri və investorları bir araya gətirən qapalı biznes icması.</p>
+        <b data-cms="t193">BUSINESS CIRCLE AZERBAIJAN</b>
+        <div class="tag" data-cms="t194">Doğru insanlar. Doğru əlaqələr. Yeni imkanlar.</div>
+        <p data-cms="t195">Sahibkarları, rəhbərləri və investorları bir araya gətirən qapalı biznes icması.</p>
       </div>
       <div class="foot-col">
-        <h5>NAVİQASİYA</h5>
-        <a href="#home">Ana səhifə</a>
-        <a href="#icma">İcma</a>
-        <a href="#tedbirler">Tədbirlər</a>
-        <a href="#uzvluk">Üzvlük</a>
+        <h5 data-cms="t196">NAVİQASİYA</h5>
+        <a href="#home" data-cms="t197">Ana səhifə</a>
+        <a href="#icma" data-cms="t198">İcma</a>
+        <a href="#tedbirler" data-cms="t199">Tədbirlər</a>
+        <a href="#uzvluk" data-cms="t200">Üzvlük</a>
       </div>
       <div class="foot-col">
-        <h5>MƏLUMAT</h5>
-        <a href="#haqqimizda">Haqqımızda</a>
-        <a href="#elaqe">Əlaqə</a>
-        <a href="#">FAQ</a>
-        <a href="#">Privacy Policy</a>
+        <h5 data-cms="t201">MƏLUMAT</h5>
+        <a href="#haqqimizda" data-cms="t202">Haqqımızda</a>
+        <a href="#elaqe" data-cms="t203">Əlaqə</a>
+        <a href="#" data-cms="t204">FAQ</a>
+        <a href="#" data-cms="t205">Privacy Policy</a>
       </div>
       <div class="foot-col">
-        <h5>ƏLAQƏ</h5>
+        <h5 data-cms="t206">ƏLAQƏ</h5>
         <a href="#" id="cms-ig-1">Instagram</a>
         <a href="#" id="cms-li-1">LinkedIn</a>
         <a href="#" id="cms-wa-2">WhatsApp</a>
@@ -994,7 +995,7 @@
     <div class="foot-bottom">
       <span id="cms-copyright">© 2026 Business Circle Azerbaijan. Bütün hüquqlar qorunur.</span>
       <div class="social">
-        <a href="#" id="cms-ig-2">IG</a><a href="#" id="cms-li-2">LI</a><a href="#" id="cms-fb-2">FB</a><a href="#">TT</a><a href="#" id="cms-wa-3">WA</a>
+        <a href="#" id="cms-ig-2">IG</a><a href="#" id="cms-li-2">LI</a><a href="#" id="cms-fb-2">FB</a><a href="#" data-cms="t207">TT</a><a href="#" id="cms-wa-3">WA</a>
       </div>
     </div>
   </div>
@@ -1285,6 +1286,12 @@
     var map = {};
     rows.forEach(function(r){ map[r.key] = r.value; });
 
+    if(map.content){
+      Object.keys(map.content).forEach(function(key){
+        var el = document.querySelector('[data-cms="'+String(key).replace(/"/g,'')+'"]');
+        if(el && map.content[key]) el.textContent = map.content[key];
+      });
+    }
     if(map.hero){
       var h = map.hero;
       if(h.eyebrow) document.getElementById('cms-eyebrow').textContent = h.eyebrow;
@@ -1446,7 +1453,7 @@
       directoryCache[m.id] = m;
       var letter = (m.ad||'?').trim().charAt(0).toUpperCase();
       var avatarInner = safeUrl(m.avatar_url)
-        ? '<img src="'+escapeHtml(safeUrl(m.avatar_url))+'" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">'
+        ? '<img src="'+escapeHtml(safeUrl(m.avatar_url))+'" alt="" style="width:100%;height:100%;object-fit:cover;">'
         : letter;
       return '<div class="member-card">'+
         '<div class="avatar">'+avatarInner+'</div>'+
@@ -1471,31 +1478,24 @@
   }
 
   // ====== PROFİL BAXIŞ MODALI ======
+  var TAG_LABEL = {terefdashliq:'Tərəfdaşlıq', investisiya:'İnvestisiya', xidmet:'Xidmət', mehsul:'Məhsul', ekspertiza:'Ekspertiza', marketinq:'Marketinq', texnologiya:'Texnologiya', konsaltinq:'Konsaltinq', terefdash:'Tərəfdaş', investor:'İnvestor', musteri:'Müştəri', tedarukchu:'Təchizatçı', ishchi:'İşçi', mentor:'Mentor', hemtesisci:'Həmtəsisçi', ideya:'Yeni biznes ideyası'};
   function openProfileModal(p){
     if(!p) return;
-    var letter = (p.ad||'?').trim().charAt(0).toUpperCase();
-    document.getElementById('pm_avatar').innerHTML = safeUrl(p.avatar_url)
-      ? '<img src="'+escapeHtml(safeUrl(p.avatar_url))+'" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">'
-      : letter;
-    document.getElementById('pm_name').textContent = (p.ad||'') + ' ' + (p.soyad||'');
-    document.getElementById('pm_role').textContent = [p.vezife, p.sirket].filter(Boolean).join(', ');
-    document.getElementById('pm_loc').textContent = [p.sektor, p.seher].filter(Boolean).join(' · ');
-    var aboutEl = document.getElementById('pm_about');
-    if(p.about){ aboutEl.textContent = p.about; aboutEl.style.display = 'block'; }
-    else { aboutEl.textContent = currentUser ? 'Bu üzv haqqımda məlumat əlavə etməyib.' : 'Bu məlumatı görmək üçün icmaya qoşulmalısınız.'; aboutEl.style.display = 'block'; }
-
-    var tagsHtml = '';
-    (p.offering||[]).forEach(function(t){ tagsHtml += '<span class="pm-tag pm-tag-offer">'+escapeHtml(t)+'</span>'; });
-    (p.seeking||[]).forEach(function(t){ tagsHtml += '<span class="pm-tag pm-tag-seek">'+escapeHtml(t)+'</span>'; });
-    document.getElementById('pm_tags').innerHTML = tagsHtml;
-
-    var linksHtml = '';
-    if(safeUrl(p.website)) linksHtml += '<a href="'+escapeHtml(safeUrl(p.website))+'" target="_blank" rel="noopener">Website</a>';
-    if(safeUrl(p.linkedin)) linksHtml += '<a href="'+escapeHtml(safeUrl(p.linkedin))+'" target="_blank" rel="noopener">LinkedIn</a>';
-    if(safeUrl(p.instagram)) linksHtml += '<a href="'+escapeHtml(safeUrl(p.instagram))+'" target="_blank" rel="noopener">Instagram</a>';
-    if(p.telefon) linksHtml += '<span>'+escapeHtml(p.telefon)+'</span>';
-    document.getElementById('pm_links').innerHTML = linksHtml || '<span style="color:var(--muted-2);">Əlaqə məlumatı gizlidir</span>';
-
+    var img = safeUrl(p.avatar_url), letter = (p.ad||'?').trim().charAt(0).toUpperCase();
+    var h = '<div class="pm-top"><div class="avatar pm-avatar">'+(img?'<img src="'+escapeHtml(img)+'" alt="" style="width:100%;height:100%;object-fit:cover;">':letter)+'</div>'+
+      '<h3 style="color:#fff;font-size:22px;">'+escapeHtml((p.ad||'')+' '+(p.soyad||''))+'</h3></div>';
+    var info = [['Vəzifə',p.vezife],['Şirkət',p.sirket],['Sektor',p.sektor],['Şəhər',p.seher]].filter(function(r){ return r[1]; });
+    if(info.length) h += '<div class="pm-sec"><h5>Ümumi məlumat</h5><dl class="pm-dl">'+info.map(function(r){ return '<dt>'+r[0]+'</dt><dd>'+escapeHtml(r[1])+'</dd>'; }).join('')+'</dl></div>';
+    h += '<div class="pm-sec"><h5>Haqqında</h5><p style="color:var(--muted);font-size:14px;line-height:1.6;">'+(p.about ? escapeHtml(p.about) : (currentUser ? 'Bu üzv haqqında məlumat əlavə etməyib.' : 'Bu məlumatı görmək üçün icmaya qoşulmalısınız.'))+'</p></div>';
+    function tags(title, arr, cls){ return (arr && arr.length) ? '<div class="pm-sec"><h5>'+title+'</h5><div style="display:flex;flex-wrap:wrap;gap:8px;">'+arr.map(function(t){ return '<span class="pm-tag '+cls+'">'+escapeHtml(TAG_LABEL[t]||t)+'</span>'; }).join('')+'</div></div>' : ''; }
+    h += tags('Nə təklif edir', p.offering, 'pm-tag-offer') + tags('Nə axtarır', p.seeking, 'pm-tag-seek');
+    var c = [];
+    if(p.telefon) c.push(['Telefon', escapeHtml(p.telefon)]);
+    [['Website',p.website],['LinkedIn',p.linkedin],['Instagram',p.instagram]].forEach(function(l){
+      var u = safeUrl(l[1]); if(u) c.push([l[0], '<a href="'+escapeHtml(u)+'" target="_blank" rel="noopener" style="border-bottom:1px solid var(--gold-dim);">'+escapeHtml(u.replace(/^https?:\/\/(www\.)?/,''))+'</a>']);
+    });
+    h += '<div class="pm-sec"><h5>Əlaqə</h5>'+(c.length ? '<dl class="pm-dl">'+c.map(function(r){ return '<dt>'+r[0]+'</dt><dd>'+r[1]+'</dd>'; }).join('')+'</dl>' : '<span style="color:var(--muted-2);font-size:13px;">Əlaqə məlumatı gizlidir.</span>')+'</div>';
+    document.getElementById('pm_body').innerHTML = h;
     document.getElementById('profileModal').classList.add('open');
   }
   document.getElementById('profileModalClose').addEventListener('click', function(e){ e.preventDefault(); document.getElementById('profileModal').classList.remove('open'); });
@@ -1603,7 +1603,7 @@
     var valid = true;
     var required = form.querySelectorAll('input[required]');
     required.forEach(function(input){
-      var field = input.closest('.field');
+      var field = input.closest('.field'); if(!field) return;
       var ok = input.value.trim().length > 0;
       if(input.type === 'email' && ok){
         ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value.trim());
@@ -1642,16 +1642,20 @@
     if(LIVE){
       submitBtn.disabled = true;
       submitBtn.textContent = 'Göndərilir...';
-      supa.from('applications').insert([payload]).then(function(res){
-        submitBtn.disabled = false;
-        submitBtn.textContent = submitDefaultText;
-        if(res.error){
-          alert('Xəta baş verdi, zəhmət olmasa yenidən cəhd et. (' + res.error.message + ')');
-          console.error('application insert xətası:', res.error);
-          return;
-        }
-        showSuccess();
-      });
+      var CORE=['ad','soyad','telefon','email','sirket','vezife','teklif','axtaris','niye','status'];
+      (function send(p, retried){
+        supa.from('applications').insert([p]).then(function(res){
+          if(res.error && !retried && (res.error.code==='PGRST204' || /column/i.test(res.error.message||''))){
+            // cədvəldə sahe/seher/social/veb sütunu yoxdur: əlavə sahələr "niye" mətninə qatılır, itmir
+            var c={}; CORE.forEach(function(k){ c[k]=p[k]; });
+            c.niye=[p.niye, p.sahe&&('Fəaliyyət sahəsi: '+p.sahe), p.seher&&('Şəhər: '+p.seher), p.social&&('Sosial: '+p.social), p.veb&&('Veb sayt: '+p.veb)].filter(Boolean).join('\n');
+            return send(c,true);
+          }
+          submitBtn.disabled=false; submitBtn.textContent=submitDefaultText;
+          if(res.error){ console.error('application insert xətası:',res.error); alert('Müraciət göndərilmədi: '+res.error.message); return; }
+          showSuccess();
+        });
+      })(payload,false);
     } else {
       // Backend qoşulmayıb — demo rejim, məlumat heç yerə yazılmır.
       console.info('DEMO REJİM: backend qoşulmadığı üçün bu məlumat heç yerə göndərilmədi:', payload);
