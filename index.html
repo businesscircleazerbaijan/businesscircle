@@ -471,6 +471,24 @@
   .pm-company-logo-plate img{width:100%; height:100%; object-fit:contain;}
   .wa-join-box{margin-top:20px; padding:18px 20px; background:var(--panel-2); border:1px solid var(--gold-dim); border-radius:4px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
   .wa-join-box p{color:var(--muted); font-size:13.5px; margin:0;}
+  /* ---- bildiriş zəngi ---- */
+  #notifWrap{position:fixed; left:24px; bottom:24px; z-index:95; display:none;}
+  #notifBell{width:52px; height:52px; border-radius:50%; background:var(--panel-2); border:1px solid var(--gold-dim); color:var(--gold); cursor:pointer; display:flex; align-items:center; justify-content:center; position:relative; padding:0;}
+  #notifBell:hover{border-color:var(--gold);}
+  #notifBell svg{width:22px; height:22px;}
+  #notifBadge{position:absolute; top:-4px; right:-4px; min-width:20px; height:20px; padding:0 5px; border-radius:10px; background:#C96A5A; color:#fff; font-size:11.5px; line-height:20px; text-align:center; display:none;}
+  #notifPanel{position:absolute; left:0; bottom:64px; width:min(340px, calc(100vw - 48px)); background:var(--panel); border:1px solid var(--line); box-shadow:0 12px 32px rgba(0,0,0,.45); display:none;}
+  #notifPanel.open{display:block;}
+  #notifPanel .np-head{padding:14px 16px; border-bottom:1px solid var(--line); font-size:13.5px; color:#fff;}
+  #notifPanel .np-tools{padding:10px 16px; border-bottom:1px solid var(--line); display:flex; flex-direction:column; gap:8px; font-size:12.5px; color:var(--muted);}
+  #notifPanel .np-tools label{display:flex; gap:8px; align-items:center; cursor:pointer;}
+  #notifPanel .np-tools a{color:var(--gold); cursor:pointer;}
+  #notifList{max-height:280px; overflow-y:auto;}
+  .np-item{display:block; padding:12px 16px; border-bottom:1px solid var(--line); font-size:13px; color:var(--muted);}
+  .np-item b{display:block; color:#fff; font-weight:500; margin-bottom:2px;}
+  .np-item.unread{border-left:3px solid var(--gold); padding-left:13px;}
+  .np-item time{display:block; font-size:11.5px; color:var(--muted-2); margin-top:4px;}
+  .np-empty{padding:18px 16px; font-size:13px; color:var(--muted-2);}
   .event-toast{position:fixed; top:90px; right:20px; z-index:400; background:var(--panel); border:1px solid var(--gold-dim); box-shadow:0 12px 32px rgba(0,0,0,.4); padding:16px 18px; max-width:320px; display:none; gap:12px;}
   .event-toast.show{display:flex;}
   .event-toast b{color:#fff; font-size:14px; display:block; margin-bottom:4px;}
@@ -1106,7 +1124,22 @@
   </div>
 </footer>
 
-<div class="event-toast" id="eventToast"><span class="et-close" id="eventToastClose">&times;</span><div><b id="etTitle"></b><p id="etDesc"></p><a href="#tedbirler" class="btn btn-gold btn-sm" style="width:auto;">Bax</a></div></div>
+<div class="event-toast" id="eventToast"><span class="et-close" id="eventToastClose">&times;</span><div><b id="etTitle"></b><p id="etDesc"></p><a href="#tedbirler" id="etLink" class="btn btn-gold btn-sm" style="width:auto;">Bax</a></div></div>
+<div id="notifWrap">
+  <div id="notifPanel" role="dialog" aria-label="Bildirişlər">
+    <div class="np-head">Bildirişlər</div>
+    <div class="np-tools">
+      <label><input type="checkbox" id="notifSound" checked> Yeni bildirişdə səs çal</label>
+      <a id="notifTest">Səsi yoxla</a>
+      <a id="notifPerm" style="display:none;">Brauzer bildirişlərinə icazə ver (tab arxada olanda da görünsün)</a>
+    </div>
+    <div id="notifList"></div>
+  </div>
+  <button id="notifBell" type="button" aria-label="Bildirişlər">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0112 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 003.4 0"/></svg>
+    <span id="notifBadge"></span>
+  </button>
+</div>
 <a href="#" class="wa-float" aria-label="WhatsApp" id="cms-wa-float">
   <svg viewBox="0 0 24 24" fill="#0A0D14"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.36 5.07L2 22l5.06-1.33A9.94 9.94 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm0 18c-1.6 0-3.09-.46-4.35-1.26l-.31-.19-3.06.8.82-2.99-.2-.31A7.93 7.93 0 014 12c0-4.42 3.58-8 8-8s8 3.58 8 8-3.58 8-8 8zm4.38-5.83c-.24-.12-1.42-.7-1.64-.78-.22-.08-.38-.12-.54.12-.16.24-.62.78-.76.94-.14.16-.28.18-.52.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.44-1.34-1.68-.14-.24-.02-.37.1-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.54-1.3-.74-1.78-.2-.47-.4-.4-.54-.41h-.46c-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.7 2.6 4.12 3.64.58.25 1.03.4 1.38.51.58.18 1.11.16 1.53.1.47-.07 1.42-.58 1.62-1.14.2-.56.2-1.04.14-1.14-.06-.1-.22-.16-.46-.28z"/></svg>
 </a>
@@ -1290,6 +1323,7 @@
       if(res.error || !res.data){ dirInit(''); return; }
       currentProfile = res.data;
       dirInit(currentProfile.seher);
+      initNotifications();
       document.getElementById('memberPanel').style.display = 'block';
       document.getElementById('panelGreeting').textContent = 'Xoş gəldin, ' + (currentProfile.ad || user.email);
       var badge = document.getElementById('panelStatusBadge');
@@ -1822,25 +1856,142 @@
   // Xəbərdarlıq: bu YALNIZ sayt brauzerdə açıq olduğu müddətdə işləyir.
   // Sayt bağlı olarkən (WhatsApp/push) bildiriş üçün n8n + WPPConnect workflow lazımdır (aşağıdakı izaha bax).
   // =========================================================
-  var eventToastTimer = null;
-  function showEventToast(ev){
+  // =========================================================
+  // ---------- ÜZV BİLDİRİŞLƏRİ: zəng + səs + toast (+ brauzer bildirişi) ----------
+  // Mənbə: "notifications" cədvəli. Yalnız GİRİŞ EDİB TƏSDİQLƏNMİŞ üzvlər üçün açılır
+  // (anonim ziyarətçi realtime bağlantısı tutmur → Supabase concurrent-connection limiti qorunur).
+  // Sayt bağlı olanda çatdırılma: n8n → WhatsApp qrupu (ayrıca workflow).
+  // =========================================================
+  var NOTIF_SEEN_KEY = 'bc_notif_seen', NOTIF_MUTE_KEY = 'bc_notif_mute';
+  var notifItems = [], notifStarted = false, notifChannel = null, notifLastFetch = 0, notifToastTimer = null;
+  var audioCtx = null, baseTitle = document.title;
+
+  function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+  function lsSet(k, v){ try{ localStorage.setItem(k, v); }catch(e){} }
+
+  // Brauzerlər səsi yalnız istifadəçi hərəkətindən sonra icazə verir → ilk toxunuşda "kilid" açılır
+  function unlockAudio(){
+    try{
+      if(!audioCtx){ var AC = window.AudioContext || window.webkitAudioContext; if(AC) audioCtx = new AC(); }
+      if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+    }catch(e){}
+  }
+  ['click','touchstart','keydown'].forEach(function(evt){ document.addEventListener(evt, unlockAudio, {passive:true}); });
+
+  function playChime(force){
+    if(!force && lsGet(NOTIF_MUTE_KEY) === '1') return false;
+    if(!audioCtx || audioCtx.state !== 'running') return false;   // hələ toxunuş olmayıb → səs bloklanıb
+    var t0 = audioCtx.currentTime;
+    [[880, 0], [1318.5, 0.18]].forEach(function(n){
+      var osc = audioCtx.createOscillator(), g = audioCtx.createGain();
+      osc.type = 'sine'; osc.frequency.value = n[0];
+      g.gain.setValueAtTime(0.0001, t0 + n[1]);
+      g.gain.exponentialRampToValueAtTime(0.35, t0 + n[1] + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + n[1] + 0.6);
+      osc.connect(g); g.connect(audioCtx.destination);
+      osc.start(t0 + n[1]); osc.stop(t0 + n[1] + 0.65);
+    });
+    return true;
+  }
+
+  function notifHref(n){
+    var l = String(n.link || '').trim();
+    if(l.charAt(0) === '#') return l;
+    return safeUrl(l) || '#tedbirler';
+  }
+  function showNotifToast(n){
     var box = document.getElementById('eventToast');
-    document.getElementById('etTitle').textContent = 'Yeni tədbir: ' + (ev.title || '');
-    document.getElementById('etDesc').textContent = ev.event_date ? new Date(ev.event_date).toLocaleDateString('az-AZ') : '';
+    document.getElementById('etTitle').textContent = n.title || '';
+    document.getElementById('etDesc').textContent = n.body || '';
+    var a = document.getElementById('etLink'), href = notifHref(n);
+    a.setAttribute('href', href);
+    if(/^https?:/i.test(href)){ a.setAttribute('target', '_blank'); a.setAttribute('rel', 'noopener'); } else { a.removeAttribute('target'); }
     box.classList.add('show');
-    clearTimeout(eventToastTimer);
-    eventToastTimer = setTimeout(function(){ box.classList.remove('show'); }, 12000);
+    clearTimeout(notifToastTimer);
+    notifToastTimer = setTimeout(function(){ box.classList.remove('show'); }, 12000);
   }
   var etClose = document.getElementById('eventToastClose');
   if(etClose) etClose.addEventListener('click', function(){ document.getElementById('eventToast').classList.remove('show'); });
-  if(LIVE){
-    supa.channel('events-public-changes')
-      .on('postgres_changes', {event:'INSERT', schema:'public', table:'events'}, function(payload){
-        if(payload.new && payload.new.published) showEventToast(payload.new);
-      })
-      .on('postgres_changes', {event:'UPDATE', schema:'public', table:'events'}, function(payload){
-        if(payload.new && payload.new.published && !(payload.old && payload.old.published)) showEventToast(payload.new);
-      })
+
+  function notifUnreadCount(){
+    var seen = lsGet(NOTIF_SEEN_KEY) || '';
+    return notifItems.filter(function(n){ return n.created_at > seen; }).length;
+  }
+  function renderNotifBadge(){
+    var c = notifUnreadCount(), el = document.getElementById('notifBadge');
+    el.textContent = c > 9 ? '9+' : String(c);
+    el.style.display = c ? 'block' : 'none';
+    document.title = (c && document.hidden) ? '(' + c + ') ' + baseTitle : baseTitle;
+  }
+  function renderNotifList(){
+    var seen = lsGet(NOTIF_SEEN_KEY) || '';
+    var box = document.getElementById('notifList');
+    if(!notifItems.length){ box.innerHTML = '<div class="np-empty">Hələ bildiriş yoxdur.</div>'; return; }
+    box.innerHTML = notifItems.map(function(n){
+      var d = new Date(n.created_at);
+      return '<a class="np-item'+(n.created_at > seen ? ' unread' : '')+'" href="'+escapeHtml(notifHref(n))+'"'+(/^https?:/i.test(notifHref(n)) ? ' target="_blank" rel="noopener"' : '')+'>'+
+        '<b>'+escapeHtml(n.title)+'</b>'+(n.body ? escapeHtml(n.body) : '')+
+        '<time>'+escapeHtml(isNaN(d) ? '' : d.toLocaleString('az-AZ', {day:'numeric', month:'long', hour:'2-digit', minute:'2-digit'}))+'</time></a>';
+    }).join('');
+  }
+  function markNotifSeen(){
+    if(notifItems.length) lsSet(NOTIF_SEEN_KEY, notifItems[0].created_at);
+    renderNotifBadge(); renderNotifList();
+  }
+
+  function onNewNotification(n){
+    if(!n || !n.id || notifItems.some(function(x){ return x.id === n.id; })) return;   // təkrarlanmanın qarşısı
+    notifItems.unshift(n); notifItems = notifItems.slice(0, 10);
+    var panelOpen = document.getElementById('notifPanel').classList.contains('open');
+    if(panelOpen && !document.hidden) markNotifSeen(); else { renderNotifBadge(); renderNotifList(); }   // tab arxadadırsa oxunmuş sayılmır
+    showNotifToast(n);
+    playChime(false);
+    try{ if(navigator.vibrate) navigator.vibrate([120, 60, 120]); }catch(e){}
+    if(document.hidden && 'Notification' in window && Notification.permission === 'granted'){
+      try{
+        var sys = new Notification(n.title, {body: n.body || '', tag: 'bc-' + n.id});
+        sys.onclick = function(){ window.focus(); var h = notifHref(n); if(/^https?:/i.test(h)) window.open(h, '_blank'); else location.hash = h; sys.close(); };
+      }catch(e){}
+    }
+  }
+
+  function fetchNotifications(){
+    notifLastFetch = Date.now();
+    supa.from('notifications').select('id,title,body,link,created_at').order('created_at', {ascending:false}).limit(10)
+      .then(function(res){
+        if(res.error){ console.warn('notifications sorğu xətası:', res.error.message); return; }
+        notifItems = res.data || [];
+        renderNotifBadge(); renderNotifList();
+      });
+  }
+
+  function initNotifications(){
+    if(!LIVE || notifStarted || !currentUser || !currentProfile || currentProfile.status !== 'approved') return;
+    notifStarted = true;
+    document.getElementById('notifWrap').style.display = 'block';
+    document.getElementById('notifSound').checked = lsGet(NOTIF_MUTE_KEY) !== '1';
+    var perm = document.getElementById('notifPerm');
+    if('Notification' in window && Notification.permission === 'default') perm.style.display = 'block';
+
+    document.getElementById('notifBell').addEventListener('click', function(){
+      var panel = document.getElementById('notifPanel');
+      panel.classList.toggle('open');
+      if(panel.classList.contains('open')) markNotifSeen();
+    });
+    document.getElementById('notifSound').addEventListener('change', function(){ lsSet(NOTIF_MUTE_KEY, this.checked ? '0' : '1'); });
+    document.getElementById('notifTest').addEventListener('click', function(){ unlockAudio(); setTimeout(function(){ playChime(true); }, 50); });
+    perm.addEventListener('click', function(){
+      Notification.requestPermission().then(function(r){ if(r !== 'default') perm.style.display = 'none'; });
+    });
+    // tab arxadan qayıdanda: realtime yuxuya getmiş ola bilər → ən çox 30 saniyədə bir yüngül sorğu
+    document.addEventListener('visibilitychange', function(){
+      if(!document.hidden && Date.now() - notifLastFetch > 30000) fetchNotifications();
+      renderNotifBadge();
+    });
+
+    fetchNotifications();
+    notifChannel = supa.channel('member-notifications')
+      .on('postgres_changes', {event:'INSERT', schema:'public', table:'notifications'}, function(payload){ onNewNotification(payload.new); })
       .subscribe();
   }
 

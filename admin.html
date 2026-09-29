@@ -232,6 +232,7 @@
             <div class="field"><label>İştirakçı limiti</label><input type="number" id="ev_capacity" min="0"></div>
             <div class="field full"><label>Təsvir</label><input type="text" id="ev_description"></div>
             <div class="field full"><label>Qeydiyyat linki</label><input type="text" id="ev_link" placeholder="https://..."></div>
+            <div class="field full"><label style="display:flex; gap:8px; align-items:center; cursor:pointer;"><input type="checkbox" id="ev_notify" style="width:auto;"><span id="ev_notify_label">Üzvlərə bildiriş göndər (saytda zəng + səs, WhatsApp qrupu)</span></label></div>
           </div>
           <div style="display:flex; gap:10px; margin-top:22px;">
             <button type="submit" class="btn btn-sm" style="width:auto;">Yadda saxla</button>
@@ -239,6 +240,18 @@
           </div>
           <div class="msg" id="formMsg"></div>
         </form>
+      </div>
+
+      <div class="card" id="announceCard">
+        <h3 style="margin-bottom:6px;">Üzvlərə elan göndər</h3>
+        <p style="color:var(--muted-2); font-size:13px; margin-bottom:16px;">Tədbirdən asılı olmayan qısa elan. Təsdiqlənmiş bütün üzvlərə çatır.</p>
+        <div class="form-grid">
+          <div class="field full"><label>Başlıq * (120 simvola qədər)</label><input type="text" id="an_title" maxlength="120"></div>
+          <div class="field full"><label>Mətn (300 simvola qədər)</label><input type="text" id="an_body" maxlength="300"></div>
+          <div class="field full"><label>Link (istəyə bağlı)</label><input type="text" id="an_link" placeholder="https://..."></div>
+        </div>
+        <div style="display:flex; gap:10px; margin-top:18px;"><a href="#" id="announceBtn" class="btn btn-sm" style="width:auto;">Göndər</a></div>
+        <div class="msg" id="announceMsg"></div>
       </div>
 
       <div class="card">
@@ -577,6 +590,9 @@
     document.getElementById('ev_capacity').value = ev ? (ev.capacity||'') : '';
     document.getElementById('ev_description').value = ev ? (ev.description||'') : '';
     document.getElementById('ev_link').value = ev ? (ev.link||'') : '';
+    // yeni tədbirdə default AÇIQ; redaktədə default BAĞLI (düzəliş edəndə üzvləri təkrar narahat etməmək üçün)
+    document.getElementById('ev_notify').checked = !ev;
+    document.getElementById('ev_notify_label').textContent = ev ? 'Bu tədbir barədə üzvlərə yenidən bildiriş göndər' : 'Üzvlərə bildiriş göndər (saytda zəng + səs, WhatsApp qrupu)';
     document.getElementById('formMsg').classList.remove('show');
     formCard.style.display = 'block';
     formCard.scrollIntoView({behavior:'smooth', block:'start'});
@@ -596,11 +612,50 @@
       link: document.getElementById('ev_link').value.trim(),
       published: true
     };
+    var notify = document.getElementById('ev_notify').checked;
     var req = id ? supa.from('events').update(payload).eq('id', id) : supa.from('events').insert([payload]);
     req.then(function(res){
       if(res.error){ showMsg(document.getElementById('formMsg'), 'Xəta: ' + res.error.message, false); return; }
       formCard.style.display = 'none';
       loadEvents();
+      if(!notify) return;
+      var when = [payload.event_date, payload.event_time].filter(Boolean).join(' · ');
+      sendNotification({
+        title: (id ? 'Tədbir yeniləndi: ' : 'Yeni tədbir: ') + payload.title,
+        body: [when, payload.location].filter(Boolean).join(' · '),
+        link: payload.link || '#tedbirler'
+      }, function(err){
+        alert(err ? 'Tədbir saxlanıldı, amma bildiriş göndərilmədi: ' + err.message : 'Tədbir saxlanıldı və bildiriş göndərildi.');
+      });
+    });
+  });
+
+  // ---------- BİLDİRİŞ GÖNDƏR ----------
+  // notifications cədvəlinə yazır → təsdiqlənmiş üzvlərin açıq saytında zəng+səs (realtime),
+  // eyni zamanda Supabase Database Webhook → n8n → WhatsApp qrupu.
+  function sendNotification(n, cb){
+    var row = {
+      title: String(n.title || '').trim().slice(0, 120),
+      body: String(n.body || '').trim().slice(0, 300) || null,
+      link: String(n.link || '').trim().slice(0, 500) || null
+    };
+    if(!row.title){ cb({message: 'Başlıq boşdur'}); return; }
+    supa.from('notifications').insert([row]).then(function(res){ cb(res.error || null); });
+  }
+  document.getElementById('announceBtn').addEventListener('click', function(e){
+    e.preventDefault();
+    var msg = document.getElementById('announceMsg');
+    var n = {
+      title: document.getElementById('an_title').value,
+      body: document.getElementById('an_body').value,
+      link: document.getElementById('an_link').value
+    };
+    if(!n.title.trim()){ showMsg(msg, 'Başlıq yaz.', false); return; }
+    if(!confirm('Bu bildiriş BÜTÜN üzvlərə göndəriləcək. Davam edim?')) return;
+    sendNotification(n, function(err){
+      if(err){ showMsg(msg, 'Xəta: ' + err.message, false); return; }
+      showMsg(msg, 'Göndərildi.', true);
+      ['an_title','an_body','an_link'].forEach(function(id){ document.getElementById(id).value = ''; });
     });
   });
 
