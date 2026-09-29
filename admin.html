@@ -132,6 +132,34 @@
   .ct-item{margin-bottom:14px;}
   .ct-item textarea{background:var(--panel-2); border:1px solid var(--line); color:var(--text); padding:9px 12px; font-size:13.5px; border-radius:2px; font-family:'Inter',sans-serif; width:100%; resize:vertical;}
   .ct-item.changed textarea{border-color:var(--gold);}
+
+  .field select{
+    background:var(--panel-2); border:1px solid var(--line); color:var(--text);
+    padding:11px 13px; font-size:14.5px; border-radius:2px; font-family:'Inter',sans-serif;
+  }
+  select.settings-input{
+    background:var(--panel-2); border:1px solid var(--line); color:var(--text);
+    padding:11px 13px; font-size:14px; border-radius:2px; font-family:'Inter',sans-serif; width:100%;
+  }
+  .field-hint{font-size:11.5px; color:var(--muted-2); margin-top:-4px;}
+
+  /* ---- profil/loqo şəkil yükləmə ---- */
+  .avatar-edit{display:flex; align-items:center; gap:16px; margin-bottom:22px; padding-bottom:20px; border-bottom:1px solid var(--line);}
+  .avatar-edit .mem-avatar{width:72px; height:72px; font-size:24px; flex-shrink:0;}
+  .avatar-edit .ae-actions{display:flex; flex-direction:column; gap:8px;}
+  .avatar-edit .ae-actions .btn{width:auto; padding:8px 16px; font-size:13px;}
+  .avatar-edit .ae-status{font-size:12px; color:var(--muted-2);}
+
+  .logo-preview{
+    width:72px; height:72px; border-radius:8px; background:var(--panel-2); border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;
+    font-size:11px; color:var(--muted-2); text-align:center; padding:4px;
+  }
+  .logo-preview img{width:100%; height:100%; object-fit:contain;}
+  .logo-upload{display:flex; align-items:center; gap:18px;}
+  .logo-upload .lu-actions{display:flex; flex-direction:column; gap:8px;}
+  .logo-upload .lu-actions .btn{width:auto; padding:8px 16px; font-size:13px;}
+  .logo-upload .lu-status{font-size:12px; color:var(--muted-2);}
 </style>
 </head>
 <body>
@@ -329,6 +357,22 @@
         </div>
 
         <div class="card">
+          <h3>Sayt loqosu</h3>
+          <p style="color:var(--muted); font-size:13px; margin-bottom:18px;">PNG və ya SVG tövsiyə olunur (şəffaf fon). Yüklənən kimi saytda dərhal görünür.</p>
+          <div class="logo-upload">
+            <div class="logo-preview" id="logoPreview">Loqo yoxdur</div>
+            <div class="lu-actions">
+              <label class="btn btn-outline btn-sm" style="cursor:pointer;">
+                Loqo yüklə
+                <input type="file" id="logoInput" accept="image/png,image/jpeg,image/svg+xml,image/webp" style="display:none;">
+              </label>
+              <a href="#" id="logoRemoveBtn" class="btn btn-danger btn-sm" style="display:none;">Loqonu sil (mətnə qaytar)</a>
+              <span class="lu-status" id="logoStatus"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
           <h3>Statistika rəqəmləri</h3>
           <div class="form-grid">
             <div class="field"><label>Üzv sayı</label><input type="number" id="set_stat_members" placeholder="500"></div>
@@ -434,6 +478,7 @@
     loadApplications();
     loadMembers();
     loadSettings();
+    loadBranding();
     loadContentTab();
   }
 
@@ -739,7 +784,15 @@
       btn.addEventListener('click', function(e){
         e.preventDefault();
         var row = currentMembers.find(function(x){ return String(x.id) === btn.closest('tr').getAttribute('data-id'); });
-        openEditor('Üzvü redaktə et', 'profiles', row, [['ad','Ad'],['soyad','Soyad'],['vezife','Vəzifə'],['sirket','Şirkət'],['sektor','Sektor'],['seher','Şəhər'],['telefon','Telefon'],['website','Website'],['linkedin','LinkedIn'],['instagram','Instagram'],['about','Haqqında','area']], loadMembers);
+        openEditor('Üzvü redaktə et', 'profiles', row, [
+          ['ad','Ad'],['soyad','Soyad'],['vezife','Vəzifə'],['sirket','Şirkət'],
+          ['sektor','Sektor'],['seher','Şəhər'],
+          ['telefon','Telefon'],['contact_email','Əlaqə emaili'],
+          ['website','Website'],['linkedin','LinkedIn'],['instagram','Instagram'],['facebook','Facebook'],
+          ['about','Haqqında','area'],['sirket_haqqinda','Şirkət haqqında','area'],
+          ['visibility_phone','Telefon kimə görünsün?','select',[['private','Heç kimə'],['members','Yalnız üzvlərə'],['public','Hamıya']]],
+          ['visibility_email','Əlaqə emaili kimə görünsün?','select',[['private','Heç kimə'],['members','Yalnız üzvlərə'],['public','Hamıya']]]
+        ], loadMembers);
       });
     });
     body.querySelectorAll('.mem-action').forEach(function(btn){
@@ -854,23 +907,124 @@
   });
 
   // =========================================================
+  // ---------- SAYT LOQOSU (site_settings key='branding') ----------
+  // =========================================================
+  function renderLogoPreview(url){
+    var box = document.getElementById('logoPreview');
+    var rm = document.getElementById('logoRemoveBtn');
+    if(url){ box.innerHTML = '<img src="' + escapeHtml(url) + '" alt="Loqo">'; rm.style.display = 'inline-flex'; }
+    else{ box.textContent = 'Loqo yoxdur'; rm.style.display = 'none'; }
+  }
+  function loadBranding(){
+    supa.from('site_settings').select('value').eq('key', 'branding').maybeSingle().then(function(res){
+      if(res.error){ console.warn('branding sorğu xətası:', res.error.message); return; }
+      renderLogoPreview(res.data && res.data.value && res.data.value.logo_url);
+    });
+  }
+  document.getElementById('logoInput').addEventListener('change', function(e){
+    var file = e.target.files[0];
+    if(!file) return;
+    var status = document.getElementById('logoStatus');
+    status.textContent = 'Yüklənir...';
+    var ext = (file.name.split('.').pop() || 'png').toLowerCase();
+    var path = 'site/logo-' + Date.now() + '.' + ext;
+    supa.storage.from('avatars').upload(path, file, {upsert:true, cacheControl:'3600'}).then(function(res){
+      if(res.error){ status.textContent = 'Xəta: ' + res.error.message; return; }
+      var publicUrl = supa.storage.from('avatars').getPublicUrl(path).data.publicUrl;
+      supa.from('site_settings').upsert([{key:'branding', value:{logo_url: publicUrl}}], {onConflict:'key'}).then(function(res2){
+        if(res2.error){ status.textContent = 'Bazaya yazılmadı: ' + res2.error.message; return; }
+        renderLogoPreview(publicUrl);
+        status.textContent = 'Yükləndi ✓ — saytı yeniləyəndə (F5) görünəcək.';
+      });
+    });
+  });
+  document.getElementById('logoRemoveBtn').addEventListener('click', function(e){
+    e.preventDefault();
+    if(!confirm('Loqonu silib mətn loqosuna qayıtmaq istəyirsən?')) return;
+    supa.from('site_settings').upsert([{key:'branding', value:{}}], {onConflict:'key'}).then(function(res){
+      var status = document.getElementById('logoStatus');
+      if(res.error){ status.textContent = 'Xəta: ' + res.error.message; return; }
+      renderLogoPreview(null);
+      status.textContent = 'Silindi — saytı yeniləyəndə (F5) görünəcək.';
+    });
+  });
+
+  // =========================================================
   // ---------- ÜMUMİ REDAKTƏ DİALOQU (ərizə / üzv) ----------
   // =========================================================
   function openEditor(title, table, row, fields, done){
     fields = fields.filter(function(f){ return f[0] in row; });   // cədvəldə olmayan sütun göstərilmir
     var ov = document.createElement('div'); ov.className = 'ed-overlay';
-    ov.innerHTML = '<div class="ed-box"><h3 style="margin-bottom:18px;">' + escapeHtml(title) + '</h3><div class="form-grid">' +
+    var avatarBlock = '';
+    if(table === 'profiles'){
+      var letter = (row.ad || row.soyad || '?').trim().charAt(0).toUpperCase() || '?';
+      var av = row.avatar_url ? '<img src="' + escapeHtml(row.avatar_url) + '" alt="">' : letter;
+      avatarBlock = '<div class="avatar-edit">' +
+        '<div class="mem-avatar" id="edAvatarPreview">' + av + '</div>' +
+        '<div class="ae-actions">' +
+          '<label class="btn btn-outline btn-sm" style="cursor:pointer;">Şəkli dəyiş<input type="file" id="edAvatarInput" accept="image/png,image/jpeg,image/webp" style="display:none;"></label>' +
+          (row.avatar_url ? '<a href="#" class="btn btn-danger btn-sm" id="edAvatarRemove" style="width:auto;">Şəkli sil</a>' : '') +
+          '<span class="ae-status" id="edAvatarStatus"></span>' +
+        '</div></div>';
+    }
+    ov.innerHTML = '<div class="ed-box"><h3 style="margin-bottom:18px;">' + escapeHtml(title) + '</h3>' + avatarBlock + '<div class="form-grid">' +
       fields.map(function(f){
-        var v = escapeHtml(row[f[0]] == null ? '' : row[f[0]]);
-        return '<div class="field' + (f[2] ? ' full' : '') + '"><label>' + f[1] + '</label>' +
-          (f[2] ? '<textarea class="settings-input" data-f="' + f[0] + '" rows="3">' + v + '</textarea>' : '<input type="text" data-f="' + f[0] + '" value="' + v + '">') + '</div>';
+        var v = row[f[0]] == null ? '' : row[f[0]];
+        var type = f[2];
+        if(type === 'select'){
+          var opts = f[3] || [];
+          return '<div class="field"><label>' + f[1] + '</label><select class="settings-input" data-f="' + f[0] + '">' +
+            opts.map(function(o){ return '<option value="' + o[0] + '"' + (o[0] === v ? ' selected' : '') + '>' + o[1] + '</option>'; }).join('') +
+            '</select></div>';
+        }
+        var ve = escapeHtml(v);
+        return '<div class="field' + (type === 'area' ? ' full' : '') + '"><label>' + f[1] + '</label>' +
+          (type === 'area' ? '<textarea class="settings-input" data-f="' + f[0] + '" rows="3">' + ve + '</textarea>' : '<input type="text" data-f="' + f[0] + '" value="' + ve + '">') + '</div>';
       }).join('') + '</div><div style="display:flex; gap:10px; margin-top:22px;"><a href="#" class="btn btn-sm ed-save" style="width:auto;">Yadda saxla</a><a href="#" class="btn btn-outline btn-sm ed-cancel">Ləğv et</a></div><div class="msg ed-msg" style="margin-top:14px;"></div></div>';
     document.body.appendChild(ov);
     ov.querySelector('.ed-cancel').addEventListener('click', function(e){ e.preventDefault(); ov.remove(); });
+
+    if(table === 'profiles'){
+      var avPreview = ov.querySelector('#edAvatarPreview');
+      var avStatus = ov.querySelector('#edAvatarStatus');
+      ov.querySelector('#edAvatarInput').addEventListener('change', function(e){
+        var file = e.target.files[0];
+        if(!file) return;
+        avStatus.textContent = 'Yüklənir...';
+        var ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+        var path = row.id + '/avatar-' + Date.now() + '.' + ext;
+        supa.storage.from('avatars').upload(path, file, {upsert:true, cacheControl:'3600'}).then(function(res){
+          if(res.error){ avStatus.textContent = 'Xəta: ' + res.error.message; return; }
+          var publicUrl = supa.storage.from('avatars').getPublicUrl(path).data.publicUrl;
+          supa.from('profiles').update({avatar_url: publicUrl}).eq('id', row.id).then(function(res2){
+            if(res2.error){ avStatus.textContent = 'Bazaya yazılmadı: ' + res2.error.message; return; }
+            row.avatar_url = publicUrl;
+            avPreview.innerHTML = '<img src="' + publicUrl + '" alt="">';
+            avStatus.textContent = 'Yükləndi ✓';
+            loadMembers();
+          });
+        });
+      });
+      var rmBtn = ov.querySelector('#edAvatarRemove');
+      if(rmBtn){
+        rmBtn.addEventListener('click', function(e){
+          e.preventDefault();
+          if(!confirm('Profil şəklini silmək istədiyinə əminsən?')) return;
+          supa.from('profiles').update({avatar_url: null}).eq('id', row.id).then(function(res){
+            if(res.error){ avStatus.textContent = 'Xəta: ' + res.error.message; return; }
+            row.avatar_url = null;
+            avPreview.innerHTML = (row.ad || row.soyad || '?').trim().charAt(0).toUpperCase() || '?';
+            rmBtn.style.display = 'none';
+            loadMembers();
+          });
+        });
+      }
+    }
+
     ov.querySelector('.ed-save').addEventListener('click', function(e){
       e.preventDefault();
       var patch = {};
-      ov.querySelectorAll('[data-f]').forEach(function(el){ patch[el.getAttribute('data-f')] = el.value.trim(); });
+      ov.querySelectorAll('[data-f]').forEach(function(el){ patch[el.getAttribute('data-f')] = el.value.trim ? el.value.trim() : el.value; });
       supa.from(table).update(patch).eq('id', row.id).then(function(res){
         if(res.error){ showMsg(ov.querySelector('.ed-msg'), 'Xəta: ' + res.error.message, false); return; }
         ov.remove(); done();

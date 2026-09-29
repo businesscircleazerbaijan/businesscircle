@@ -61,6 +61,7 @@
   nav{display:flex; align-items:center; justify-content:space-between; padding:20px 32px; max-width:1180px; margin:0 auto;}
   @media(max-width:640px){nav{padding:16px 20px;}}
   .logo{display:flex; flex-direction:column; line-height:1.05;}
+  .logo-img{height:38px; width:auto; max-width:180px; object-fit:contain; display:block;}
   .logo b{font-family:'Fraunces',serif; font-size:17px; font-weight:500; letter-spacing:0.04em;}
   .logo span{font-size:10.5px; color:var(--gold); letter-spacing:0.22em; margin-top:3px;}
   .navlinks{display:flex; gap:34px; font-size:14.5px; color:var(--muted);}
@@ -446,8 +447,12 @@
   .logo-preview{width:64px; height:64px; border-radius:8px; background:var(--panel-2); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0; font-size:11px; color:var(--muted-2); text-align:center;}
   .logo-preview img{width:100%; height:100%; object-fit:contain; background:#fff;}
   .req-mark{color:var(--gold);}
-  .member-card .company-logo{width:28px; height:28px; border-radius:5px; object-fit:contain; background:#fff; border:1px solid var(--line); vertical-align:middle; margin-left:6px;}
-  .pm-company-logo{width:40px; height:40px; border-radius:6px; object-fit:contain; background:#fff; border:1px solid var(--line); margin-left:8px; vertical-align:middle;}
+  .company-logo-row{display:flex; align-items:center; gap:10px; margin-top:10px;}
+  .company-logo-plate{width:44px; height:44px; border-radius:9px; background:#fff; border:1px solid var(--gold-dim); box-shadow:0 4px 14px rgba(0,0,0,.28); display:flex; align-items:center; justify-content:center; flex-shrink:0; padding:5px; overflow:hidden;}
+  .company-logo-plate img{width:100%; height:100%; object-fit:contain;}
+  .company-logo-row span{font-size:12px; color:var(--muted-2);}
+  .pm-company-logo-plate{width:64px; height:64px; border-radius:11px; background:#fff; border:1px solid var(--gold-dim); box-shadow:0 6px 18px rgba(0,0,0,.3); display:flex; align-items:center; justify-content:center; flex-shrink:0; padding:7px; overflow:hidden; margin-top:6px;}
+  .pm-company-logo-plate img{width:100%; height:100%; object-fit:contain;}
   .wa-join-box{margin-top:20px; padding:18px 20px; background:var(--panel-2); border:1px solid var(--gold-dim); border-radius:4px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
   .wa-join-box p{color:var(--muted); font-size:13.5px; margin:0;}
   .event-toast{position:fixed; top:90px; right:20px; z-index:400; background:var(--panel); border:1px solid var(--gold-dim); box-shadow:0 12px 32px rgba(0,0,0,.4); padding:16px 18px; max-width:320px; display:none; gap:12px;}
@@ -462,9 +467,12 @@
 
 <header id="siteHeader">
   <nav>
-    <a href="#home" class="logo">
-      <b>BUSINESS CIRCLE</b>
-      <span>AZERBAIJAN</span>
+    <a href="#home" class="logo" id="siteLogo">
+      <img id="cms-logo-img" class="logo-img" alt="Business Circle Azerbaijan" style="display:none;">
+      <span id="cms-logo-text" style="display:flex; flex-direction:column; line-height:1.05;">
+        <b>BUSINESS CIRCLE</b>
+        <span>AZERBAIJAN</span>
+      </span>
     </a>
     <div class="navlinks">
       <a href="#home">Ana səhifə</a>
@@ -1490,6 +1498,15 @@
     if(map.footer && map.footer.copyright){
       document.getElementById('cms-copyright').textContent = map.footer.copyright;
     }
+    if(map.branding && map.branding.logo_url){
+      var logoSrc = safeUrl(map.branding.logo_url);
+      if(logoSrc){
+        var img = document.getElementById('cms-logo-img');
+        img.src = logoSrc;
+        img.style.display = 'block';
+        document.getElementById('cms-logo-text').style.display = 'none';
+      }
+    }
   }
 
   // header scroll state
@@ -1618,7 +1635,8 @@
         '<div class="avatar">'+avatarInner+'</div>'+
         '<h4>'+escapeHtml(m.ad)+' '+escapeHtml(m.soyad||'')+'</h4>'+
         '<div class="role">'+escapeHtml(m.vezife||'')+'</div>'+
-        '<div class="sector">'+escapeHtml(m.sirket||'')+(m.sirket && m.seher ? ' · ' : '')+escapeHtml(m.seher||'')+(logoImg ? ' <img class="company-logo" src="'+escapeHtml(logoImg)+'" alt="">' : '')+'</div>'+
+        '<div class="sector">'+escapeHtml(m.sirket||'')+(m.sirket && m.seher ? ' · ' : '')+escapeHtml(m.seher||'')+'</div>'+
+        (logoImg ? '<div class="company-logo-row"><div class="company-logo-plate"><img src="'+escapeHtml(logoImg)+'" alt="Şirkət loqosu"></div><span>Şirkət loqosu</span></div>' : '')+
         '<a href="#" class="view-profile-btn" data-id="'+m.id+'" style="display:block; margin-bottom:12px;">Profilə bax →</a>'+
         '<div class="conn-actions" data-pid="'+m.id+'">'+connActionHtml(m.id)+'</div></div>';
     }).join('');
@@ -1836,7 +1854,7 @@
       '<h3 style="color:#fff;font-size:22px;">'+escapeHtml((p.ad||'')+' '+(p.soyad||''))+'</h3></div>';
     var info = [['Vəzifə',p.vezife],['Şirkət',p.sirket],['Sektor',p.sektor],['Şəhər',p.seher]].filter(function(r){ return r[1]; });
     var plogo = safeUrl(p.company_logo_url);
-    if(info.length) h += '<div class="pm-sec"><h5>Ümumi məlumat</h5><dl class="pm-dl">'+info.map(function(r){ return '<dt>'+r[0]+'</dt><dd>'+escapeHtml(r[1])+(r[0]==='Şirkət' && plogo ? ' <img class="pm-company-logo" src="'+escapeHtml(plogo)+'" alt="">' : '')+'</dd>'; }).join('')+'</dl></div>';
+    if(info.length) h += '<div class="pm-sec"><h5>Ümumi məlumat</h5><dl class="pm-dl">'+info.map(function(r){ return '<dt>'+r[0]+'</dt><dd>'+escapeHtml(r[1])+'</dd>'; }).join('')+'</dl>'+(plogo ? '<div class="pm-company-logo-plate"><img src="'+escapeHtml(plogo)+'" alt="Şirkət loqosu"></div>' : '')+'</div>';
     h += '<div class="pm-sec"><h5>Haqqında</h5><p style="color:var(--muted);font-size:14px;line-height:1.6;">'+(p.about ? escapeHtml(p.about) : (currentUser ? 'Bu üzv haqqında məlumat əlavə etməyib.' : 'Bu məlumatı görmək üçün icmaya qoşulmalısınız.'))+'</p></div>';
     function tags(title, arr, cls){ return (arr && arr.length) ? '<div class="pm-sec"><h5>'+title+'</h5><div style="display:flex;flex-wrap:wrap;gap:8px;">'+arr.map(function(t){ return '<span class="pm-tag '+cls+'">'+escapeHtml(TAG_LABEL[t]||t)+'</span>'; }).join('')+'</div></div>' : ''; }
     h += tags('Nə təklif edir', p.offering, 'pm-tag-offer') + tags('Nə axtarır', p.seeking, 'pm-tag-seek');
