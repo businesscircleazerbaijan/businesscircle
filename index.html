@@ -418,6 +418,44 @@
   .pm-sec h5{font-family:'Inter',sans-serif; font-size:13px; font-weight:600; color:var(--gold); margin-bottom:10px;}
   .pm-dl{display:grid; grid-template-columns:96px 1fr; gap:8px 14px; font-size:14px;}
   .pm-dl dt{color:var(--muted-2);} .pm-dl dd{color:var(--text); word-break:break-word;}
+
+  /* ===== BAĞLANTILAR (network) ===== */
+  .nav-badge{background:var(--danger); color:#fff; font-size:10.5px; line-height:1; padding:3px 6px; border-radius:9px; margin-left:7px; display:none; vertical-align:1px;}
+  .network-section{padding:48px 0; background:var(--bg); border-bottom:1px solid var(--line); display:none;}
+  .network-section.show{display:block;}
+  .network-tabs{display:flex; gap:1px; background:var(--line); border:1px solid var(--line); margin-bottom:24px; width:fit-content;}
+  .network-tab{padding:11px 20px; font-size:13.5px; background:var(--panel); color:var(--muted); cursor:pointer; display:flex; align-items:center; gap:8px; white-space:nowrap;}
+  .network-tab.active{background:var(--gold); color:#0A0D14;}
+  .network-tab .count{font-size:11px; background:var(--danger); color:#fff; padding:1px 7px; border-radius:9px; display:none;}
+  .network-tab.active .count{background:#0A0D14; color:var(--gold);}
+  .network-list{border:1px solid var(--line);}
+  .network-row{display:flex; align-items:center; gap:16px; padding:18px 22px; border-bottom:1px solid var(--line); flex-wrap:wrap; background:var(--panel);}
+  .network-row:last-child{border-bottom:none;}
+  .nr-avatar{width:48px; height:48px; border-radius:50%; background:var(--panel-2); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; font-family:'Fraunces',serif; color:var(--gold); font-size:17px; overflow:hidden; flex-shrink:0;}
+  .nr-avatar img{width:100%; height:100%; object-fit:cover;}
+  .nr-info{flex:1; min-width:170px;}
+  .nr-info b{display:block; color:#fff; font-size:15px; font-weight:500;}
+  .nr-info span{font-size:12.5px; color:var(--muted);}
+  .nr-actions{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
+  .network-empty{color:var(--muted); font-size:14px; padding:44px 20px; text-align:center; background:var(--panel); border:1px solid var(--line); border-top:none;}
+  .conn-btn{font-size:12.5px; padding:7px 14px;}
+  .conn-actions{display:flex; gap:8px; align-items:center; flex-wrap:wrap; font-size:12.5px;}
+
+  /* ===== loqo yükləmə + tələb olunan sahə vurğusu + tədbir toast ===== */
+  .logo-upload{display:flex; align-items:center; gap:16px; margin-top:18px; padding-top:18px; border-top:1px solid var(--line);}
+  .logo-preview{width:64px; height:64px; border-radius:8px; background:var(--panel-2); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0; font-size:11px; color:var(--muted-2); text-align:center;}
+  .logo-preview img{width:100%; height:100%; object-fit:contain; background:#fff;}
+  .req-mark{color:var(--gold);}
+  .member-card .company-logo{width:28px; height:28px; border-radius:5px; object-fit:contain; background:#fff; border:1px solid var(--line); vertical-align:middle; margin-left:6px;}
+  .pm-company-logo{width:40px; height:40px; border-radius:6px; object-fit:contain; background:#fff; border:1px solid var(--line); margin-left:8px; vertical-align:middle;}
+  .wa-join-box{margin-top:20px; padding:18px 20px; background:var(--panel-2); border:1px solid var(--gold-dim); border-radius:4px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+  .wa-join-box p{color:var(--muted); font-size:13.5px; margin:0;}
+  .event-toast{position:fixed; top:90px; right:20px; z-index:400; background:var(--panel); border:1px solid var(--gold-dim); box-shadow:0 12px 32px rgba(0,0,0,.4); padding:16px 18px; max-width:320px; display:none; gap:12px;}
+  .event-toast.show{display:flex;}
+  .event-toast b{color:#fff; font-size:14px; display:block; margin-bottom:4px;}
+  .event-toast p{color:var(--muted); font-size:12.5px; margin:0 0 8px;}
+  .event-toast a{font-size:12.5px;}
+  .event-toast .et-close{position:absolute; top:8px; right:10px; color:var(--muted-2); cursor:pointer; font-size:16px; line-height:1;}
 </style>
 </head>
 <body>
@@ -438,7 +476,7 @@
       <a href="#elaqe">Əlaqə</a>
     </div>
     <div class="nav-cta">
-      <a href="#" class="btn btn-outline" id="authNavBtn">Giriş / Qeydiyyat</a>
+      <a href="#" class="btn btn-outline" id="authNavBtn"><span id="authNavLabel">Giriş / Qeydiyyat</span><span id="netBadge" class="nav-badge">0</span></a>
       <div class="burger" id="burgerBtn" aria-label="Menyu">
         <span></span><span></span><span></span>
       </div>
@@ -452,7 +490,7 @@
     <a href="#networking">Networking</a>
     <a href="#haqqimizda">Haqqımızda</a>
     <a href="#elaqe">Əlaqə</a>
-    <a href="#" id="authNavBtnMobile">Giriş / Qeydiyyat</a>
+    <a href="#" id="authNavBtnMobile"><span id="authNavLabelMobile">Giriş / Qeydiyyat</span><span id="netBadgeMobile" class="nav-badge">0</span></a>
   </div>
 </header>
 
@@ -495,6 +533,11 @@
       <div class="panel-status" id="panelStatusBadge"></div>
     </div>
 
+    <div class="wa-join-box" id="waJoinBox" style="display:none;">
+      <p>İcma WhatsApp qrupuna qoşul ki, yeni tədbirlər və elanları qaçırma.</p>
+      <a href="#" id="waJoinBtn" target="_blank" rel="noopener" class="btn btn-gold" style="width:auto;">Qrupa qoşul</a>
+    </div>
+
     <div class="completion-row">
       <div class="completion-bar"><div class="completion-fill" id="completionFill"></div></div>
       <span id="completionText">0% tamamlanıb</span>
@@ -507,7 +550,16 @@
           <input type="file" id="avatarFile" accept="image/jpeg,image/png,image/webp" style="display:none;">
           <a href="#" class="btn btn-outline" id="avatarPickBtn" style="width:auto;">Şəkil yüklə</a>
           <a href="#" id="avatarRemoveBtn" class="auth-link" style="display:none;">Şəkli sil</a>
-          <span class="avatar-hint" id="avatarHint">JPG, PNG və ya WebP · maks. 2 MB</span>
+          <span class="avatar-hint" id="avatarHint">JPG, PNG və ya WebP · maks. 2 MB <span class="req-mark">*(tələb olunur)</span></span>
+        </div>
+        <div class="logo-upload">
+          <div class="logo-preview" id="logoPreview">Loqo yoxdur</div>
+          <div class="avatar-actions">
+            <input type="file" id="logoFile" accept="image/jpeg,image/png,image/webp" style="display:none;">
+            <a href="#" class="btn btn-outline" id="logoPickBtn" style="width:auto;">Şirkət loqosu yüklə</a>
+            <a href="#" id="logoRemoveBtn" class="auth-link" style="display:none;">Loqonu sil</a>
+            <span class="avatar-hint" id="logoHint">İstəyə bağlı — şirkətin varsa, ümumi səhifədə görünəcək</span>
+          </div>
         </div>
       </div>
       <div class="form-grid">
@@ -521,7 +573,7 @@
         <div class="field"><label>Website</label><input type="text" id="pf_website"></div>
         <div class="field"><label>LinkedIn</label><input type="text" id="pf_linkedin"></div>
         <div class="field"><label>Instagram</label><input type="text" id="pf_instagram"></div>
-        <div class="field full"><label>Haqqımda</label><textarea id="pf_about" rows="3" maxlength="1200"></textarea></div>
+        <div class="field full"><label>Haqqımda <span class="req-mark">*(tələb olunur)</span></label><textarea id="pf_about" rows="3" maxlength="1200"></textarea></div>
         <div class="field">
           <label>"Haqqımda" kimə görünsün?</label>
           <select id="pf_vis_about">
@@ -573,6 +625,24 @@
       </div>
       <div class="msg" id="profileMsgEl"></div>
     </form>
+  </div>
+</section>
+
+<!-- ===== MƏNİM ŞƏBƏKƏM (bağlantılar) ===== -->
+<section id="networkPanel" class="network-section">
+  <div class="wrap">
+    <div class="panel-top">
+      <div>
+        <div class="panel-kicker">Mənim Şəbəkəm</div>
+        <h2 style="color:#fff; font-size:24px;">Bağlantılar</h2>
+      </div>
+    </div>
+    <div class="network-tabs" id="networkTabs">
+      <div class="network-tab active" data-ntab="accepted">Əlaqələr <span class="count" id="cntAccepted">0</span></div>
+      <div class="network-tab" data-ntab="received">Gələn sorğular <span class="count" id="cntReceived">0</span></div>
+      <div class="network-tab" data-ntab="sent">Göndərilən sorğular <span class="count" id="cntSent">0</span></div>
+    </div>
+    <div id="networkList"></div>
   </div>
 </section>
 
@@ -849,6 +919,10 @@
       <div id="formSuccess">
         <h3 data-cms="t159">Təşəkkür edirik.</h3>
         <p data-cms="t160">Müraciətiniz qəbul edildi. Komandamız sizinlə əlaqə saxlayacaq.</p>
+        <div class="wa-join-box" id="waJoinBoxSuccess" style="display:none; margin-top:24px; text-align:left;">
+          <p>Təsdiqi gözləyərkən icma WhatsApp qrupuna da qoşula bilərsən.</p>
+          <a href="#" id="waJoinBtnSuccess" target="_blank" rel="noopener" class="btn btn-gold" style="width:auto;">Qrupa qoşul</a>
+        </div>
       </div>
       <form id="applyForm" novalidate>
         <div class="form-grid">
@@ -1001,6 +1075,7 @@
   </div>
 </footer>
 
+<div class="event-toast" id="eventToast"><span class="et-close" id="eventToastClose">&times;</span><div><b id="etTitle"></b><p id="etDesc"></p><a href="#tedbirler" class="btn btn-gold btn-sm" style="width:auto;">Bax</a></div></div>
 <a href="#" class="wa-float" aria-label="WhatsApp" id="cms-wa-float">
   <svg viewBox="0 0 24 24" fill="#0A0D14"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.36 5.07L2 22l5.06-1.33A9.94 9.94 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm0 18c-1.6 0-3.09-.46-4.35-1.26l-.31-.19-3.06.8.82-2.99-.2-.31A7.93 7.93 0 014 12c0-4.42 3.58-8 8-8s8 3.58 8 8-3.58 8-8 8zm4.38-5.83c-.24-.12-1.42-.7-1.64-.78-.22-.08-.38-.12-.54.12-.16.24-.62.78-.76.94-.14.16-.28.18-.52.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.44-1.34-1.68-.14-.24-.02-.37.1-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.54-1.3-.74-1.78-.2-.47-.4-.4-.54-.41h-.46c-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.7 2.6 4.12 3.64.58.25 1.03.4 1.38.51.58.18 1.11.16 1.53.1.47-.07 1.42-.58 1.62-1.14.2-.56.2-1.04.14-1.14-.06-.1-.22-.16-.46-.28z"/></svg>
 </a>
@@ -1046,15 +1121,9 @@
   document.getElementById('authOverlay').addEventListener('click', function(e){ if(e.target === this) closeAuth(); });
 
   function updateAuthNav(){
-    var btn = document.getElementById('authNavBtn');
-    var btnMobile = document.getElementById('authNavBtnMobile');
-    if(currentUser){
-      btn.textContent = 'Panelim';
-      btnMobile.textContent = 'Panelim';
-    } else {
-      btn.textContent = 'Giriş / Qeydiyyat';
-      btnMobile.textContent = 'Giriş / Qeydiyyat';
-    }
+    var label = currentUser ? 'Panelim' : 'Giriş / Qeydiyyat';
+    document.getElementById('authNavLabel').textContent = label;
+    document.getElementById('authNavLabelMobile').textContent = label;
   }
   function navBtnClick(e){
     e.preventDefault();
@@ -1126,6 +1195,17 @@
       var msg = document.getElementById('profileMsgEl');
       var offering = Array.prototype.slice.call(document.querySelectorAll('#pf_offering .chip.sel')).map(function(c){ return c.getAttribute('data-tag'); });
       var seeking = Array.prototype.slice.call(document.querySelectorAll('#pf_seeking .chip.sel')).map(function(c){ return c.getAttribute('data-tag'); });
+      var aboutVal = document.getElementById('pf_about').value.trim();
+      if(!safeUrl(currentProfile && currentProfile.avatar_url)){
+        showAuthMsg(msg, 'Profili yadda saxlamazdan əvvəl profil şəkli yüklə.', false);
+        document.getElementById('avatarPickBtn').scrollIntoView({behavior:'smooth', block:'center'});
+        return;
+      }
+      if(!aboutVal){
+        showAuthMsg(msg, 'Profili yadda saxlamazdan əvvəl "Haqqımda" sahəsini doldur.', false);
+        document.getElementById('pf_about').focus();
+        return;
+      }
       var payload = {
         ad: document.getElementById('pf_ad').value.trim(),
         soyad: document.getElementById('pf_soyad').value.trim(),
@@ -1137,7 +1217,7 @@
         website: safeUrl(document.getElementById('pf_website').value) || null,
         linkedin: safeUrl(document.getElementById('pf_linkedin').value) || null,
         instagram: safeUrl(document.getElementById('pf_instagram').value) || null,
-        about: document.getElementById('pf_about').value.trim(),
+        about: aboutVal,
         visibility_about: document.getElementById('pf_vis_about').value,
         visibility_phone: document.getElementById('pf_vis_phone').value,
         visibility_social: document.getElementById('pf_vis_social').value,
@@ -1191,6 +1271,8 @@
       document.getElementById('pf_vis_phone').value = currentProfile.visibility_phone || 'private';
       document.getElementById('pf_vis_social').value = currentProfile.visibility_social || 'public';
       renderAvatarPreview();
+      renderLogoPreview();
+      renderWaJoinBox();
       (currentProfile.offering || []).forEach(function(tag){
         var el = document.querySelector('#pf_offering .chip[data-tag="' + tag + '"]');
         if(el) el.classList.add('sel');
@@ -1200,6 +1282,9 @@
         if(el) el.classList.add('sel');
       });
       renderProfileCompletion();
+      document.getElementById('networkPanel').classList.add('show');
+      loadConnections();
+      subscribeConnectionsRealtime();
     });
   }
 
@@ -1222,6 +1307,23 @@
 
   function setAvatarHint(text, isError){
     var h = document.getElementById('avatarHint');
+    h.textContent = text;
+    h.style.color = isError ? '#C96A5A' : '';
+  }
+
+  function renderLogoPreview(){
+    var box = document.getElementById('logoPreview');
+    var removeBtn = document.getElementById('logoRemoveBtn');
+    if(currentProfile && safeUrl(currentProfile.company_logo_url)){
+      box.innerHTML = '<img src="' + escapeHtml(safeUrl(currentProfile.company_logo_url)) + '" alt="Şirkət loqosu">';
+      removeBtn.style.display = 'inline';
+    } else {
+      box.textContent = 'Loqo yoxdur';
+      removeBtn.style.display = 'none';
+    }
+  }
+  function setLogoHint(text, isError){
+    var h = document.getElementById('logoHint');
     h.textContent = text;
     h.style.color = isError ? '#C96A5A' : '';
   }
@@ -1267,6 +1369,42 @@
         });
       });
     });
+
+    var logoFile = document.getElementById('logoFile');
+    document.getElementById('logoPickBtn').addEventListener('click', function(e){ e.preventDefault(); logoFile.click(); });
+    logoFile.addEventListener('change', function(){
+      var file = logoFile.files[0];
+      if(!file) return;
+      if(AVATAR_TYPES.indexOf(file.type) === -1){ setLogoHint('Yalnız JPG, PNG və ya WebP qəbul olunur.', true); logoFile.value = ''; return; }
+      if(file.size > AVATAR_MAX_BYTES){ setLogoHint('Şəkil 2 MB-dan böyükdür.', true); logoFile.value = ''; return; }
+      setLogoHint('Yüklənir...', false);
+      var path = currentUser.id + '/logo';
+      supa.storage.from('avatars').upload(path, file, {upsert: true, contentType: file.type, cacheControl: '3600'})
+        .then(function(up){
+          if(up.error){ setLogoHint('Yükləmə xətası: ' + up.error.message, true); return; }
+          var pub = supa.storage.from('avatars').getPublicUrl(path);
+          var url = pub.data.publicUrl + '?v=' + Date.now();
+          supa.from('profiles').update({company_logo_url: url}).eq('id', currentUser.id).then(function(res){
+            if(res.error){ setLogoHint('Şəkil yükləndi, amma profilə yazılmadı: ' + res.error.message, true); return; }
+            currentProfile.company_logo_url = url;
+            renderLogoPreview();
+            setLogoHint('Loqo yeniləndi.', false);
+          });
+        });
+      logoFile.value = '';
+    });
+    document.getElementById('logoRemoveBtn').addEventListener('click', function(e){
+      e.preventDefault();
+      if(!confirm('Şirkət loqosunu silmək istədiyinə əminsən?')) return;
+      supa.storage.from('avatars').remove([currentUser.id + '/logo']).then(function(){
+        supa.from('profiles').update({company_logo_url: null}).eq('id', currentUser.id).then(function(res){
+          if(res.error){ setLogoHint('Xəta: ' + res.error.message, true); return; }
+          currentProfile.company_logo_url = null;
+          renderLogoPreview();
+          setLogoHint('Loqo silindi.', false);
+        });
+      });
+    });
   }
 
   function renderProfileCompletion(){
@@ -1279,6 +1417,23 @@
     var pct = Math.round((done / total) * 100);
     document.getElementById('completionFill').style.width = pct + '%';
     document.getElementById('completionText').textContent = pct + '% tamamlanıb';
+  }
+
+  // ====== WHATSAPP QRUP DƏVƏTİ ======
+  var SITE_WA_LINK = null;
+  function renderWaJoinBox(){
+    var box = document.getElementById('waJoinBox');
+    if(!box) return;
+    if(SITE_WA_LINK && currentProfile && currentProfile.status === 'approved'){
+      document.getElementById('waJoinBtn').setAttribute('href', SITE_WA_LINK);
+      box.style.display = 'flex';
+    } else { box.style.display = 'none'; }
+  }
+  function showApplicationWaBox(){
+    var box = document.getElementById('waJoinBoxSuccess');
+    if(!box || !SITE_WA_LINK) return;
+    document.getElementById('waJoinBtnSuccess').setAttribute('href', SITE_WA_LINK);
+    box.style.display = 'flex';
   }
 
   // ====== CMS: site_settings-dən dinamik mətnləri yüklə ======
@@ -1316,10 +1471,13 @@
       if(w.heading) document.getElementById('cms-wa-heading').textContent = w.heading;
       if(w.text) document.getElementById('cms-wa-text').textContent = w.text;
       if(w.link){
+        SITE_WA_LINK = w.link;
         ['cms-wa-link','cms-wa-2','cms-wa-3','cms-wa-float'].forEach(function(id){
           var el = document.getElementById(id);
           if(el) el.setAttribute('href', w.link);
         });
+        showApplicationWaBox();
+        renderWaJoinBox();
       }
       if(w.button_text) document.getElementById('cms-wa-link').textContent = w.button_text;
     }
@@ -1455,12 +1613,14 @@
       var avatarInner = safeUrl(m.avatar_url)
         ? '<img src="'+escapeHtml(safeUrl(m.avatar_url))+'" alt="" style="width:100%;height:100%;object-fit:cover;">'
         : letter;
+      var logoImg = safeUrl(m.company_logo_url);
       return '<div class="member-card">'+
         '<div class="avatar">'+avatarInner+'</div>'+
         '<h4>'+escapeHtml(m.ad)+' '+escapeHtml(m.soyad||'')+'</h4>'+
         '<div class="role">'+escapeHtml(m.vezife||'')+'</div>'+
-        '<div class="sector">'+escapeHtml(m.sirket||'')+(m.sirket && m.seher ? ' · ' : '')+escapeHtml(m.seher||'')+'</div>'+
-        '<a href="#" class="view-profile-btn" data-id="'+m.id+'">Profilə bax →</a></div>';
+        '<div class="sector">'+escapeHtml(m.sirket||'')+(m.sirket && m.seher ? ' · ' : '')+escapeHtml(m.seher||'')+(logoImg ? ' <img class="company-logo" src="'+escapeHtml(logoImg)+'" alt="">' : '')+'</div>'+
+        '<a href="#" class="view-profile-btn" data-id="'+m.id+'" style="display:block; margin-bottom:12px;">Profilə bax →</a>'+
+        '<div class="conn-actions" data-pid="'+m.id+'">'+connActionHtml(m.id)+'</div></div>';
     }).join('');
     grid.querySelectorAll('.view-profile-btn').forEach(function(a){
       a.addEventListener('click', function(e){
@@ -1470,11 +1630,201 @@
     });
   }
   if(LIVE){
-    supa.from('profiles_directory').select('*').order('id',{ascending:false}).limit(8)
+    supa.from('profiles_directory').select('*')
+      .not('avatar_url','is',null).not('about','is',null)
+      .order('id',{ascending:false}).limit(8)
       .then(function(res){
         if(res.error){ console.warn('profiles_directory sorğu xətası:', res.error.message); return; }
         renderMembers(res.data);
       });
+  }
+
+  // =========================================================
+  // ---------- YENİ TƏDBİR BİLDİRİŞİ (real-time, sayt açıq olarkən) ----------
+  // Xəbərdarlıq: bu YALNIZ sayt brauzerdə açıq olduğu müddətdə işləyir.
+  // Sayt bağlı olarkən (WhatsApp/push) bildiriş üçün n8n + WPPConnect workflow lazımdır (aşağıdakı izaha bax).
+  // =========================================================
+  var eventToastTimer = null;
+  function showEventToast(ev){
+    var box = document.getElementById('eventToast');
+    document.getElementById('etTitle').textContent = 'Yeni tədbir: ' + (ev.title || '');
+    document.getElementById('etDesc').textContent = ev.event_date ? new Date(ev.event_date).toLocaleDateString('az-AZ') : '';
+    box.classList.add('show');
+    clearTimeout(eventToastTimer);
+    eventToastTimer = setTimeout(function(){ box.classList.remove('show'); }, 12000);
+  }
+  var etClose = document.getElementById('eventToastClose');
+  if(etClose) etClose.addEventListener('click', function(){ document.getElementById('eventToast').classList.remove('show'); });
+  if(LIVE){
+    supa.channel('events-public-changes')
+      .on('postgres_changes', {event:'INSERT', schema:'public', table:'events'}, function(payload){
+        if(payload.new && payload.new.published) showEventToast(payload.new);
+      })
+      .on('postgres_changes', {event:'UPDATE', schema:'public', table:'events'}, function(payload){
+        if(payload.new && payload.new.published && !(payload.old && payload.old.published)) showEventToast(payload.new);
+      })
+      .subscribe();
+  }
+
+  // =========================================================
+  // ---------- BAĞLANTILAR (Connections) ----------
+  // =========================================================
+  var connectionsList = [];
+  var connectionsMap = {};        // otherUserId -> {id, status, direction:'sent'|'received'}
+  var activeNetworkTab = 'accepted';
+  var connChannel = null;
+
+  function connActionHtml(otherId){
+    if(!currentUser) return '<a href="#" class="btn btn-outline btn-sm conn-btn conn-login-btn">Bağlantı üçün daxil ol</a>';
+    if(otherId === currentUser.id) return '';
+    if(currentProfile && currentProfile.status !== 'approved') return '<span style="color:var(--muted-2);">Bağlantı üçün üzvlük təsdiqini gözlə</span>';
+    var st = connectionsMap[otherId];
+    if(!st) return '<a href="#" class="btn btn-gold btn-sm conn-btn conn-connect-btn" data-pid="'+otherId+'">Bağlan</a>';
+    if(st.status === 'accepted') return '<span style="color:#7BC796;">✓ Əlaqədəsiniz</span> <a href="#" class="btn btn-outline btn-sm conn-btn conn-remove-btn" data-cid="'+st.id+'">Sil</a>';
+    if(st.status === 'pending' && st.direction === 'sent') return '<span style="color:var(--muted);">Sorğu göndərilib</span> <a href="#" class="btn btn-outline btn-sm conn-btn conn-cancel-btn" data-cid="'+st.id+'">Ləğv et</a>';
+    return '<a href="#" class="btn btn-gold btn-sm conn-btn conn-accept-btn" data-cid="'+st.id+'">Qəbul et</a> <a href="#" class="btn btn-outline btn-sm conn-btn conn-decline-btn" data-cid="'+st.id+'">Rədd et</a>';
+  }
+
+  function refreshConnectButtons(){
+    document.querySelectorAll('.conn-actions[data-pid]').forEach(function(el){
+      el.innerHTML = connActionHtml(el.getAttribute('data-pid'));
+    });
+  }
+
+  function loadConnections(){
+    if(!currentUser) return;
+    supa.from('connections').select('*')
+      .or('requester_id.eq.' + currentUser.id + ',addressee_id.eq.' + currentUser.id)
+      .order('created_at', {ascending:false})
+      .then(function(res){
+        if(res.error){ console.warn('connections sorğu xətası:', res.error.message); return; }
+        connectionsList = res.data;
+        connectionsMap = {};
+        var missingIds = [];
+        connectionsList.forEach(function(c){
+          var isReq = c.requester_id === currentUser.id;
+          var otherId = isReq ? c.addressee_id : c.requester_id;
+          if(!directoryCache[otherId] && missingIds.indexOf(otherId) === -1) missingIds.push(otherId);
+          if(c.status !== 'pending' && c.status !== 'accepted') return;
+          connectionsMap[otherId] = {id:c.id, status:c.status, direction: isReq ? 'sent' : 'received'};
+        });
+        function finish(){
+          updateNetworkBadge();
+          renderNetworkTab();
+          refreshConnectButtons();
+        }
+        // homepage vitrini yalnız ilk 8 üzvü göstərir (directoryCache) — bağlantı tərəfdaşı
+        // orada olmaya bilər, ona görə çatışmayan profilləri ayrıca çəkirik.
+        if(missingIds.length){
+          supa.from('profiles_directory').select('*').in('id', missingIds).then(function(r2){
+            if(!r2.error && r2.data) r2.data.forEach(function(m){ directoryCache[m.id] = m; });
+            finish();
+          });
+        } else { finish(); }
+      });
+  }
+
+  function updateNetworkBadge(){
+    if(!currentUser) return;
+    var n = connectionsList.filter(function(c){ return c.status === 'pending' && c.addressee_id === currentUser.id; }).length;
+    ['netBadge','netBadgeMobile'].forEach(function(id){
+      var b = document.getElementById(id);
+      b.textContent = n; b.style.display = n > 0 ? 'inline-block' : 'none';
+    });
+  }
+
+  function subscribeConnectionsRealtime(){
+    if(connChannel || !currentUser) return;
+    connChannel = supa.channel('connections-' + currentUser.id)
+      .on('postgres_changes', {event:'*', schema:'public', table:'connections', filter:'requester_id=eq.'+currentUser.id}, function(){ loadConnections(); })
+      .on('postgres_changes', {event:'*', schema:'public', table:'connections', filter:'addressee_id=eq.'+currentUser.id}, function(){ loadConnections(); })
+      .subscribe();
+  }
+
+  function sendConnectionRequest(targetId){
+    if(!currentUser || !targetId) return;
+    supa.from('connections').insert([{requester_id:currentUser.id, addressee_id:targetId, status:'pending'}]).then(function(res){
+      if(res.error){
+        if(res.error.code === '23505') alert('Bu üzvlə artıq aktiv bağlantı və ya sorğu var.');
+        else alert('Sorğu göndərilmədi: ' + res.error.message);
+        return;
+      }
+      loadConnections();
+    });
+  }
+
+  function updateConnectionStatus(id, status){
+    supa.from('connections').update({status:status, responded_at:new Date().toISOString()}).eq('id', id).then(function(res){
+      if(res.error){ alert('Xəta: ' + res.error.message); return; }
+      loadConnections();
+    });
+  }
+
+  document.addEventListener('click', function(e){
+    var t = e.target.closest('.conn-connect-btn, .conn-cancel-btn, .conn-accept-btn, .conn-decline-btn, .conn-remove-btn, .conn-login-btn, .network-view-btn');
+    if(!t) return;
+    e.preventDefault();
+    if(t.classList.contains('conn-login-btn')){ openAuth('login'); return; }
+    if(t.classList.contains('conn-connect-btn')){ sendConnectionRequest(t.getAttribute('data-pid')); return; }
+    if(t.classList.contains('network-view-btn')){
+      var p = directoryCache[t.getAttribute('data-id')];
+      if(p) openProfileModal(p); else alert('Bu üzvün profili hazırda əlçatan deyil.');
+      return;
+    }
+    var cid = t.getAttribute('data-cid');
+    if(t.classList.contains('conn-cancel-btn')) updateConnectionStatus(cid, 'cancelled');
+    else if(t.classList.contains('conn-accept-btn')) updateConnectionStatus(cid, 'accepted');
+    else if(t.classList.contains('conn-decline-btn')) updateConnectionStatus(cid, 'declined');
+    else if(t.classList.contains('conn-remove-btn')){ if(confirm('Bu bağlantını silmək istədiyinə əminsən?')) updateConnectionStatus(cid, 'removed'); }
+  });
+
+  document.querySelectorAll('.network-tab').forEach(function(tb){
+    tb.addEventListener('click', function(){
+      document.querySelectorAll('.network-tab').forEach(function(x){ x.classList.remove('active'); });
+      tb.classList.add('active');
+      activeNetworkTab = tb.getAttribute('data-ntab');
+      renderNetworkTab();
+    });
+  });
+
+  function networkRowHtml(c){
+    var isReq = c.requester_id === currentUser.id;
+    var otherId = isReq ? c.addressee_id : c.requester_id;
+    var other = directoryCache[otherId];
+    var name = other ? ((other.ad||'')+' '+(other.soyad||'')).trim() : 'Üzv';
+    var sub = other ? [other.vezife, other.sirket].filter(Boolean).join(', ') : '';
+    var img = other && safeUrl(other.avatar_url);
+    var letter = ((other && other.ad) || '?').trim().charAt(0).toUpperCase();
+    var actions = '';
+    if(c.status === 'accepted') actions = '<a href="#" class="btn btn-outline btn-sm conn-remove-btn" data-cid="'+c.id+'">Bağlantını sil</a>';
+    else if(c.status === 'pending' && isReq) actions = '<a href="#" class="btn btn-outline btn-sm conn-cancel-btn" data-cid="'+c.id+'">Sorğunu ləğv et</a>';
+    else if(c.status === 'pending' && !isReq) actions = '<a href="#" class="btn btn-gold btn-sm conn-accept-btn" data-cid="'+c.id+'">Qəbul et</a> <a href="#" class="btn btn-outline btn-sm conn-decline-btn" data-cid="'+c.id+'">Rədd et</a>';
+    return '<div class="network-row">'+
+      '<div class="nr-avatar">'+(img?'<img src="'+escapeHtml(img)+'" alt="">':letter)+'</div>'+
+      '<div class="nr-info"><b>'+escapeHtml(name)+'</b><span>'+escapeHtml(sub)+'</span></div>'+
+      '<div class="nr-actions">'+actions+(other ? ' <a href="#" class="btn btn-outline btn-sm network-view-btn" data-id="'+otherId+'">Profilə bax</a>' : '')+'</div></div>';
+  }
+
+  function renderNetworkTab(){
+    var box = document.getElementById('networkList');
+    if(!currentUser || !box) return;
+    var accepted = connectionsList.filter(function(c){ return c.status === 'accepted'; });
+    var received = connectionsList.filter(function(c){ return c.status === 'pending' && c.addressee_id === currentUser.id; });
+    var sent = connectionsList.filter(function(c){ return c.status === 'pending' && c.requester_id === currentUser.id; });
+    [['cntAccepted',accepted.length],['cntReceived',received.length],['cntSent',sent.length]].forEach(function(p){
+      var el = document.getElementById(p[0]); el.textContent = p[1]; el.style.display = p[1] > 0 ? 'inline-block' : 'none';
+    });
+    var filtered = activeNetworkTab === 'accepted' ? accepted : (activeNetworkTab === 'received' ? received : sent);
+    if(!filtered.length){
+      var emptyMsg = {
+        accepted:'Hələ bağlantın yoxdur. Üzvlər siyahısından "Bağlan" düyməsini basaraq başla.',
+        received:'Gələn sorğu yoxdur.',
+        sent:'Göndərilmiş sorğu yoxdur.'
+      }[activeNetworkTab];
+      box.innerHTML = '<div class="network-empty">'+emptyMsg+'</div>';
+      return;
+    }
+    box.innerHTML = '<div class="network-list">'+filtered.map(networkRowHtml).join('')+'</div>';
   }
 
   // ====== PROFİL BAXIŞ MODALI ======
@@ -1485,7 +1835,8 @@
     var h = '<div class="pm-top"><div class="avatar pm-avatar">'+(img?'<img src="'+escapeHtml(img)+'" alt="" style="width:100%;height:100%;object-fit:cover;">':letter)+'</div>'+
       '<h3 style="color:#fff;font-size:22px;">'+escapeHtml((p.ad||'')+' '+(p.soyad||''))+'</h3></div>';
     var info = [['Vəzifə',p.vezife],['Şirkət',p.sirket],['Sektor',p.sektor],['Şəhər',p.seher]].filter(function(r){ return r[1]; });
-    if(info.length) h += '<div class="pm-sec"><h5>Ümumi məlumat</h5><dl class="pm-dl">'+info.map(function(r){ return '<dt>'+r[0]+'</dt><dd>'+escapeHtml(r[1])+'</dd>'; }).join('')+'</dl></div>';
+    var plogo = safeUrl(p.company_logo_url);
+    if(info.length) h += '<div class="pm-sec"><h5>Ümumi məlumat</h5><dl class="pm-dl">'+info.map(function(r){ return '<dt>'+r[0]+'</dt><dd>'+escapeHtml(r[1])+(r[0]==='Şirkət' && plogo ? ' <img class="pm-company-logo" src="'+escapeHtml(plogo)+'" alt="">' : '')+'</dd>'; }).join('')+'</dl></div>';
     h += '<div class="pm-sec"><h5>Haqqında</h5><p style="color:var(--muted);font-size:14px;line-height:1.6;">'+(p.about ? escapeHtml(p.about) : (currentUser ? 'Bu üzv haqqında məlumat əlavə etməyib.' : 'Bu məlumatı görmək üçün icmaya qoşulmalısınız.'))+'</p></div>';
     function tags(title, arr, cls){ return (arr && arr.length) ? '<div class="pm-sec"><h5>'+title+'</h5><div style="display:flex;flex-wrap:wrap;gap:8px;">'+arr.map(function(t){ return '<span class="pm-tag '+cls+'">'+escapeHtml(TAG_LABEL[t]||t)+'</span>'; }).join('')+'</div></div>' : ''; }
     h += tags('Nə təklif edir', p.offering, 'pm-tag-offer') + tags('Nə axtarır', p.seeking, 'pm-tag-seek');
@@ -1495,6 +1846,7 @@
       var u = safeUrl(l[1]); if(u) c.push([l[0], '<a href="'+escapeHtml(u)+'" target="_blank" rel="noopener" style="border-bottom:1px solid var(--gold-dim);">'+escapeHtml(u.replace(/^https?:\/\/(www\.)?/,''))+'</a>']);
     });
     h += '<div class="pm-sec"><h5>Əlaqə</h5>'+(c.length ? '<dl class="pm-dl">'+c.map(function(r){ return '<dt>'+r[0]+'</dt><dd>'+r[1]+'</dd>'; }).join('')+'</dl>' : '<span style="color:var(--muted-2);font-size:13px;">Əlaqə məlumatı gizlidir.</span>')+'</div>';
+    h += '<div class="pm-sec conn-actions" data-pid="'+p.id+'">'+connActionHtml(p.id)+'</div>';
     document.getElementById('pm_body').innerHTML = h;
     document.getElementById('profileModal').classList.add('open');
   }
@@ -1636,6 +1988,7 @@
     function showSuccess(){
       document.getElementById('formSuccess').classList.add('show');
       form.reset();
+      showApplicationWaBox();
       document.getElementById('formSuccess').scrollIntoView({behavior:'smooth', block:'center'});
     }
 
