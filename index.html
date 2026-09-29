@@ -419,6 +419,14 @@
   .pm-sec h5{font-family:'Inter',sans-serif; font-size:13px; font-weight:600; color:var(--gold); margin-bottom:10px;}
   .pm-dl{display:grid; grid-template-columns:96px 1fr; gap:8px 14px; font-size:14px;}
   .pm-dl dt{color:var(--muted-2);} .pm-dl dd{color:var(--text); word-break:break-word;}
+  .pm-social-row{display:flex; flex-wrap:wrap; gap:10px; margin-top:4px;}
+  .pm-social-btn{
+    display:inline-flex; align-items:center; gap:8px; font-size:13.5px; padding:10px 16px;
+    border:1px solid var(--line); color:var(--text) !important; background:var(--panel-2);
+    text-decoration:none !important; transition:border-color .2s, color .2s;
+  }
+  .pm-social-btn:hover{border-color:var(--gold); color:var(--gold) !important;}
+  .pm-social-btn svg{width:16px; height:16px; flex-shrink:0;}
 
   /* ===== BAĞLANTILAR (network) ===== */
   .nav-badge{background:var(--danger); color:#fff; font-size:10.5px; line-height:1; padding:3px 6px; border-radius:9px; margin-left:7px; display:none; vertical-align:1px;}
@@ -1860,10 +1868,21 @@
     h += tags('Nə təklif edir', p.offering, 'pm-tag-offer') + tags('Nə axtarır', p.seeking, 'pm-tag-seek');
     var c = [];
     if(p.telefon) c.push(['Telefon', escapeHtml(p.telefon)]);
-    [['Website',p.website],['LinkedIn',p.linkedin],['Instagram',p.instagram]].forEach(function(l){
-      var u = safeUrl(l[1]); if(u) c.push([l[0], '<a href="'+escapeHtml(u)+'" target="_blank" rel="noopener" style="border-bottom:1px solid var(--gold-dim);">'+escapeHtml(u.replace(/^https?:\/\/(www\.)?/,''))+'</a>']);
+    var SOCIAL_ICON = {
+      Website: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 4 6 4 9s-1.5 6.3-4 9c-2.5-2.7-4-6-4-9s1.5-6.3 4-9z"/></svg>',
+      LinkedIn: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5C4.98 4.9 3.9 6 2.5 6S0 4.9 0 3.5 1.1 1 2.5 1s2.48 1.1 2.48 2.5zM.2 8.5h4.6V23H.2V8.5zM8.3 8.5h4.4v2h.06c.6-1.1 2.1-2.3 4.3-2.3 4.6 0 5.4 3 5.4 7v7.8h-4.6v-6.9c0-1.6 0-3.8-2.3-3.8s-2.7 1.8-2.7 3.7v7h-4.6V8.5z"/></svg>',
+      Instagram: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg>',
+      Facebook: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 22v-8.2h2.8l.5-3.3h-3.3V8.4c0-.9.4-1.7 1.8-1.7h1.6V3.9c-.3 0-1.3-.2-2.4-.2-2.5 0-4.1 1.5-4.1 4.2v2.6H7.5v3.3h2.9V22h3.1z"/></svg>'
+    };
+    var socialBtns = [];
+    [['Website',p.website],['LinkedIn',p.linkedin],['Instagram',p.instagram],['Facebook',p.facebook]].forEach(function(l){
+      var u = safeUrl(l[1]);
+      if(u) socialBtns.push('<a href="'+escapeHtml(u)+'" target="_blank" rel="noopener" class="pm-social-btn">'+(SOCIAL_ICON[l[0]]||'')+'<span>'+l[0]+'</span></a>');
     });
-    h += '<div class="pm-sec"><h5>Əlaqə</h5>'+(c.length ? '<dl class="pm-dl">'+c.map(function(r){ return '<dt>'+r[0]+'</dt><dd>'+r[1]+'</dd>'; }).join('')+'</dl>' : '<span style="color:var(--muted-2);font-size:13px;">Əlaqə məlumatı gizlidir.</span>')+'</div>';
+    var contactHtml = '';
+    if(c.length) contactHtml += '<dl class="pm-dl">'+c.map(function(r){ return '<dt>'+r[0]+'</dt><dd>'+r[1]+'</dd>'; }).join('')+'</dl>';
+    if(socialBtns.length) contactHtml += '<div class="pm-social-row">'+socialBtns.join('')+'</div>';
+    h += '<div class="pm-sec"><h5>Əlaqə</h5>'+(contactHtml || '<span style="color:var(--muted-2);font-size:13px;">Əlaqə məlumatı gizlidir.</span>')+'</div>';
     h += '<div class="pm-sec conn-actions" data-pid="'+p.id+'">'+connActionHtml(p.id)+'</div>';
     document.getElementById('pm_body').innerHTML = h;
     document.getElementById('profileModal').classList.add('open');
