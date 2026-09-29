@@ -410,6 +410,14 @@
   }
 
   /* ===== böyük profil şəkilləri ===== */
+  /* ---- üzv kataloqu: axtarış / şəhər / daha çox ---- */
+  .dir-toolbar{display:flex; gap:12px; flex-wrap:wrap; margin-bottom:14px;}
+  .dir-toolbar input[type=search]{flex:1 1 260px; min-width:0; background:var(--panel); border:1px solid var(--line); color:var(--text); padding:12px 14px; font-size:14.5px; font-family:'Inter',sans-serif; border-radius:2px;}
+  .dir-toolbar select{flex:0 0 190px; background:var(--panel); border:1px solid var(--line); color:var(--text); padding:12px 14px; font-size:14.5px; font-family:'Inter',sans-serif; border-radius:2px;}
+  .dir-toolbar input:focus, .dir-toolbar select:focus{outline:none; border-color:var(--gold);}
+  .dir-status{min-height:20px; margin-bottom:12px; font-size:13px; color:var(--muted-2);}
+  .dir-empty{grid-column:1/-1; background:var(--panel); padding:40px 26px; text-align:center; color:var(--muted); font-size:14px;}
+  .dir-more{text-align:center; margin-top:26px;}
   .member-card .avatar{width:100%; height:auto; aspect-ratio:1/1; border-radius:6px; font-size:64px; margin-bottom:18px;}
   .avatar-preview{width:140px; height:140px; border-radius:14px; font-size:44px;}
   .pm-box{max-width:520px;}
@@ -584,11 +592,12 @@
         <div class="field"><label>Vəzifə</label><input type="text" id="pf_vezife"></div>
         <div class="field"><label>Şirkət</label><input type="text" id="pf_sirket"></div>
         <div class="field"><label>Sektor</label><input type="text" id="pf_sektor"></div>
-        <div class="field"><label>Şəhər</label><input type="text" id="pf_seher" value="Bakı"></div>
+        <div class="field"><label>Şəhər</label><select id="pf_seher"><option value="Bakı">Bakı</option><option value="Gəncə">Gəncə</option><option value="Digər">Digər</option></select></div>
         <div class="field"><label>Telefon</label><input type="text" id="pf_telefon"></div>
         <div class="field"><label>Website</label><input type="text" id="pf_website"></div>
         <div class="field"><label>LinkedIn</label><input type="text" id="pf_linkedin"></div>
         <div class="field"><label>Instagram</label><input type="text" id="pf_instagram"></div>
+        <div class="field"><label>Facebook</label><input type="text" id="pf_facebook" placeholder="https://facebook.com/..."></div>
         <div class="field full"><label>Haqqımda <span class="req-mark">*(tələb olunur)</span></label><textarea id="pf_about" rows="3" maxlength="1200"></textarea></div>
         <div class="field">
           <label>"Haqqımda" kimə görünsün?</label>
@@ -805,12 +814,18 @@
       <h2 data-cms="t82">Üzvlər</h2>
       <p data-cms="t83">Fərqli sektorlardan olan sahibkarlar və rəhbərlər — hər biri öz sahəsində fəaliyyət göstərir, öz təcrübəsini gətirir.</p>
     </div>
+    <div class="dir-toolbar" id="dirToolbar" style="display:none;">
+      <input type="search" id="dirSearch" placeholder="Ad, şirkət, vəzifə və ya sektor üzrə axtar…" maxlength="40" autocomplete="off" aria-label="Üzv axtarışı">
+      <select id="dirRegion" aria-label="Şəhər üzrə filtr"></select>
+    </div>
+    <div class="dir-status" id="dirStatus" aria-live="polite"></div>
     <div class="member-grid reveal" id="memberGrid">
       <div class="member-card"><div class="avatar">R</div><h4>Rəşad M.</h4><div class="role">Founder</div><div class="sector">Texnologiya · Bakı</div><a href="#">Profilə bax →</a></div>
       <div class="member-card"><div class="avatar">N</div><h4>Nərmin Q.</h4><div class="role">CEO</div><div class="sector">Marketinq · Bakı</div><a href="#">Profilə bax →</a></div>
       <div class="member-card"><div class="avatar">T</div><h4>Tural S.</h4><div class="role">Investor</div><div class="sector">Maliyyə · Bakı</div><a href="#">Profilə bax →</a></div>
       <div class="member-card"><div class="avatar">L</div><h4>Leyla H.</h4><div class="role">Director</div><div class="sector">Retail · Bakı</div><a href="#">Profilə bax →</a></div>
     </div>
+    <div class="dir-more"><a href="#" class="btn btn-outline" id="dirMore" style="display:none; width:auto;">Daha çox göstər</a></div>
   </div>
 </section>
 
@@ -949,7 +964,7 @@
           <div class="field"><label>Şirkət</label><input type="text" name="sirket"></div>
           <div class="field"><label>Vəzifə</label><input type="text" name="vezife"></div>
           <div class="field"><label>Fəaliyyət sahəsi</label><input type="text" name="sahe"></div>
-          <div class="field"><label>Şəhər</label><input type="text" name="seher" value="Bakı"></div>
+          <div class="field"><label>Şəhər</label><select name="seher"><option value="Bakı">Bakı</option><option value="Gəncə">Gəncə</option><option value="Digər">Digər</option></select></div>
           <div class="field"><label>LinkedIn / Instagram</label><input type="text" name="social"></div>
           <div class="field"><label>Veb sayt</label><input type="text" name="veb"></div>
           <div class="field full"><label>Siz nə təklif edirsiniz?</label><textarea name="teklif" rows="2"></textarea></div>
@@ -1233,6 +1248,7 @@
         website: safeUrl(document.getElementById('pf_website').value) || null,
         linkedin: safeUrl(document.getElementById('pf_linkedin').value) || null,
         instagram: safeUrl(document.getElementById('pf_instagram').value) || null,
+        facebook: safeUrl(document.getElementById('pf_facebook').value) || null,
         about: aboutVal,
         visibility_about: document.getElementById('pf_vis_about').value,
         visibility_phone: document.getElementById('pf_vis_phone').value,
@@ -1250,7 +1266,7 @@
 
     // sessiya bərpası (səhifə yenilənəndə)
     supa.auth.getSession().then(function(res){
-      if(res.data.session) onAuthed(res.data.session.user);
+      if(res.data.session) onAuthed(res.data.session.user); else dirInit('');
     });
   }
 
@@ -1271,18 +1287,28 @@
     currentUser = user;
     updateAuthNav();
     supa.from('profiles').select('*').eq('id', user.id).maybeSingle().then(function(res){
-      if(res.error || !res.data) return;
+      if(res.error || !res.data){ dirInit(''); return; }
       currentProfile = res.data;
+      dirInit(currentProfile.seher);
       document.getElementById('memberPanel').style.display = 'block';
       document.getElementById('panelGreeting').textContent = 'Xoş gəldin, ' + (currentProfile.ad || user.email);
       var badge = document.getElementById('panelStatusBadge');
       badge.textContent = PROFILE_STATUS_LABEL[currentProfile.status] || currentProfile.status;
       badge.className = 'panel-status' + (currentProfile.status === 'approved' ? ' approved' : '');
-      ['ad','soyad','vezife','sirket','sektor','telefon','website','linkedin','instagram','about'].forEach(function(f){
+      ['ad','soyad','vezife','sirket','sektor','telefon','website','linkedin','instagram','facebook','about'].forEach(function(f){
         var el = document.getElementById('pf_' + f);
         if(el && currentProfile[f]) el.value = currentProfile[f];
       });
-      if(currentProfile.seher) document.getElementById('pf_seher').value = currentProfile.seher;
+      if(currentProfile.seher){
+        var cityEl = document.getElementById('pf_seher'), cityNorm = normCity(currentProfile.seher);
+        if(cityNorm === 'Bakı' || cityNorm === 'Gəncə') cityEl.value = cityNorm;
+        else {   // Sumqayıt və s.: mövcud dəyər itməsin deyə müvəqqəti seçim kimi əlavə olunur
+          if(![].some.call(cityEl.options, function(o){ return o.value === currentProfile.seher; })){
+            var op = document.createElement('option'); op.value = op.textContent = currentProfile.seher; cityEl.appendChild(op);
+          }
+          cityEl.value = currentProfile.seher;
+        }
+      }
       document.getElementById('pf_vis_about').value = currentProfile.visibility_about || 'public';
       document.getElementById('pf_vis_phone').value = currentProfile.visibility_phone || 'private';
       document.getElementById('pf_vis_social').value = currentProfile.visibility_social || 'public';
@@ -1305,7 +1331,26 @@
   }
 
   // ====== AVATAR: yüklə / göstər / sil ======
-  var AVATAR_MAX_BYTES = 2 * 1024 * 1024;
+  var AVATAR_MAX_BYTES = 10 * 1024 * 1024;   // xam limit; yüklənmədən əvvəl brauzerdə kiçildilir
+  // Şəkli brauzerdə kiçildir (Supabase Storage egress-ini qorumaq üçün): 2 MB-lıq foto ~60 KB olur.
+  function resizeImage(file, maxSide, keepAlpha){
+    return new Promise(function(resolve, reject){
+      var url = URL.createObjectURL(file), img = new Image();
+      img.onload = function(){
+        URL.revokeObjectURL(url);
+        var k = Math.min(1, maxSide / Math.max(img.width, img.height));
+        var c = document.createElement('canvas');
+        c.width = Math.max(1, Math.round(img.width * k)); c.height = Math.max(1, Math.round(img.height * k));
+        var ctx = c.getContext('2d');
+        var type = keepAlpha && file.type !== 'image/jpeg' ? 'image/png' : 'image/jpeg';
+        if(type === 'image/jpeg'){ ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height); }
+        ctx.drawImage(img, 0, 0, c.width, c.height);
+        c.toBlob(function(b){ b ? resolve(b) : reject(new Error('Şəkil emal olunmadı')); }, type, 0.82);
+      };
+      img.onerror = function(){ URL.revokeObjectURL(url); reject(new Error('Şəkil oxunmadı')); };
+      img.src = url;
+    });
+  }
   var AVATAR_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
   function renderAvatarPreview(){
@@ -1352,11 +1397,13 @@
       var file = avatarFile.files[0];
       if(!file) return;
       if(AVATAR_TYPES.indexOf(file.type) === -1){ setAvatarHint('Yalnız JPG, PNG və ya WebP qəbul olunur.', true); avatarFile.value = ''; return; }
-      if(file.size > AVATAR_MAX_BYTES){ setAvatarHint('Şəkil 2 MB-dan böyükdür.', true); avatarFile.value = ''; return; }
+      if(file.size > AVATAR_MAX_BYTES){ setAvatarHint('Şəkil 10 MB-dan böyükdür.', true); avatarFile.value = ''; return; }
 
       setAvatarHint('Yüklənir...', false);
       var path = currentUser.id + '/avatar';
-      supa.storage.from('avatars').upload(path, file, {upsert: true, contentType: file.type, cacheControl: '3600'})
+      resizeImage(file, 640, false).then(function(blob){
+        return supa.storage.from('avatars').upload(path, blob, {upsert: true, contentType: blob.type, cacheControl: '31536000'});   // URL-də ?v= var, uzun keş təhlükəsizdir
+      }).catch(function(err){ return {error: err}; })
         .then(function(up){
           if(up.error){ setAvatarHint('Yükləmə xətası: ' + up.error.message, true); return; }
           var pub = supa.storage.from('avatars').getPublicUrl(path);
@@ -1392,10 +1439,12 @@
       var file = logoFile.files[0];
       if(!file) return;
       if(AVATAR_TYPES.indexOf(file.type) === -1){ setLogoHint('Yalnız JPG, PNG və ya WebP qəbul olunur.', true); logoFile.value = ''; return; }
-      if(file.size > AVATAR_MAX_BYTES){ setLogoHint('Şəkil 2 MB-dan böyükdür.', true); logoFile.value = ''; return; }
+      if(file.size > AVATAR_MAX_BYTES){ setLogoHint('Şəkil 10 MB-dan böyükdür.', true); logoFile.value = ''; return; }
       setLogoHint('Yüklənir...', false);
       var path = currentUser.id + '/logo';
-      supa.storage.from('avatars').upload(path, file, {upsert: true, contentType: file.type, cacheControl: '3600'})
+      resizeImage(file, 600, true).then(function(blob){
+        return supa.storage.from('avatars').upload(path, blob, {upsert: true, contentType: blob.type, cacheControl: '31536000'});
+      }).catch(function(err){ return {error: err}; })
         .then(function(up){
           if(up.error){ setLogoHint('Yükləmə xətası: ' + up.error.message, true); return; }
           var pub = supa.storage.from('avatars').getPublicUrl(path);
@@ -1628,42 +1677,145 @@
   }
 
   // ====== ÜZVLƏR: profiles_directory-dən canlı çək (real şəkil + haqqımda) ======
-  var directoryCache = {};
-  function renderMembers(list){
-    var grid = document.getElementById('memberGrid');
-    if(!list || !list.length) return;
-    grid.innerHTML = list.map(function(m){
-      directoryCache[m.id] = m;
-      var letter = (m.ad||'?').trim().charAt(0).toUpperCase();
-      var avatarInner = safeUrl(m.avatar_url)
-        ? '<img src="'+escapeHtml(safeUrl(m.avatar_url))+'" alt="" style="width:100%;height:100%;object-fit:cover;">'
-        : letter;
-      var logoImg = safeUrl(m.company_logo_url);
-      return '<div class="member-card">'+
-        '<div class="avatar">'+avatarInner+'</div>'+
-        '<h4>'+escapeHtml(m.ad)+' '+escapeHtml(m.soyad||'')+'</h4>'+
-        '<div class="role">'+escapeHtml(m.vezife||'')+'</div>'+
-        '<div class="sector">'+escapeHtml(m.sirket||'')+(m.sirket && m.seher ? ' · ' : '')+escapeHtml(m.seher||'')+'</div>'+
-        (logoImg ? '<div class="company-logo-row"><div class="company-logo-plate"><img src="'+escapeHtml(logoImg)+'" alt="Şirkət loqosu"></div><span>Şirkət loqosu</span></div>' : '')+
-        '<a href="#" class="view-profile-btn" data-id="'+m.id+'" style="display:block; margin-bottom:12px;">Profilə bax →</a>'+
-        '<div class="conn-actions" data-pid="'+m.id+'">'+connActionHtml(m.id)+'</div></div>';
-    }).join('');
-    grid.querySelectorAll('.view-profile-btn').forEach(function(a){
-      a.addEventListener('click', function(e){
-        e.preventDefault();
-        openProfileModal(directoryCache[a.getAttribute('data-id')]);
-      });
+  var directoryCache = {};   // id -> profil (kartda yüngül sahələr; _full=true olanda tam profil)
+
+  // Şəhərin yazılış variantlarını (Baku/bakı/Ganja/gəncə…) bir dəyərə gətirir
+  function normCity(v){
+    var raw = String(v == null ? '' : v).trim();
+    var t = raw.toLowerCase().replace(/ə/g,'e').replace(/ı/g,'i').replace(/ü/g,'u').replace(/ö/g,'o').replace(/ş/g,'s').replace(/ç/g,'c').replace(/ğ/g,'g');
+    if(t === 'baki' || t === 'baku') return 'Bakı';
+    if(t === 'gence' || t === 'ganja' || t === 'ganca') return 'Gəncə';
+    return raw;
+  }
+
+  // ====== ÜZVLƏR KATALOQU: axtarış + şəhər filtri + səhifələmə ======
+  // Supabase yükünü azaltmaq üçün: (1) kartlar yalnız DIR_COLS sütunlarını çəkir ("about", "offering" və s. YOX),
+  // (2) hər səhifə DIR_PAGE+1 sətir (əlavə 1 sətir = "daha var?" yoxlaması, ayrıca count sorğusu yoxdur),
+  // (3) axtarış 350ms debounce ilə, (4) eyni sorğular 2 dəq. yaddaşda keşlənir, (5) tam profil yalnız "Profilə bax" basılanda çəkilir.
+  var DIR_PAGE = 12;
+  var DIR_COLS = 'id,ad,soyad,vezife,sirket,seher,sektor,avatar_url,company_logo_url';
+  var DIR_TTL = 120000, DIR_CACHE_MAX = 40;
+  var DIR_REGIONS = [['','Bütün şəhərlər'],['Bakı','Bakı'],['Gəncə','Gəncə'],['Digər','Digər şəhərlər']];
+  var dirState = {q:'', region:'', offset:0, seq:0, started:false, hasMore:false};
+  var dirPageCache = {};
+
+  function dirClean(q){   // PostgREST filtr sintaksisini pozan simvollar atılır
+    return String(q || '').replace(/[%*_,()\\"'.:]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 40);
+  }
+  function dirFetch(off){
+    var key = dirState.region + '|' + dirState.q + '|' + off;
+    var hit = dirPageCache[key];
+    if(hit && Date.now() - hit.t < DIR_TTL) return Promise.resolve(hit.rows);
+    var q = supa.from('profiles_directory').select(DIR_COLS)
+      .not('avatar_url','is',null).not('about','is',null);
+    if(dirState.region === 'Digər') q = q.or('seher.is.null,seher.not.in.("Bakı","Gəncə")');
+    else if(dirState.region) q = q.eq('seher', dirState.region);
+    dirState.q.split(' ').filter(Boolean).slice(0, 3).forEach(function(w){   // hər söz ən azı bir sahədə olmalıdır
+      q = q.or(['ad','soyad','sirket','vezife','sektor'].map(function(c){ return c + '.ilike.*' + w + '*'; }).join(','));
+    });
+    return q.order('id',{ascending:false}).range(off, off + DIR_PAGE).then(function(res){
+      if(res.error) throw res.error;
+      var keys = Object.keys(dirPageCache);
+      if(keys.length >= DIR_CACHE_MAX) delete dirPageCache[keys[0]];
+      dirPageCache[key] = {t: Date.now(), rows: res.data};
+      return res.data;
     });
   }
-  if(LIVE){
-    supa.from('profiles_directory').select('*')
-      .not('avatar_url','is',null).not('about','is',null)
-      .order('id',{ascending:false}).limit(8)
-      .then(function(res){
-        if(res.error){ console.warn('profiles_directory sorğu xətası:', res.error.message); return; }
-        renderMembers(res.data);
-      });
+
+  function memberCardHtml(m){
+    directoryCache[m.id] = Object.assign(directoryCache[m.id] || {}, m);
+    var letter = (m.ad||'?').trim().charAt(0).toUpperCase();
+    var av = safeUrl(m.avatar_url);
+    var avatarInner = av ? '<img src="'+escapeHtml(av)+'" alt="" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;">' : letter;
+    var logoImg = safeUrl(m.company_logo_url);
+    return '<div class="member-card">'+
+      '<div class="avatar">'+avatarInner+'</div>'+
+      '<h4>'+escapeHtml(m.ad)+' '+escapeHtml(m.soyad||'')+'</h4>'+
+      '<div class="role">'+escapeHtml(m.vezife||'')+'</div>'+
+      '<div class="sector">'+escapeHtml(m.sirket||'')+(m.sirket && m.seher ? ' · ' : '')+escapeHtml(m.seher||'')+'</div>'+
+      (logoImg ? '<div class="company-logo-row"><div class="company-logo-plate"><img src="'+escapeHtml(logoImg)+'" alt="Şirkət loqosu" loading="lazy" decoding="async"></div><span>Şirkət loqosu</span></div>' : '')+
+      '<a href="#" class="view-profile-btn" data-id="'+m.id+'" style="display:block; margin-bottom:12px;">Profilə bax →</a>'+
+      '<div class="conn-actions" data-pid="'+m.id+'">'+connActionHtml(m.id)+'</div></div>';
   }
+  function renderMembers(list, append){
+    var grid = document.getElementById('memberGrid');
+    var html = (list || []).map(memberCardHtml).join('');
+    if(append) grid.insertAdjacentHTML('beforeend', html); else grid.innerHTML = html;
+  }
+
+  // Tam profil (about, offering, sosial linklər…) yalnız açılanda və bir dəfə çəkilir
+  function openProfileById(id){
+    var c = directoryCache[id];
+    if(c && c._full){ openProfileModal(c); return; }
+    supa.from('profiles_directory').select('*').eq('id', id).maybeSingle().then(function(res){
+      if(res.error || !res.data){ alert('Bu üzvün profili hazırda əlçatan deyil.'); return; }
+      directoryCache[id] = Object.assign(directoryCache[id] || {}, res.data, {_full: true});
+      openProfileModal(directoryCache[id]);
+    });
+  }
+
+  function dirSetStatus(txt){ var el = document.getElementById('dirStatus'); if(el) el.textContent = txt; }
+
+  function dirLoad(append){
+    var mySeq = ++dirState.seq;                       // köhnə (gec gələn) cavablar atılır
+    var off = append ? dirState.offset : 0;
+    var moreBtn = document.getElementById('dirMore');
+    dirSetStatus('Yüklənir…');
+    dirFetch(off).then(function(rows){
+      if(mySeq !== dirState.seq) return;
+      var shown = rows.slice(0, DIR_PAGE);
+      dirState.hasMore = rows.length > DIR_PAGE;
+      dirState.offset = off + shown.length;
+      var filtered = !!(dirState.q || dirState.region);
+      if(!append && !shown.length && !filtered){       // hələ heç bir real üzv yoxdur → demo kartlar qalır
+        dirSetStatus(''); moreBtn.style.display = 'none'; return;
+      }
+      document.getElementById('dirToolbar').style.display = 'flex';
+      if(!append && !shown.length){
+        document.getElementById('memberGrid').innerHTML = '<div class="dir-empty">Bu axtarış üzrə üzv tapılmadı. Şəhər filtrini "Bütün şəhərlər"ə çevir və ya sözü dəyiş.</div>';
+      } else renderMembers(shown, append);
+      moreBtn.style.display = dirState.hasMore ? 'inline-block' : 'none';
+      var region = dirState.region ? (dirState.region === 'Digər' ? 'Digər şəhərlər' : dirState.region + ' üzrə') : 'Bütün şəhərlər';
+      var total = dirState.offset;
+      dirSetStatus(shown.length || append ? region + (dirState.q ? ' · "' + dirState.q + '"' : '') + ' · ' + total + (dirState.hasMore ? '+' : '') + ' üzv göstərilir' : '');
+    }).catch(function(err){
+      if(mySeq !== dirState.seq) return;
+      console.warn('profiles_directory sorğu xətası:', err && err.message);
+      dirSetStatus('Üzvləri yükləmək alınmadı — bir az sonra yenidən cəhd et.');
+    });
+  }
+
+  // Bir dəfə işə düşür. Giriş etmiş üzvün şəhəri Bakı/Gəncədirsə, siyahı əvvəlcə həmin şəhərlə açılır;
+  // istənilən vaxt filtrdən başqa şəhər və ya "Bütün şəhərlər" seçilə bilər.
+  function dirInit(city){
+    if(!LIVE || dirState.started) return;
+    dirState.started = true;
+    var c = normCity(city);
+    dirState.region = (c === 'Bakı' || c === 'Gəncə') ? c : '';
+    var sel = document.getElementById('dirRegion');
+    sel.innerHTML = DIR_REGIONS.map(function(r){ return '<option value="'+r[0]+'">'+r[1]+'</option>'; }).join('');
+    sel.value = dirState.region;
+    var timer = null, input = document.getElementById('dirSearch');
+    input.addEventListener('input', function(){
+      clearTimeout(timer);
+      timer = setTimeout(function(){
+        var q = dirClean(input.value);
+        if(q === dirState.q) return;
+        dirState.q = q; dirLoad(false);
+      }, 350);
+    });
+    sel.addEventListener('change', function(){ dirState.region = sel.value; dirLoad(false); });
+    document.getElementById('dirMore').addEventListener('click', function(e){ e.preventDefault(); dirLoad(true); });
+    document.getElementById('memberGrid').addEventListener('click', function(e){
+      var a = e.target.closest('.view-profile-btn');
+      if(!a) return;
+      e.preventDefault();
+      openProfileById(a.getAttribute('data-id'));
+    });
+    dirLoad(false);
+  }
+  // sessiya/profil cavabı gec gəlsə və ya alınmasa, kataloq yenə də açılır
+  if(LIVE) setTimeout(function(){ dirInit(''); }, 3000);
 
   // =========================================================
   // ---------- YENİ TƏDBİR BİLDİRİŞİ (real-time, sayt açıq olarkən) ----------
@@ -1742,7 +1894,7 @@
         // homepage vitrini yalnız ilk 8 üzvü göstərir (directoryCache) — bağlantı tərəfdaşı
         // orada olmaya bilər, ona görə çatışmayan profilləri ayrıca çəkirik.
         if(missingIds.length){
-          supa.from('profiles_directory').select('*').in('id', missingIds).then(function(r2){
+          supa.from('profiles_directory').select(DIR_COLS).in('id', missingIds).then(function(r2){
             if(!r2.error && r2.data) r2.data.forEach(function(m){ directoryCache[m.id] = m; });
             finish();
           });
@@ -1793,8 +1945,7 @@
     if(t.classList.contains('conn-login-btn')){ openAuth('login'); return; }
     if(t.classList.contains('conn-connect-btn')){ sendConnectionRequest(t.getAttribute('data-pid')); return; }
     if(t.classList.contains('network-view-btn')){
-      var p = directoryCache[t.getAttribute('data-id')];
-      if(p) openProfileModal(p); else alert('Bu üzvün profili hazırda əlçatan deyil.');
+      openProfileById(t.getAttribute('data-id'));
       return;
     }
     var cid = t.getAttribute('data-cid');
@@ -1943,7 +2094,7 @@
       statusEl.textContent = 'Axtarılır...';
       resultBox.classList.add('show');
       document.getElementById('matchRows').innerHTML = '';
-      supa.from('profiles_directory').select('*').overlaps(col, selectedTags).limit(10)
+      supa.from('profiles_directory').select('id,ad,soyad,vezife,sektor').overlaps(col, selectedTags).limit(10)
         .then(function(res){
           if(res.error){
             statusEl.textContent = 'Sorğuda xəta baş verdi.';

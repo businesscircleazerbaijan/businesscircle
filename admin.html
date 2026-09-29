@@ -786,7 +786,7 @@
         var row = currentMembers.find(function(x){ return String(x.id) === btn.closest('tr').getAttribute('data-id'); });
         openEditor('Üzvü redaktə et', 'profiles', row, [
           ['ad','Ad'],['soyad','Soyad'],['vezife','Vəzifə'],['sirket','Şirkət'],
-          ['sektor','Sektor'],['seher','Şəhər'],
+          ['sektor','Sektor'],['seher','Şəhər','select',[['Bakı','Bakı'],['Gəncə','Gəncə'],['Digər','Digər']]],
           ['telefon','Telefon'],['contact_email','Əlaqə emaili'],
           ['website','Website'],['linkedin','LinkedIn'],['instagram','Instagram'],['facebook','Facebook'],
           ['about','Haqqında','area'],['sirket_haqqinda','Şirkət haqqında','area'],
@@ -953,6 +953,25 @@
   // =========================================================
   // ---------- ÜMUMİ REDAKTƏ DİALOQU (ərizə / üzv) ----------
   // =========================================================
+  // Şəkli brauzerdə kiçildir (Supabase Storage egress-ini qorumaq üçün)
+  function resizeImage(file, maxSide){
+    return new Promise(function(resolve, reject){
+      var url = URL.createObjectURL(file), img = new Image();
+      img.onload = function(){
+        URL.revokeObjectURL(url);
+        var k = Math.min(1, maxSide / Math.max(img.width, img.height));
+        var c = document.createElement('canvas');
+        c.width = Math.max(1, Math.round(img.width * k)); c.height = Math.max(1, Math.round(img.height * k));
+        var ctx = c.getContext('2d');
+        ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
+        ctx.drawImage(img, 0, 0, c.width, c.height);
+        c.toBlob(function(b){ b ? resolve(b) : reject(new Error('Şəkil emal olunmadı')); }, 'image/jpeg', 0.82);
+      };
+      img.onerror = function(){ URL.revokeObjectURL(url); reject(new Error('Şəkil oxunmadı')); };
+      img.src = url;
+    });
+  }
+
   function openEditor(title, table, row, fields, done){
     fields = fields.filter(function(f){ return f[0] in row; });   // cədvəldə olmayan sütun göstərilmir
     var ov = document.createElement('div'); ov.className = 'ed-overlay';
@@ -973,7 +992,8 @@
         var v = row[f[0]] == null ? '' : row[f[0]];
         var type = f[2];
         if(type === 'select'){
-          var opts = f[3] || [];
+          var opts = (f[3] || []).slice();
+          if(v !== '' && !opts.some(function(o){ return o[0] === v; })) opts.push([v, v]);   // mövcud dəyər səssizcə dəyişməsin
           return '<div class="field"><label>' + f[1] + '</label><select class="settings-input" data-f="' + f[0] + '">' +
             opts.map(function(o){ return '<option value="' + o[0] + '"' + (o[0] === v ? ' selected' : '') + '>' + o[1] + '</option>'; }).join('') +
             '</select></div>';
@@ -992,9 +1012,10 @@
         var file = e.target.files[0];
         if(!file) return;
         avStatus.textContent = 'Yüklənir...';
-        var ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
-        var path = row.id + '/avatar-' + Date.now() + '.' + ext;
-        supa.storage.from('avatars').upload(path, file, {upsert:true, cacheControl:'3600'}).then(function(res){
+        var path = row.id + '/avatar-' + Date.now() + '.jpg';
+        resizeImage(file, 640).then(function(blob){
+          return supa.storage.from('avatars').upload(path, blob, {upsert:true, contentType:'image/jpeg', cacheControl:'31536000'});   // yol hər dəfə unikaldır → uzun keş təhlükəsizdir
+        }).catch(function(err){ return {error: err}; }).then(function(res){
           if(res.error){ avStatus.textContent = 'Xəta: ' + res.error.message; return; }
           var publicUrl = supa.storage.from('avatars').getPublicUrl(path).data.publicUrl;
           supa.from('profiles').update({avatar_url: publicUrl}).eq('id', row.id).then(function(res2){
