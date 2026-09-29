@@ -631,7 +631,7 @@
   });
 
   // ---------- BİLDİRİŞ GÖNDƏR ----------
-  // notifications cədvəlinə yazır → təsdiqlənmiş üzvlərin açıq saytında zəng+səs (realtime),
+  // member_notifications cədvəlinə yazır → təsdiqlənmiş üzvlərin açıq saytında zəng+səs (realtime),
   // eyni zamanda Supabase Database Webhook → n8n → WhatsApp qrupu.
   function sendNotification(n, cb){
     var row = {
@@ -640,7 +640,7 @@
       link: String(n.link || '').trim().slice(0, 500) || null
     };
     if(!row.title){ cb({message: 'Başlıq boşdur'}); return; }
-    supa.from('notifications').insert([row]).then(function(res){ cb(res.error || null); });
+    supa.from('member_notifications').insert([row]).then(function(res){ cb(res.error || null); });
   }
   document.getElementById('announceBtn').addEventListener('click', function(e){
     e.preventDefault();

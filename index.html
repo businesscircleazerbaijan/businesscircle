@@ -1858,7 +1858,7 @@
   // =========================================================
   // =========================================================
   // ---------- ÜZV BİLDİRİŞLƏRİ: zəng + səs + toast (+ brauzer bildirişi) ----------
-  // Mənbə: "notifications" cədvəli. Yalnız GİRİŞ EDİB TƏSDİQLƏNMİŞ üzvlər üçün açılır
+  // Mənbə: "member_notifications" cədvəli. Yalnız GİRİŞ EDİB TƏSDİQLƏNMİŞ üzvlər üçün açılır
   // (anonim ziyarətçi realtime bağlantısı tutmur → Supabase concurrent-connection limiti qorunur).
   // Sayt bağlı olanda çatdırılma: n8n → WhatsApp qrupu (ayrıca workflow).
   // =========================================================
@@ -1957,9 +1957,9 @@
 
   function fetchNotifications(){
     notifLastFetch = Date.now();
-    supa.from('notifications').select('id,title,body,link,created_at').order('created_at', {ascending:false}).limit(10)
+    supa.from('member_notifications').select('id,title,body,link,created_at').order('created_at', {ascending:false}).limit(10)
       .then(function(res){
-        if(res.error){ console.warn('notifications sorğu xətası:', res.error.message); return; }
+        if(res.error){ console.warn('member_notifications sorğu xətası:', res.error.message); return; }
         notifItems = res.data || [];
         renderNotifBadge(); renderNotifList();
       });
@@ -1991,7 +1991,7 @@
 
     fetchNotifications();
     notifChannel = supa.channel('member-notifications')
-      .on('postgres_changes', {event:'INSERT', schema:'public', table:'notifications'}, function(payload){ onNewNotification(payload.new); })
+      .on('postgres_changes', {event:'INSERT', schema:'public', table:'member_notifications'}, function(payload){ onNewNotification(payload.new); })
       .subscribe();
   }
 
